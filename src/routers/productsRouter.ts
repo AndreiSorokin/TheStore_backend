@@ -5,9 +5,9 @@ const router = express.Router();
 
 
 let products: Product[] = [
-  { id: "1", name: "product1", price: 1, description: "description1", category: { category: "category1" }, size: Size.Small },
-  { id: "2", name: "product2", price: 2, description: "description2", category: { category: "category2" }, size: Size.Medium },
-  { id: "3", name: "product3", price: 3, description: "description3", category: { category: "category3" }, size: Size.Large },
+  { id: "1", name: "product1", price: 1, description: "description1", category: { id: '1', name: "category1" }, size: Size.Small },
+  { id: "2", name: "product2", price: 2, description: "description2", category: { id: '2', name: "category2" }, size: Size.Medium },
+  { id: "3", name: "product3", price: 3, description: "description3", category: { id: '3', name: "category3" }, size: Size.Large },
 ];
 
 router.get("/", (request: Request, response: Response) => {
@@ -30,7 +30,7 @@ router.get("/", (request: Request, response: Response) => {
 
   if (categoryQuery) {
     products = products.filter(product =>
-      product.category.category.includes(categoryQuery)
+      product.category.name.includes(categoryQuery)
     );
   }
 

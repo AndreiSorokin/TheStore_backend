@@ -5,7 +5,8 @@ export enum Size {
 }
 
 export type Category = {
-   category: string;
+   id: string;
+   name: string;
 }
 
 export type Product = {

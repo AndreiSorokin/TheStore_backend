@@ -14,7 +14,7 @@ app.use(express.json());
 app.use("/api/v1/products", productsRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/cart", cartRouter)
-app.use("/api/v1/categoriy", categoryRouter);
+app.use("/api/v1/categories", categoryRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
