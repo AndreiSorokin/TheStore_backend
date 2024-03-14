@@ -1,18 +1,21 @@
-import express, { Request, Response } from "express";
-
+import express from "express";
+import dotenv from "dotenv";
 import productsRouter from "./routers/productsRouter";
+import usersRouter from "./routers/usersRouter";
+import cartRouter from "./routers/cartRouter";
+import categoryRouter from "./routers/categoryRouter";
 
-const PORT = 8080;
+dotenv.config()
+
 
 const app = express();
+
 app.use(express.json());
-
-app.get("/", (request: Request, response: Response) => {
-  response.status(200).json({ message: "Hello world!" });
-});
-
 app.use("/api/v1/products", productsRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/cart", cartRouter)
+app.use("/api/v1/categoriy", categoryRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
