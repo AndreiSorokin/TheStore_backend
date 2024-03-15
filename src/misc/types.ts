@@ -18,11 +18,6 @@ export type Product = {
    size: Size;
 }
 
-export type Cart = {
-   items: Product[];
-   quantity: number;
-}
-
 export type User = {
    id: string;
    firstName: string;

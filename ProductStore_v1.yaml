@@ -55,8 +55,8 @@ paths:
         "204":
           description: product deleted successfully
     put:
-      summary: udpate product
-      description: udpate product
+      summary: update product
+      description: update product
       parameters:
         - name: id
           in: path
@@ -226,6 +226,61 @@ paths:
           description: Category Updated Successfully
   # Category methods || muzahid
 
+  # Noor
+  /users:
+    get:
+      summary: get list of Users
+      description: get list of Users
+      responses:
+        "200":
+          description: Users Got successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    post:
+      summary: create a new Users
+      description: create a new Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: user created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /users/{id}:
+    delete:
+      summary: delete user
+      description: delete user
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: user deleted successfully
+    put:
+      summary: udpate user
+      description: udpate user
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: user updated successfully
+    # Noor       
   # Andrei
 components:
   schemas:
@@ -259,7 +314,7 @@ components:
         id:
           type: string
           example: "123"
-        Quantity:
+        quantity:
           type: integer
           example: 3
         priceSum:
@@ -293,3 +348,25 @@ components:
           format: date-time
           example: "2024-03-13T14:52:42.000Z"
     # Category methods || muzahid
+    # Noor
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: "123"
+        email:
+          type: string
+          example: "a@b.com"
+        name:
+          type: string
+          example: "Mr Backend"
+        password:
+          type: string
+          format: string
+          example: "12345"
+        role:
+          type: string
+          format: string
+          example: "user"
+    # Noor
