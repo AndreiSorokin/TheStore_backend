@@ -35,4 +35,23 @@ router.post('/', (req: Request, res: Response) => {
    res.status(201).json(users);
 })
 
+// update user information || muzahid
+router.put('/:id', (req: Request, res: Response) => {
+   const { id } = req.params;
+   const updateUserInfo: User = req.body;
+   try {
+      const index = users.findIndex((user) => user.id === id);
+      let result = {};
+      if (index !== -1) {
+         users[index] = { ...users[index], ... updateUserInfo };
+         result = {'success': true, 'msg': 'User Info Updated Successful', data: users[index]}
+      } else {
+         result = {'success': false, 'msg': 'User Info not Found', data: []}
+      }
+      res.status(201).json(result);
+   } catch (error: any) {
+      res.status(500).send({'success': false, 'msg': error.message});
+   }
+})
+
 export default router;

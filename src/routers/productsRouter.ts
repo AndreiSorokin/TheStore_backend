@@ -50,19 +50,28 @@ router.post("/", (request: Request, response: Response) => {
     size: body.size
   }
 
-  if(!body.name || !body.price || !body.description || !body.category || !body.size) {
+  if (!body.name || !body.price || !body.description || !body.category || !body.size) {
     return response.status(400).json({ message: "fill out all the fields" })
-}
+  }
 
   products.push(newProduct);
   response.status(201).json(products);
 });
 
-
+// delete product || muzahid
 router.delete("/:productId", (request: Request, response: Response) => {
   const productId = request.params.productId;
-  products = products.filter((item) => item.id !== productId);
-  response.sendStatus(204);
+  try{
+    const index = products.findIndex((item) => item.id === productId);
+    if (index !== -1) {
+      products.splice(index, 1);
+      response.sendStatus(204); // Product deleted successfully
+    } else {
+      response.status(404).json({ success: false, msg:'Product not found' });
+    }
+  } catch (error: any) {
+    response.status(500).send({success: false, msg: error.message});
+ }
 });
 
 export default router;
