@@ -49,6 +49,27 @@ export async function createProduct(request: Request, response: Response) {
    }
 }
 
+export async function updateProduct(request: Request, response: Response) {
+   try {
+      const id = request.params.id;
+      const { name, price, description, category, size } = request.body;
+      
+      const updatedProduct = await Products.findByIdAndUpdate(
+         id,
+         { name, price, description, category, size },
+         { new: true }
+      )
+
+      if(!updateProduct) {
+         return response.status(404).json({ message: "product not found" })
+      }
+
+      response.status(200).json(updatedProduct);
+   } catch (error) {
+      response.status(500).json({ message: "Internal server error" });
+   }
+}
+
 export async function deleteProduct(request: Request, response: Response) {
    const product = await Products.findById(request.params.id);
 
