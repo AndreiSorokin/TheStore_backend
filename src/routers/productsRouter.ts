@@ -58,6 +58,26 @@ router.post("/", (request: Request, response: Response) => {
   response.status(201).json(products);
 });
 
+//Noor
+router.get('/:productId', (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+     const index = products.findIndex((product) => product.id === id);
+     let result = {};
+     if (index !== -1) {
+        
+        result = {'success': true, 'msg': 'Product Get Successful', data: products[index]}
+     } else {
+        result = {'success': false, 'msg': 'Product Info not Found', data: []}
+     }
+     res.status(200).json(result);
+  } catch (error: any) {
+     res.status(500).send({'success': false, 'msg': error.message});
+  }
+})
+//Noor
+
 // delete product || muzahid
 router.delete("/:productId", (request: Request, response: Response) => {
   const productId = request.params.productId;

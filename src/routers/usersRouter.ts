@@ -13,6 +13,25 @@ let users: User[] = [
 router.get('/', (req: Request, res: Response) => {
    res.status(200).json(users);
 })
+//Noor
+router.get('/:id', (req: Request, res: Response) => {
+   const { id } = req.params;
+
+   try {
+      const index = users.findIndex((user) => user.id === id);
+      let result = {};
+      if (index !== -1) {
+         
+         result = {'success': true, 'msg': 'User Get Successful', data: users[index]}
+      } else {
+         result = {'success': false, 'msg': 'User Info not Found', data: []}
+      }
+      res.status(200).json(result);
+   } catch (error: any) {
+      res.status(500).send({'success': false, 'msg': error.message});
+   }
+})
+//Noor
 
 router.post('/', (req: Request, res: Response) => {
    const body: UserToRegistar = req.body

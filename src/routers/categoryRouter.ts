@@ -38,4 +38,21 @@ router.post('/', (req: Request, res: Response) => {
    }
 })
 
+//Noor
+router.delete("/:catId", (request: Request, response: Response) => {
+   const catId = request.params.catId;
+   try{
+     const index = categories.findIndex((item) => item.id === catId);
+     if (index !== -1) {
+       categories.splice(index, 1);
+       response.sendStatus(204); // Category deleted successfully
+     } else {
+       response.status(404).json({ success: false, msg:'Category not found' });
+     }
+   } catch (error: any) {
+     response.status(500).send({success: false, msg: error.message});
+  }
+ });
+ //Noor
+
 export default router
