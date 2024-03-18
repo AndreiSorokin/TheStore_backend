@@ -120,7 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Order"
+                $ref: "#/components/schemas/OrderList"
     post:
       summary: create a new order
       description: create a new order
@@ -128,14 +128,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Order"
+              $ref: "#/components/schemas/OrderList"
       responses:
         "201":
           description: Order created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Order"
+                $ref: "#/components/schemas/OrderList"
   /orders/{id}:
     delete:
       summary: delete order
@@ -164,7 +164,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Order"
+              $ref: "#/components/schemas/OrderList"
       responses:
         "204":
           description: Order updated successfully
@@ -305,9 +305,27 @@ components:
     Images:
       type: string
 
-    # Andrei above
-    
-    # Lam-Ngo
+  # Andrei above
+  
+  # Lam-Ngo
+    OrderList:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123"
+        userId:
+          $ref: "#/components/schemas/User/id"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-03-18T12:34:56Z"
+        shipment:
+           $ref: "#/components/schemas/Shipment"
+        orderItems:
+          items:  
+            $ref: "#/components/schemas/Order"
+
     Order:
       type: object
       properties:
@@ -320,10 +338,20 @@ components:
         priceSum:
           type: number
           example: 1
-        orderItems:
+        products:
           type: array
           items:  
             $ref: "#/components/schemas/Product"
+
+    Shipment:
+        type: object
+        properties:
+          id:
+            type: string
+            example: "123"
+          userId:
+            type: integer
+            $ref: "#/components/schemas/User/id"
     # Lam-Ngo above
 
     # Category methods || muzahid
