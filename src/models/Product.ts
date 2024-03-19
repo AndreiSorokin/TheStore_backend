@@ -22,6 +22,10 @@ const ProductSchema = new Schema({
       type: String,
       required: true
    },
+   image: {
+      type: String,
+      required: true
+   },
    size: {
       type: String,
       enum: [Size.Small, Size.Medium, Size.Large],
