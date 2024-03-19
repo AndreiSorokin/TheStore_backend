@@ -19,8 +19,8 @@ const ProductSchema = new Schema({
       required: true
    },
    category: {
-      type: String,
-      required: true
+      type: Schema.Types.ObjectId,
+      ref: "Category"
    },
    image: {
       type: String,
@@ -30,7 +30,9 @@ const ProductSchema = new Schema({
       type: String,
       enum: [Size.Small, Size.Medium, Size.Large],
       required: true
-   }
+   },
+
+   
 })
 
 export default mongoose.model<ProductDocument>("Products", ProductSchema)

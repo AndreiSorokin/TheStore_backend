@@ -22,7 +22,8 @@ const createProduct = async (product: ProductDocument): Promise<ProductDocument>
 }
 
 const updateProduct = async(id: string, changedProduct: Partial<ProductDocument>) => {
-   const updatedProduct = await Product.findByIdAndUpdate(id, changedProduct, { new: true })
+   const options = { new: true, runValidators: true }; // Enable validators
+   const updatedProduct = await Product.findByIdAndUpdate(id, changedProduct, options);
    return updatedProduct;
 }
 
