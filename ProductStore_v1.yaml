@@ -305,10 +305,31 @@ components:
     Images:
       type: string
 
-    # Andrei above
-    
-    # Lam-Ngo
+  # Andrei above
+  
+  # Lam-Ngo
     Order:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123"
+        userId:
+          $ref: "#/components/schemas/User/id"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-03-18T12:34:56Z"
+        priceSum:
+          type: string
+          example: "123"
+        shipment:
+           $ref: "#/components/schemas/Shipment"
+        orderItems:
+          items:  
+            $ref: "#/components/schemas/OrderItem"
+
+    OrderItem:
       type: object
       properties:
         id:
@@ -317,13 +338,18 @@ components:
         quantity:
           type: integer
           example: 3
-        priceSum:
-          type: number
-          example: 1
-        orderItems:
-          type: array
-          items:  
-            $ref: "#/components/schemas/Product"
+        productId:
+          $ref: "#/components/schemas/Product/id"
+
+    Shipment:
+        type: object
+        properties:
+          id:
+            type: string
+            example: "123"
+          userId:
+            type: integer
+            $ref: "#/components/schemas/User/id"
     # Lam-Ngo above
 
     # Category methods || muzahid
@@ -348,6 +374,7 @@ components:
           format: date-time
           example: "2024-03-13T14:52:42.000Z"
     # Category methods || muzahid
+
     # Noor
     User:
       type: object
