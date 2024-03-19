@@ -28,7 +28,7 @@ router.post('/', (req: Request, res: Response) => {
          return res.status(400).json({ msg: "fill out all the fields" })
       }
       if (categories.some(categories => categories.name === body.name)) {
-         return res.status(400).json({ msg: "Categori with this name already exists" });
+         return res.status(400).json({ msg: "Categori with this name already exists!" });
       }
 
       categories.push(newCategory)
