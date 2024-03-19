@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export enum Size {
   Small = "Small",
   Medium = "Medium",
@@ -18,19 +20,17 @@ export type Product = {
   size: Size;
 };
 
-export type Order = {
-  id: string;
+export type OrderItem = {
   quantity: number;
-  priceSum: number;
-  products: Product[];
+  productId: Types.ObjectId;
 };
 
-export type OrderList = {
-  id: string;
-  userId: User["id"];
+export type Order = {
+  userId: Types.ObjectId;
   createdAt: Date;
+  shipment: string;
   priceSum: number;
-  orderItems: Order[];
+  orderItems: OrderItem[];
 };
 
 export type User = {

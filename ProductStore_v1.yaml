@@ -120,7 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrderList"
+                $ref: "#/components/schemas/Order"
     post:
       summary: create a new order
       description: create a new order
@@ -128,14 +128,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrderList"
+              $ref: "#/components/schemas/Order"
       responses:
         "201":
           description: Order created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrderList"
+                $ref: "#/components/schemas/Order"
   /orders/{id}:
     delete:
       summary: delete order
@@ -164,7 +164,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrderList"
+              $ref: "#/components/schemas/Order"
       responses:
         "204":
           description: Order updated successfully
@@ -308,7 +308,7 @@ components:
   # Andrei above
   
   # Lam-Ngo
-    OrderList:
+    Order:
       type: object
       properties:
         id:
@@ -320,13 +320,16 @@ components:
           type: string
           format: date-time
           example: "2024-03-18T12:34:56Z"
+        priceSum:
+          type: string
+          example: "123"
         shipment:
            $ref: "#/components/schemas/Shipment"
         orderItems:
           items:  
-            $ref: "#/components/schemas/Order"
+            $ref: "#/components/schemas/OrderItem"
 
-    Order:
+    OrderItem:
       type: object
       properties:
         id:
@@ -335,13 +338,8 @@ components:
         quantity:
           type: integer
           example: 3
-        priceSum:
-          type: number
-          example: 1
-        products:
-          type: array
-          items:  
-            $ref: "#/components/schemas/Product"
+        productId:
+          $ref: "#/components/schemas/Product/id"
 
     Shipment:
         type: object
@@ -376,6 +374,7 @@ components:
           format: date-time
           example: "2024-03-13T14:52:42.000Z"
     # Category methods || muzahid
+
     # Noor
     User:
       type: object
