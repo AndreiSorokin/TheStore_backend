@@ -1,5 +1,7 @@
+import validator from "validator"
 import Category, { CategoryDocument } from "../models/Category"
 import User, { UserDocument } from "../models/User"
+
 
 
 const getAllUser = async(): Promise<UserDocument[]> => {
@@ -16,23 +18,31 @@ const getSingleUser = async (id: string): Promise<UserDocument | undefined> => {
 
 const createUser = async (user: UserDocument): Promise<UserDocument | String> => {
     const { name, email, password, role } = user;
+   
       if (!name || !email || !password || !role) {
          return "Fill out all the fields";
         
+      }else if (!validator.isEmail){
+        return "Please Enter a valid email"
+      }
+      // check is the eamil already added or not
+      const isEmailAlreadyAdded=await User.findOne({email});
+      if (isEmailAlreadyAdded){
+        return "Email already added in our database"
       }
     return await user.save();
 }
 
-const updateUser = async (id: string, changedCategory: Partial<UserDocument>) => {
-    const options = { new: true, runValidators: true }; // Enable validators
-    const updatedCategory = await Category.findByIdAndUpdate(id, changedCategory, options);
-    return updatedCategory;
+const updateUser = async (id: string, updateData: Partial<UserDocument>) => {
+    const options = { new: true, runValidators: true }; 
+    const updateUser = await User.findByIdAndUpdate(id, updateData, options);
+    return updateUser;
 }
 
 const deleteUser = async (id: string) => {
-    const category = await Category.findByIdAndDelete(id)
-    if (category) {
-        return category;
+    const user = await User.findByIdAndDelete(id)
+    if (user) {
+        return user;
     }
 }
 

@@ -2,8 +2,7 @@ import express, { Request, Response } from "express";
 import Product from "../models/Product"
 import userService from "../services/user"
 import ProductModel, { ProductDocument } from "../models/Product";
-import User from "../models/User";
-
+import User, { UserDocument } from "../models/User";
 export async function getAllUser(_: Request, response: Response) {
    const users = await userService.getAllUser()
    if(users.length===0){
@@ -31,16 +30,16 @@ export async function createUser(request: Request, response: Response) {
 }
 
 export async function updateUser(request: Request, response: Response) {
-   // const id = request.params.id;
-   // const product: Partial<ProductDocument> = request.body;
+   const id = request.params.id;
+   const user: Partial<UserDocument> = request.body;
 
-   // const updatedProduct: ProductDocument | null = await userService.updateUser(id, product);
+   const updateUser: UserDocument | null = await userService.updateUser(id, user);
 
-   // if (!updatedProduct) {
-   //    return response.status(404).json({ message: "Product not found" });
-   // }
+   if (!updateUser) {
+      return response.status(404).json({ message: "User not found" });
+   }
 
-   // response.status(200).json(updatedProduct);
+   response.status(200).json(updateUser);
 }
 
 export async function deleteUser(request: Request, response: Response) {
@@ -48,5 +47,5 @@ export async function deleteUser(request: Request, response: Response) {
 
    const data = await userService.deleteUser(id)
 
-   response.status(204).json({ message: "product has been deleted" }).end()
-}
+   response.status(200).json({  message:" User deleted" }).end()
+}   

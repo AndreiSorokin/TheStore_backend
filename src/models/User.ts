@@ -7,7 +7,7 @@ export type UserDocument = Document & User
 
 const UserSchema = new Schema({
    id: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId, 
       ref: "User",
     
     },
