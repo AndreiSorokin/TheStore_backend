@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import Product from "../models/Product"
 import productsService from "../services/products"
 import ProductModel, { ProductDocument } from "../models/Product";
+import { User } from "../misc/types";
 
 export async function getAllProducts(_: Request, response: Response) {
    const products = await productsService.getAllProducts()
@@ -16,11 +17,16 @@ export async function getOneProduct(request: Request, response: Response) {
    response.status(201).json(product)
 }
 
-export async function createProduct(request: Request, response: Response) {
-   const product = new Product(request.body)
-   const newProduct = await productsService.createProduct(product)
+export async function createProduct(request: Request & { user?: User }, response: Response) {
+   const userRole = request.user && request.user.role;
 
-   response.status(201).json(newProduct);
+   if (userRole === 'admin') {
+      const product = new Product(request.body);
+      const newProduct = await productsService.createProduct(product);
+      response.status(201).json(newProduct);
+   } else {
+      response.status(403).json({ error: 'Forbidden' });
+   }
 }
 
 export async function updateProduct(request: Request, response: Response) {

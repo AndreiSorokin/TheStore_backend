@@ -31,8 +31,6 @@ const ProductSchema = new Schema({
       enum: [Size.Small, Size.Medium, Size.Large],
       required: true
    },
-
-   
 })
 
 export default mongoose.model<ProductDocument>("Products", ProductSchema)
