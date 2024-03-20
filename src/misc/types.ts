@@ -21,6 +21,7 @@ export type Product = {
   size: Size;
 };
 
+
 export type OrderItem = {
   quantity: number;
   productId: Types.ObjectId;
@@ -35,10 +36,11 @@ export type Order = {
 };
 
 export type User = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+  id: Types.ObjectId;
+  name: string;
+  email: number;
+  password: string;
+  role: string;
 };
 
 export type UserToRegistar = {
