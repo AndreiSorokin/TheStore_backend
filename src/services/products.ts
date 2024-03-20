@@ -1,3 +1,4 @@
+import { BadRequestError, NotFoundError } from "../errors/ApiError"
 import Product, { ProductDocument } from "../models/Product"
 
 const getAllProducts = async(): Promise<ProductDocument[]> => {
@@ -10,20 +11,30 @@ const getOneProduct = async(id: string): Promise<ProductDocument | undefined> =>
    if(product) {
       return product;
    }
+   throw new NotFoundError();
 }
 
 const createProduct = async (product: ProductDocument): Promise<ProductDocument> => {
       const { name, price, description, category, size } = product;
       if (!name || !price || !description || !category || !size) {
-         throw new Error("Fill out all the fields");
+         throw new BadRequestError();
       }
 
       return await product.save();
 }
 
 const updateProduct = async(id: string, changedProduct: Partial<ProductDocument>) => {
-   const options = { new: true, runValidators: true }; // Enable validators
+   if(!id) {
+      throw new BadRequestError();
+   }
+
+   const options = { new: true, runValidators: true };
    const updatedProduct = await Product.findByIdAndUpdate(id, changedProduct, options);
+
+   if(!updatedProduct) {
+      throw new BadRequestError();
+   }
+
    return updatedProduct;
 }
 
@@ -32,6 +43,7 @@ const deleteProduct = async(id: string) => {
    if(product) {
       return product;
    }
+   throw new NotFoundError();
 }
 
 
