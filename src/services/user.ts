@@ -1,6 +1,7 @@
 import validator from "validator"
 import Category, { CategoryDocument } from "../models/Category"
 import User, { UserDocument } from "../models/User"
+import { BadRequestError, NotFoundError } from "../errors/ApiError"
 
 
 
@@ -14,6 +15,7 @@ const getSingleUser = async (id: string): Promise<UserDocument | undefined> => {
     if (user) {
         return user;
     }
+    throw new NotFoundError();
 }
 
 const createUser = async (user: UserDocument): Promise<UserDocument | String> => {
@@ -34,8 +36,16 @@ const createUser = async (user: UserDocument): Promise<UserDocument | String> =>
 }
 
 const updateUser = async (id: string, updateData: Partial<UserDocument>) => {
+    
+    if(!id) {
+        throw new BadRequestError();
+    }
     const options = { new: true, runValidators: true }; 
     const updateUser = await User.findByIdAndUpdate(id, updateData, options);
+    
+    if(!updateUser) {
+        throw new BadRequestError();
+     }
     return updateUser;
 }
 
@@ -44,6 +54,7 @@ const deleteUser = async (id: string) => {
     if (user) {
         return user;
     }
+    throw new NotFoundError();
 }
 
 export default { getAllUser, getSingleUser, createUser, updateUser, deleteUser }

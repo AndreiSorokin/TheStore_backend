@@ -9,100 +9,47 @@ import {
 
 const router = express.Router();
 
-import checkUserRole from '../middlewares/checkUserRole';
+router.get("/", getAllUser)
+router.get("/:id", getSingleUser)
 
-interface CustomRequest extends Request {
-  userRole?: string
-  userInfo?: any;
-}
+router.post("/create", createUser);
+router.put("/:id", updateUser)
+router.delete("/:id", deleteUser);
 
-router.use('/:username', function (req: Request, res: Response, next: NextFunction) {
-  const username = req.params.username;
-  console.log('username => ', username);
-  checkUserRole(username)(req as CustomRequest, res, next);
-}, (req: CustomRequest, res, next: NextFunction) => {
-  if (Object.keys(req.userInfo).length > 0) {
-    if (req.userInfo.access.read) {
-      router.get("/", getAllUser);
-      router.get("/:id", getSingleUser);
-    }
-    if (req.userInfo.access.create) {
-      router.post("/create", createUser);
-    }
-    if (req.userInfo.access.update) {
-      router.put("/:id", updateUser);
-    }
-    if (req.userInfo.access.delete) {
-      router.delete("/:id", deleteUser);
-    }
-    next();
-  } else {
-    res.status(403).json({ message: 'Forbidden' });
-  }
-});
+/**** added by muzahid || for demo purpose */
 
-// router.get('/', (req: Request, res: Response) => {
-//    res.status(200).json(users);
-// })
+// import checkUserRole from '../middlewares/checkUserRole';
 
-// //Noor
-// router.get('/:id', (req: Request, res: Response) => {
-//    const { id } = req.params;
+// interface CustomRequest extends Request {
+//   userRole?: string
+//   userInfo?: any;
+// }
 
-//    try {
-//       const index = users.findIndex((user) => user.id === id);
-//       let result = {};
-//       if (index !== -1) {
+// router.use('/:username', function (req: Request, res: Response, next: NextFunction) {
+//   const username = req.params.username;
+//   console.log('username => ', username);
+//   checkUserRole(username)(req as CustomRequest, res, next);
+// }, (req: CustomRequest, res, next: NextFunction) => {
+//   if (Object.keys(req.userInfo).length > 0) {
+//     if (req.userInfo.access.read) {
+//       router.get("/", getAllUser);
+//       router.get("/:id", getSingleUser);
+//     }
+//     if (req.userInfo.access.create) {
+//       router.post("/create", createUser);
+//     }
+//     if (req.userInfo.access.update) {
+//       router.put("/:id", updateUser);
+//     }
+//     if (req.userInfo.access.delete) {
+//       router.delete("/:id", deleteUser);
+//     }
+//     next();
+//   } else {
+//     res.status(403).json({ message: 'Forbidden' });
+//   }
+// });
 
-//          result = {'success': true, 'msg': 'User Get Successful', data: users[index]}
-//       } else {
-//          result = {'success': false, 'msg': 'User Info not Found', data: []}
-//       }
-//       res.status(200).json(result);
-//    } catch (error: any) {
-//       res.status(500).send({'success': false, 'msg': error.message});
-//    }
-// })
-// //Noor
-
-// router.post('/', (req: Request, res: Response) => {
-//    const body: UserToRegistar = req.body
-//    const newUser: User = {
-//       // Since we don't have DB yet let ID be like this
-//       id: (users.length + 1).toString(),
-//       firstName: body.firstName,
-//       lastName: body.lastName,
-//       email: body.email,
-//    };
-
-//    if(!body.username || !body.password || !body.firstName || !body.lastName || !body.email) {
-//       return res.status(400).json({ message: "fill out all the fields" })
-//    }
-//    if (users.some(user => user.email === body.email)) {
-//       return res.status(400).json({ message: "User with this email already exists" });
-//    }
-
-//    users.push(newUser)
-//    res.status(201).json(users);
-// })
-
-// // update user information || muzahid
-// router.put('/:id', (req: Request, res: Response) => {
-//    const { id } = req.params;
-//    const updateUserInfo: User = req.body;
-//    try {
-//       const index = users.findIndex((user) => user.id === id);
-//       let result = {};
-//       if (index !== -1) {
-//          users[index] = { ...users[index], ... updateUserInfo };
-//          result = {'success': true, 'msg': 'User Info Updated Successful', data: users[index]}
-//       } else {
-//          result = {'success': false, 'msg': 'User Info not Found', data: []}
-//       }
-//       res.status(201).json(result);
-//    } catch (error: any) {
-//       res.status(500).send({'success': false, 'msg': error.message});
-//    }
-// })
+/**** added by muzahid || for demo purpose */
 
 export default router;
