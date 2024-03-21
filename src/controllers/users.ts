@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 
 export async function getAllUser(request: Request, response: Response, next: NextFunction) {
    
-  try {
+   try {
       const users = await userService.getAllUser()
       if(users.length===0){
          return response.status(404).json({ message: "Empty User List" });

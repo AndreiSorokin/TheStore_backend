@@ -6,19 +6,20 @@ import productsService from "../services/products"
 import ProductModel, { ProductDocument } from "../models/Product";
 import { User } from "../misc/types";
 import { BadRequestError, ForbiddenError, InternalServerError, NotFoundError } from "../errors/ApiError";
+import Category from "../models/Category";
 
 export async function getAllProducts(request: Request, response: Response, next: NextFunction) {
    try {
-      const limit = Number(request.query.limit)
-      const offset = Number(request.query.offset)
-      const searchQuery = request.query.searchQuery as string
-      const minPrice = !isNaN(Number(request.query.minPrice)) ? Number(request.query.minPrice) : 0;
-      const maxPrice = !isNaN(Number(request.query.maxPrice)) ? Number(request.query.maxPrice) : Infinity;
-      // combine those 5 fields to 1 line
-      // const { limit = 10, offset = 0, searchQuery = '', minPrice = 0, maxPrice = Infinity } = request.query;
+      const { limit = 10, offset = 0, searchQuery = '', minPrice = 0, maxPrice = Infinity } = request.query;
 
+      const productList = await productsService.getAllProducts(
+         Number(limit),
+         Number(offset),
+         searchQuery as string,
+         !isNaN(Number(minPrice)) ? Number(minPrice) : 0,
+         !isNaN(Number(maxPrice)) ? Number(maxPrice) : Infinity
+      );
 
-      const productList = await productsService.getAllProducts(limit, offset, searchQuery, minPrice, maxPrice)
       const count = productList.length
       response.status(200).json({ totalCount: count, products: productList })
    } catch (error) {
@@ -48,19 +49,34 @@ export async function getOneProduct(request: Request, response: Response, next: 
 }
 
 export async function createProduct(request: Request & { user?: User }, response: Response) {
-   const userRole = request.user && request.user.role;
-
    try {
-      if (userRole === 'admin') {
-         const product = new Product(request.body);
-         const newProduct = await productsService.createProduct(product);
-         response.status(201).json(newProduct);
-      } else {
-         throw new ForbiddenError();
+      const userRole = request.user?.role;
+
+      if(userRole === 'admin') {
+      const { name, price, description, category, image, size } = request.body;
+      
+      const categoryDoc = await Category.findOne({ name: category });
+      if (!categoryDoc) {
+         throw new BadRequestError('Category not found');
       }
+      
+      const product = new Product({
+         name,
+         price,
+         description,
+         category: categoryDoc._id,
+         image,
+         size
+      });
+
+      const newProduct = await productsService.createProduct(product);
+      response.status(201).json(newProduct);
+   } else {
+      throw new ForbiddenError('Only admin can add new products');
+   }
    } catch (error) {
       if (error instanceof BadRequestError) {
-         response.status(400).json({ error: 'Bad Request' });
+         response.status(400).json({ error: error.message });
       } else {
          response.status(500).json({ error: 'Internal Server Error' });
       }
