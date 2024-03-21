@@ -1,4 +1,5 @@
 import mongoose, { Document, Model } from "mongoose";
+
 import { Product, Size } from "../misc/types"
 
 const Schema = mongoose.Schema;
@@ -12,6 +13,7 @@ const ProductSchema = new Schema({
    },
    price: {
       type: Number,
+      min: 0,
       required: true
    },
    description: {
@@ -20,7 +22,8 @@ const ProductSchema = new Schema({
    },
    category: {
       type: Schema.Types.ObjectId,
-      ref: "Category"
+      ref: "Category",
+      required: true
    },
    image: {
       type: String,
@@ -32,5 +35,7 @@ const ProductSchema = new Schema({
       required: true
    },
 })
+
+// ProductSchema.index({  })
 
 export default mongoose.model<ProductDocument>("Products", ProductSchema)

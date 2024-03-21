@@ -8,7 +8,7 @@ function apiErrorhandler(
    next: NextFunction
 ) {
    if (!error.status && !error.message) {
-      response.status(500).json({ message: "Internal error" });
+      response.status(500).json({ message: "Internal server error" });
    }
    response.status(error.status).json({ message: error.message });
 }
