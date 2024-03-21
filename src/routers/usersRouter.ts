@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import {
   getAllUser,
   createUser,
@@ -9,18 +9,42 @@ import {
 
 const router = express.Router();
 
-router.get("/", getAllUser)
-router.get("/:id", getSingleUser)
-router.post("/create", createUser);
-router.put("/:id", updateUser)
-router.delete("/:id", deleteUser);
+import checkUserRole from '../middlewares/checkUserRole';
 
+interface CustomRequest extends Request {
+  userRole?: string
+  userInfo?: any;
+}
 
-
+router.use('/:username', function (req: Request, res: Response, next: NextFunction) {
+  const username = req.params.username;
+  console.log('username => ', username);
+  checkUserRole(username)(req as CustomRequest, res, next);
+}, (req: CustomRequest, res, next: NextFunction) => {
+  if (Object.keys(req.userInfo).length > 0) {
+    if (req.userInfo.access.read) {
+      router.get("/", getAllUser);
+      router.get("/:id", getSingleUser);
+    }
+    if (req.userInfo.access.create) {
+      router.post("/create", createUser);
+    }
+    if (req.userInfo.access.update) {
+      router.put("/:id", updateUser);
+    }
+    if (req.userInfo.access.delete) {
+      router.delete("/:id", deleteUser);
+    }
+    next();
+  } else {
+    res.status(403).json({ message: 'Forbidden' });
+  }
+});
 
 // router.get('/', (req: Request, res: Response) => {
 //    res.status(200).json(users);
 // })
+
 // //Noor
 // router.get('/:id', (req: Request, res: Response) => {
 //    const { id } = req.params;
@@ -29,7 +53,7 @@ router.delete("/:id", deleteUser);
 //       const index = users.findIndex((user) => user.id === id);
 //       let result = {};
 //       if (index !== -1) {
-         
+
 //          result = {'success': true, 'msg': 'User Get Successful', data: users[index]}
 //       } else {
 //          result = {'success': false, 'msg': 'User Info not Found', data: []}
