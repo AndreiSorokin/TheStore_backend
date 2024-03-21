@@ -1,9 +1,25 @@
+import { FilterQuery } from "mongoose";
+
 import { BadRequestError, NotFoundError } from "../errors/ApiError"
 import Product, { ProductDocument } from "../models/Product"
 
-const getAllProducts = async(): Promise<ProductDocument[]> => {
-   return await Product.find()
-   //add pagination and filtering by name, categories, variants.
+const getAllProducts = async(limit: number, offset: number, searchQuery: string, minPrice: number, maxPrice: number): Promise<ProductDocument[]> => {
+   const query: FilterQuery<ProductDocument> = {
+      price: { $gte: minPrice, $lte: maxPrice }
+   };
+
+   if (searchQuery) {
+      query.title = { $regex: searchQuery };
+   }
+   
+   return await Product
+      // .find({ title: { $regex: searchQuery }, price: { $gte: minPrice, $lte: maxPrice } })
+      .find(query)
+      .sort( { price: 1 })
+      .populate( "category", {name: 1} )
+      .limit(limit)
+      .skip(offset)
+   // use optional query
 }
 
 const getOneProduct = async(id: string): Promise<ProductDocument | undefined> => {

@@ -1,4 +1,5 @@
 import mongoose, { Document, Model } from "mongoose";
+
 import { Product, Size } from "../misc/types"
 
 const Schema = mongoose.Schema;
@@ -32,5 +33,7 @@ const ProductSchema = new Schema({
       required: true
    },
 })
+
+// ProductSchema.index({  })
 
 export default mongoose.model<ProductDocument>("Products", ProductSchema)

@@ -1,16 +1,28 @@
 import express, { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
+
 import Product from "../models/Product"
 import productsService from "../services/products"
 import ProductModel, { ProductDocument } from "../models/Product";
 import { User } from "../misc/types";
 import { BadRequestError, ForbiddenError, InternalServerError, NotFoundError } from "../errors/ApiError";
-import mongoose from "mongoose";
 
-export async function getAllProducts(_: Request, response: Response, next: NextFunction) {
+export async function getAllProducts(request: Request, response: Response, next: NextFunction) {
    try {
-      const products = await productsService.getAllProducts()
-      response.status(200).json(products)
+      const limit = Number(request.query.limit)
+      const offset = Number(request.query.offset)
+      const searchQuery = request.query.searchQuery as string
+      const minPrice = !isNaN(Number(request.query.minPrice)) ? Number(request.query.minPrice) : 0;
+      const maxPrice = !isNaN(Number(request.query.maxPrice)) ? Number(request.query.maxPrice) : Infinity;
+      // combine those 5 fields to 1 line
+      // const { limit = 10, offset = 0, searchQuery = '', minPrice = 0, maxPrice = Infinity } = request.query;
+
+
+      const productList = await productsService.getAllProducts(limit, offset, searchQuery, minPrice, maxPrice)
+      const count = productList.length
+      response.status(200).json({ totalCount: count, products: productList })
    } catch (error) {
+      console.log("error",error)
       next(new InternalServerError("Internal error"))
    }
 }

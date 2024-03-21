@@ -1,4 +1,5 @@
 import mongoose, { Document, Model } from "mongoose";
+
 import { User } from "../misc/types";
 
 const Schema = mongoose.Schema;
@@ -9,8 +10,8 @@ const UserSchema = new Schema({
    id: {
       type: Schema.Types.ObjectId, 
       ref: "User",
-    
-    },
+   
+   },
    name: {
       type: String,
       required: true
