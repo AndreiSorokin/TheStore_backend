@@ -14,13 +14,7 @@ const CategorySchema = new Schema({
     image: {
         type: String,
         required: true
-    },
-    products: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Product"
-        }
-    ]
+    }
 })
 
 export default mongoose.model<CategoryDocument>("Category", CategorySchema)

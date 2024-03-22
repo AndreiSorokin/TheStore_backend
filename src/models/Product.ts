@@ -36,6 +36,6 @@ const ProductSchema = new Schema({
    },
 })
 
-// ProductSchema.index({  })
+ProductSchema.index({ name: "text" })
 
 export default mongoose.model<ProductDocument>("Products", ProductSchema)

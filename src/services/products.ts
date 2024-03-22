@@ -13,7 +13,7 @@ const getAllProducts = async(limit: number, offset: number, searchQuery: string 
    }
 
    if (searchQuery) {
-      query.title = { $regex: searchQuery };
+      query.name = { $regex: searchQuery };
    }
    
    return await Product

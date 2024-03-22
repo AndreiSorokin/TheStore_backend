@@ -1,7 +1,7 @@
 import Category, { CategoryDocument } from "../models/Category"
 
 const getAllCategory = async (): Promise<CategoryDocument[]> => {
-    return await Category.find().populate("products", { name: 1})
+    return await Category.find()
     //add pagination and filtering by name, categories, variants.
 }
 
