@@ -1,7 +1,7 @@
 import validator from "validator";
 import Category, { CategoryDocument } from "../models/Category";
 import User, { UserDocument } from "../models/User";
-import { BadRequestError, NotFoundError } from "../errors/ApiError";
+import {BadRequestError, NotFoundError, UnauthorizedError} from "../errors/ApiError";
 import Order from "../models/Order";
 
 const getAllUser = async (): Promise<UserDocument[]> => {
@@ -62,6 +62,23 @@ const getAllOrdersByUserId = async (userId: string) => {
   return await Order.find({ userId: userId });
 };
 
+const getUserinfo = async (email: string,pass:String) => {
+  if(email==="" || pass===""){
+    throw new BadRequestError(`Please input data properly `);
+  }
+  var user= await User.findOne({ email: email });
+  if(!user){
+    throw new BadRequestError(`User Not Found`);
+  }else{
+    if(user["password"]===pass){
+      return user;
+    }else{
+      throw new UnauthorizedError("Wrong Email & Password")
+    }
+  }
+};
+
+
 export default {
   getAllUser,
   getSingleUser,
@@ -69,4 +86,5 @@ export default {
   updateUser,
   deleteUser,
   getAllOrdersByUserId,
+  getUserinfo,
 };
