@@ -10,6 +10,7 @@ const OrderSchema = new Schema<OrderDocument>({
     required: true,
   },
   createdAt: {
+    default: Date.now(),
     type: Date,
     required: true,
   },
