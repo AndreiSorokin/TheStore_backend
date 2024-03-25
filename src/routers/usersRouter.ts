@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import {
   getAllUser,
   createUser,
@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/", getAllUser);
 router.get("/:id", getSingleUser);
 
-router.post("/create", createUser);
+router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 
