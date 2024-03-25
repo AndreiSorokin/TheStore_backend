@@ -5,7 +5,7 @@ import {
   deleteUser,
   getSingleUser,
   updateUser,
-  getAllOrdersByUserId
+  getAllOrdersByUserId, loginUser
 } from "../controllers/users"
 
 const router = express.Router();
@@ -13,9 +13,12 @@ const router = express.Router();
 router.get("/", getAllUser);
 router.get("/:id", getSingleUser);
 
-router.post("/create", createUser);
+router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
+
+//TODO: Authentication
+router.post("/login", loginUser);
 
 // Todo: Display routes for fetching all orders by User
 router.get("/:userId/orders", getAllOrdersByUserId);

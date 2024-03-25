@@ -4,7 +4,7 @@ import User, { UserDocument } from "../models/User";
 import {
   BadRequestError,
   InternalServerError,
-  NotFoundError,
+  NotFoundError, UnauthorizedError,
 } from "../errors/ApiError";
 import mongoose from "mongoose";
 
@@ -119,5 +119,32 @@ export async function getAllOrdersByUserId(
     }
 
     next(new InternalServerError());
+  }
+}
+
+// Todo: Login User
+
+/*{
+  "email":"xyz@gmail.com",
+    "password":"123546"
+
+}*/
+export async function loginUser(
+    request: Request,
+    response: Response,
+    next: NextFunction
+) {
+
+  try {
+    const login_data = request.body;
+    const user = await userService.getUserinfo(login_data["email"],login_data["password"]);
+    response.status(200).json(user);
+  } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      response.status(400).json({
+        message: error.message,
+      });
+    }
+
   }
 }
