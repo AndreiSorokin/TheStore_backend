@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 
 const userInfo = [
-    { username: 'admin', name: 'admin', email: 'admin@mail.com', role: 'admin', access: { read: 1, edit: 1, update: 1, delete: 1 } },
-    { username: 'customer', name: 'customer', email: 'customer@mail.com', role: 'customer', access: { read: 0, edit: 0, update: 0, delete: 0 } },
+    { username: 'admin', name: 'admin', email: 'admin@mail.com', role: 'ADMIN', access: { read: 1, edit: 1, update: 1, delete: 1 } },
+    { username: 'customer', name: 'customer', email: 'customer@mail.com', role: 'CUSTOMER', access: { read: 0, edit: 0, update: 0, delete: 0 } },
 ];
 
 interface CustomRequest extends Request {

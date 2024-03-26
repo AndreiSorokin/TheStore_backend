@@ -12,13 +12,12 @@ const router = express.Router();
 
 router.get("/", getAllUser);
 router.get("/:id", getSingleUser);
+router.post("/login", loginUser);
+router.post("/registration", createUser);
 
 router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
-
-//TODO: Authentication
-router.post("/login", loginUser);
 
 // Todo: Display routes for fetching all orders by User
 router.get("/:userId/orders", getAllOrdersByUserId);

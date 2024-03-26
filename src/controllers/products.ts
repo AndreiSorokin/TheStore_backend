@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import Product from "../models/Product"
 import productsService from "../services/products"
-import ProductModel, { ProductDocument } from "../models/Product";
+import { ProductDocument } from "../models/Product";
 import { User } from "../misc/types";
 import { BadRequestError, ForbiddenError, InternalServerError, NotFoundError } from "../errors/ApiError";
 import Category from "../models/Category";
@@ -52,7 +52,7 @@ export async function createProduct(request: Request & { user?: User }, response
    try {
       const userRole = request.user?.role;
 
-      if(userRole === 'admin') {
+      if(userRole === 'ADMIN') {
       const { name, price, description, category, image, size } = request.body;
       
       const categoryDoc = await Category.findOne({ name: category });

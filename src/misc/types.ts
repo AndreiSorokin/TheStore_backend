@@ -36,13 +36,10 @@ export type Order = {
   orderItems: OrderItem[];
 };
 
-export type User = {
-  id: Types.ObjectId;
-  name: string;
-  email: number;
-  password: string;
-  role: string;
-};
+export enum Role {
+  ADMIN = "ADMIN",
+  CUSTOMER = "CUSTOMER"
+}
 
 export type UserToRegistar = {
   username: string;
@@ -50,4 +47,10 @@ export type UserToRegistar = {
   firstName: string;
   lastName: string;
   email: string;
+};
+
+export type User = UserToRegistar & {
+  id: Types.ObjectId;
+  name: string;
+  role: Role;
 };

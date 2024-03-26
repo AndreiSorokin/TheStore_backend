@@ -1,17 +1,13 @@
 import mongoose, { Document, Model } from "mongoose";
 
-import { User } from "../misc/types";
+import { Role, User } from "../misc/types";
 
 const Schema = mongoose.Schema;
 
 export type UserDocument = Document & User
 
 const UserSchema = new Schema({
-   name: {
-      type: String,
-      required: true
-   },
-   email: {
+   username: {
       type: String,
       required: true
    },
@@ -19,10 +15,24 @@ const UserSchema = new Schema({
       type: String,
       required: true
    },
+   firstName: {
+      type: String,
+      required: true
+   },
+   lastName: {
+      type: String,
+      required: true
+   },
+   email: {
+      type: String,
+      required: true,
+      unique: true
+   },
    role: {
       type: String,
-      ref: "Role"
-   },
+      enum: [Role.ADMIN, Role.CUSTOMER],
+      default: Role.CUSTOMER
+   }
    
 })
 

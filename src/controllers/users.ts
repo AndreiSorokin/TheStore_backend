@@ -1,4 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
+import jwt from 'jsonwebtoken';
+import bcrypt from "bcrypt";
+import validator from "validator";
+
 import userService from "../services/user";
 import User, { UserDocument } from "../models/User";
 import {
@@ -6,7 +11,6 @@ import {
   InternalServerError,
   NotFoundError, UnauthorizedError,
 } from "../errors/ApiError";
-import mongoose from "mongoose";
 
 export async function getAllUser(
   request: Request,
@@ -50,11 +54,30 @@ export async function getSingleUser(
 }
 
 export async function createUser(request: Request, response: Response) {
-  const data = await userService.createUser(new User(request.body));
-  if (typeof data === "string") {
-    return response.status(404).json({ message: data });
+  const { username, password, firstName, lastName, email, role } = request.body
+
+  if (!username || !password || !firstName || !lastName || !email) {
+    throw new BadRequestError("Fill out all the fields")
+  } else if (!validator.isEmail(email)) {
+    throw new BadRequestError("Please Enter a valid email")
   }
-  response.status(201).json(data);
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+  const user = new User({
+    username: username,
+    password: hashedPassword,
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    role: role || 'CUSTOMER'
+  })
+
+  try {
+    const newUser = await userService.createUser(user)
+    response.status(201).json({ newUser })
+  } catch (error) {
+    throw new InternalServerError("Something went wrong")
+  }
 }
 
 export async function updateUser(request: Request, response: Response) {
@@ -83,6 +106,7 @@ export async function updateUser(request: Request, response: Response) {
   }
 }
 
+// ToDo: fix deletion
 export async function deleteUser(request: Request, response: Response) {
   const id = request.params.id;
 
@@ -122,27 +146,41 @@ export async function getAllOrdersByUserId(
   }
 }
 
-// Todo: Login User
 
-/*{
-  "email":"xyz@gmail.com",
-    "password":"123546"
-
-}*/
-export async function loginUser(
-    request: Request,
-    response: Response,
-    next: NextFunction
-) {
-
+export async function loginUser(request: Request, response: Response) {
   try {
-    const login_data = request.body;
-    const user = await userService.getUserinfo(login_data["email"],login_data["password"]);
-    response.status(200).json(user);
+    const { email, password } = request.body
+    const userData = await userService.getUserByEmail(email);
+    const hashedPassword = userData.password
+    
+    const isPasswordCorrect = await bcrypt.compare(password.toString(), hashedPassword.toString())
+
+    if(!isPasswordCorrect) {
+      throw new BadRequestError('Wrong password')
+    }
+
+    const token = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, { expiresIn: '1h' })
+
+    const refreshToken = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, { expiresIn: '20d' })
+
+    response.status(200).json({ token: token, refreshToken: refreshToken, userData } );
+
   } catch (error) {
-    if (error instanceof UnauthorizedError) {
+    if (error instanceof BadRequestError) {
       response.status(400).json({
         message: error.message,
+      });
+    } else if (error instanceof UnauthorizedError) {
+      response.status(401).json({
+        message: error.message,
+      });
+    } else if(error instanceof NotFoundError) {
+      response.status(404).json({
+        message: error.message,
+      });
+    } else {
+      response.status(500).json({
+        message: "Internal server error",
       });
     }
 
