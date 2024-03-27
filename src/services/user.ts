@@ -3,7 +3,7 @@ import { BadRequestError, NotFoundError } from "../errors/ApiError";
 import Order from "../models/Order";
 
 const getAllUser = async (): Promise<UserDocument[]> => {
-  return await User.find();
+  return await User.find().populate("orders");
 };
 
 const getSingleUser = async (id: string): Promise<UserDocument | undefined> => {

@@ -32,8 +32,13 @@ const UserSchema = new Schema({
       type: String,
       enum: [Role.ADMIN, Role.CUSTOMER],
       default: Role.CUSTOMER
-   }
-   
+   },
+   orders: [
+      {
+         type: Schema.Types.ObjectId,
+         ref: "Orders",
+      }
+   ]
 })
 
 export default mongoose.model<UserDocument>("User", UserSchema)

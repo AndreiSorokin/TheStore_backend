@@ -53,4 +53,5 @@ export type User = UserToRegistar & {
   id: Types.ObjectId;
   name: string;
   role: Role;
+  orders: Order[];
 };
