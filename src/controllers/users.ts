@@ -82,12 +82,13 @@ export async function createUser(request: Request, response: Response) {
 
 export async function updateUser(request: Request, response: Response) {
   const id = request.params.id;
-  const user: Partial<UserDocument> = request.body;
+  // const user: Partial<UserDocument> = request.body;
+  const { firstName, lastName, email } = request.body
 
   try {
     const updateUser: UserDocument | null = await userService.updateUser(
       id,
-      user
+      { firstName, lastName, email }
     );
     response.status(200).json(updateUser);
   } catch (error) {
