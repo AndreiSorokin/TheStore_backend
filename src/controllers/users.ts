@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import { v4 as uuid } from "uuid";
 
 import userService from "../services/user";
 import User, { UserDocument } from "../models/User";
 import {
   BadRequestError,
   InternalServerError,
-  NotFoundError, UnauthorizedError,
+  NotFoundError,
+  UnauthorizedError,
 } from "../errors/ApiError";
 
 export async function getAllUser(
@@ -54,42 +56,43 @@ export async function getSingleUser(
 }
 
 export async function createUser(request: Request, response: Response) {
-  const { username, password, firstName, lastName, email, role } = request.body
+  const { username, password, firstName, lastName, email, role } = request.body;
 
   if (!username || !password || !firstName || !lastName || !email) {
-    throw new BadRequestError("Fill out all the fields")
+    throw new BadRequestError("Fill out all the fields");
   } else if (!validator.isEmail(email)) {
-    throw new BadRequestError("Please Enter a valid email")
+    throw new BadRequestError("Please Enter a valid email");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const hashedPassword = await bcrypt.hash(password, 10);
   const user = new User({
     username: username,
     password: hashedPassword,
     firstName: firstName,
     lastName: lastName,
     email: email,
-    role: role || 'CUSTOMER'
-  })
+    role: role || "CUSTOMER",
+  });
 
   try {
-    const newUser = await userService.createUser(user)
-    response.status(201).json({ newUser })
+    const newUser = await userService.createUser(user);
+    response.status(201).json({ newUser });
   } catch (error) {
-    throw new InternalServerError("Something went wrong")
+    throw new InternalServerError("Something went wrong");
   }
 }
 
 export async function updateUser(request: Request, response: Response) {
   const id = request.params.id;
   // const user: Partial<UserDocument> = request.body;
-  const { firstName, lastName, email } = request.body
+  const { firstName, lastName, email } = request.body;
 
   try {
-    const updateUser: UserDocument | null = await userService.updateUser(
-      id,
-      { firstName, lastName, email }
-    );
+    const updateUser: UserDocument | null = await userService.updateUser(id, {
+      firstName,
+      lastName,
+      email,
+    });
     response.status(200).json(updateUser);
   } catch (error) {
     if (error instanceof BadRequestError) {
@@ -147,25 +150,34 @@ export async function getAllOrdersByUserId(
   }
 }
 
-
 export async function loginUser(request: Request, response: Response) {
   try {
-    const { email, password } = request.body
+    const { email, password } = request.body;
     const userData = await userService.getUserByEmail(email);
-    const hashedPassword = userData.password
-    
-    const isPasswordCorrect = await bcrypt.compare(password.toString(), hashedPassword.toString())
+    const hashedPassword = userData.password;
 
-    if(!isPasswordCorrect) {
-      throw new BadRequestError('Wrong password')
+    const isPasswordCorrect = await bcrypt.compare(
+      password.toString(),
+      hashedPassword.toString()
+    );
+
+    if (!isPasswordCorrect) {
+      throw new BadRequestError("Wrong password");
     }
 
-    const token = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, { expiresIn: '1h' })
+    const token = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, {
+      expiresIn: "1h",
+    });
 
-    const refreshToken = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, { expiresIn: '20d' })
+    const refreshToken = jwt.sign(
+      { email: userData.email },
+      process.env.SECRET_KEY!,
+      { expiresIn: "20d" }
+    );
 
-    response.status(200).json({ token: token, refreshToken: refreshToken, userData } );
-
+    response
+      .status(200)
+      .json({ token: token, refreshToken: refreshToken, userData });
   } catch (error) {
     if (error instanceof BadRequestError) {
       response.status(400).json({
@@ -175,7 +187,7 @@ export async function loginUser(request: Request, response: Response) {
       response.status(401).json({
         message: error.message,
       });
-    } else if(error instanceof NotFoundError) {
+    } else if (error instanceof NotFoundError) {
       response.status(404).json({
         message: error.message,
       });
@@ -184,6 +196,40 @@ export async function loginUser(request: Request, response: Response) {
         message: "Internal server error",
       });
     }
+  }
+}
 
+export async function forgotPassword(request: Request, response: Response) {
+  try {
+    const { email } = request.body;
+    const userData = await userService.getUserByEmail(email);
+    const code: string = uuid();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      throw new BadRequestError("Invalid email address.");
+    }
+
+    const verificationLink = `localhost:8080/verify?code=${code}`;
+
+    await userService.sendVerificationEmail(email, verificationLink);
+
+    response
+      .status(200)
+      .json({ message: "Verification email sent successfully." });
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      response.status(400).json({
+        message: error.message,
+      });
+    } else if (error instanceof NotFoundError) {
+      response.status(404).json({
+        message: error.message,
+      });
+    } else {
+      response.status(500).json({
+        message: "Failed to send verification email.",
+      });
+    }
   }
 }

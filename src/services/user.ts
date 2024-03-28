@@ -2,6 +2,8 @@ import User, { UserDocument } from "../models/User";
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
 import Order from "../models/Order";
 
+import nodemailer from "nodemailer";
+
 const getAllUser = async (): Promise<UserDocument[]> => {
   return await User.find().populate("orders");
 };
@@ -14,7 +16,9 @@ const getSingleUser = async (id: string): Promise<UserDocument | undefined> => {
   throw new NotFoundError();
 };
 
-const createUser = async (user: UserDocument): Promise<UserDocument | string> => {
+const createUser = async (
+  user: UserDocument
+): Promise<UserDocument | string> => {
   const { email } = user;
 
   const isEmailAlreadyAdded = await User.findOne({ email });
@@ -55,18 +59,48 @@ const getAllOrdersByUserId = async (userId: string) => {
 };
 
 const getUserByEmail = async (email: string): Promise<UserDocument> => {
-  if(email===""){
+  if (email === "") {
     throw new BadRequestError(`Please input data properly`);
   }
   const user = await User.findOne({ email: email });
 
-  if(!user){
-      throw new NotFoundError(`User Not Found`);
+  if (!user) {
+    throw new NotFoundError(`User Not Found`);
   }
 
   return user;
 };
 
+const sendVerificationEmail = async (
+  email: string,
+  verificationLink: string
+): Promise<any> => {
+  if (!email) {
+    throw new BadRequestError("Please provide your email");
+  }
+
+  //  Todo: Create a transporter using SMTP server details
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "lamngo606@gmail.com",
+      pass: "nlrpjsxylajeyhnp",
+    },
+  });
+
+  // Todo: create the email message
+  const mailOptions = {
+    from: "your-email@gmail.com",
+    to: email,
+    subject: "Email Verification",
+    text: `Please verify your email by clicking the following link: ${verificationLink}`,
+  };
+
+  return await transporter.sendMail(mailOptions);
+};
 
 export default {
   getAllUser,
@@ -76,4 +110,5 @@ export default {
   deleteUser,
   getAllOrdersByUserId,
   getUserByEmail,
+  sendVerificationEmail,
 };
