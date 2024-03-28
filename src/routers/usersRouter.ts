@@ -1,4 +1,6 @@
 import express from "express";
+import { Request, Response, NextFunction } from 'express';
+
 import {
   getAllUser,
   createUser,
@@ -10,51 +12,59 @@ import {
 
 const router = express.Router();
 
-router.get("/", getAllUser);
-router.get("/:id", getSingleUser);
 router.post("/login", loginUser);
 router.post("/registration", createUser);
 
-router.post("/", createUser);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
-
 // Todo: Display routes for fetching all orders by User
 router.get("/:userId/orders", getAllOrdersByUserId);
-/**** added by muzahid || for demo purpose */
 
-// import checkUserRole from '../middlewares/checkUserRole';
+/**** Admin Logic || added by muzahid ****/
 
-// interface CustomRequest extends Request {
-//   userRole?: string
-//   userInfo?: any;
-// }
+interface CustomRequest extends Request {
+  userRole?: string
+  userInfo?: { read: number, create: number, update: number, delete: number };
+}
 
-// router.use('/:username', function (req: Request, res: Response, next: NextFunction) {
-//   const username = req.params.username;
-//   console.log('username => ', username);
-//   checkUserRole(username)(req as CustomRequest, res, next);
-// }, (req: CustomRequest, res, next: NextFunction) => {
-//   if (Object.keys(req.userInfo).length > 0) {
-//     if (req.userInfo.access.read) {
-//       router.get("/", getAllUser);
-//       router.get("/:id", getSingleUser);
-//     }
-//     if (req.userInfo.access.create) {
-//       router.post("/create", createUser);
-//     }
-//     if (req.userInfo.access.update) {
-//       router.put("/:id", updateUser);
-//     }
-//     if (req.userInfo.access.delete) {
-//       router.delete("/:id", deleteUser);
-//     }
-//     next();
-//   } else {
-//     res.status(403).json({ message: 'Forbidden' });
-//   }
-// });
+router.get('/', (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (req.userInfo?.read === 1) {
+    getAllUser(req, res, next);
+  } else {
+    res.status(403).json({ message: 'Forbidden' });
+  }
+});
 
-/**** added by muzahid || for demo purpose */
+router.get('/:id', (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (req.userInfo?.read === 1) {
+    getSingleUser(req, res, next);
+  } else {
+    res.status(403).json({ message: 'Forbidden' });
+  }
+});
+
+router.post('/', (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (req.userInfo?.create === 1) {
+    createUser(req, res);
+  } else {
+    res.status(403).json({ message: 'Forbidden' });
+  }
+});
+
+router.put('/:id', (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (req.userInfo?.update === 1) {
+    updateUser(req, res);
+  } else {
+    res.status(403).json({ message: 'Forbidden' });
+  }
+});
+
+router.delete('/:id', (req: CustomRequest, res: Response, next: NextFunction) => {
+  if (req.userInfo?.delete === 1) {
+    deleteUser(req, res);
+  } else {
+    res.status(403).json({ message: 'Forbidden' });
+  }
+});
+
+/**** Admin Logic || added by muzahid ****/
 
 export default router;
