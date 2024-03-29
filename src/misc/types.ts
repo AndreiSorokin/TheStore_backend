@@ -55,3 +55,8 @@ export type User = UserToRegistar & {
   role: Role;
   orders: Order[];
 };
+
+export type Payload = {
+  email: string;
+  _id: string;
+}
