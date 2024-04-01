@@ -15,8 +15,14 @@ export const jwtStrategy = new JwtStrategy(
       secretOrKey: JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
    },
-   async () => {
-
+   async (payload: Payload, done: any) => {
+      const userEmail = payload.email;
+      try {
+        const user = await userService.getUserByEmail(userEmail);
+        done(null, user);
+      } catch (error) {
+        done(error, false);
+      }
    }
 )
 

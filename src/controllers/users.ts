@@ -128,28 +128,6 @@ export async function deleteUser(request: Request, response: Response) {
   }
 }
 
-// Todo: Fetching all orders by user
-export async function getAllOrdersByUserId(
-  request: Request,
-  response: Response,
-  next: NextFunction
-) {
-  try {
-    const userId = request.params.userId;
-    const orders = await userService.getAllOrdersByUserId(userId);
-
-    response.status(200).json(orders);
-  } catch (error) {
-    if (error instanceof BadRequestError) {
-      response.status(400).json({
-        message: `Missing userId`,
-      });
-    }
-
-    next(new InternalServerError());
-  }
-}
-
 export async function loginUser(request: Request, response: Response) {
   try {
     const { email, password } = request.body;

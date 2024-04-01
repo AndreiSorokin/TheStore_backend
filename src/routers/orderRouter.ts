@@ -4,23 +4,37 @@ import {
   createOrder,
   deleteOrder,
   getAllOrders,
+  getAllOrdersByUserId,
   getOrderById,
   updateOrder,
 } from "../controllers/orders";
+import passport from "passport";
 
 const router = express.Router();
 
 // Lam
 
-// get all orders
+// Todo: get all orders
 router.get("/", getAllOrders);
-// create order
-router.post("/", createOrder);
-// get order
+// Todo: create order
+router.post(
+  "/:userId",
+  passport.authenticate("jwt", { session: false }),
+  createOrder
+);
+
+// Todo: fetch all orders by User
+router.get(
+  "/:userId",
+  passport.authenticate("jwt", { session: false }),
+  getAllOrdersByUserId
+);
+
+// Todo: get single order
 router.get("/:id", getOrderById);
-// update order
+// Todo: update order
 router.put("/:id", updateOrder);
-// delete order
+// Todo: delete order
 router.delete("/:id", deleteOrder);
 
 export default router;
