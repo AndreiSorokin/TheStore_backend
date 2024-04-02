@@ -41,7 +41,7 @@ import { UserDocument } from "../models/User";
 const adminCheck = (...roles: string[]) => {
   return (request: Request, response: Response, next: NextFunction) => {
     const userInformation = request.user as UserDocument;
-
+    console.log(userInformation);
     if (!roles.includes(userInformation?.role)) {
       throw new ForbiddenError("Unauthorized to access this route");
     }
