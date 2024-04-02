@@ -16,6 +16,7 @@ export const jwtStrategy = new JwtStrategy(
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
    },
    async (payload: Payload, done: any) => {
+      console.log('JWT Payload:', payload);
       const userEmail = payload.email;
       try {
         const user = await userService.getUserByEmail(userEmail);

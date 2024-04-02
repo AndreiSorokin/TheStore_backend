@@ -32,14 +32,17 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/server.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "test": "jest --runInBand --forceExit --detectOpenHandles --coverage  --verbose false"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/passport-google-id-token": "^0.4.3",
     "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
-    "@types/validator": "^13.11.9"
+    "@types/validator": "^13.11.9",
+    "supertest": "^6.3.4"
   }
 }

@@ -154,9 +154,12 @@ export async function loginUser(request: Request, response: Response) {
     const token = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, {
       expiresIn: "1h",
     });
+    console.log('role in controllers',userData.role)
 
     const refreshToken = jwt.sign(
-      { email: userData.email },
+      { email: userData.email,
+        role: userData.role
+      },
       process.env.SECRET_KEY!,
       { expiresIn: "20d" }
     );
@@ -164,6 +167,7 @@ export async function loginUser(request: Request, response: Response) {
     response
       .status(200)
       .json({ token: token, refreshToken: refreshToken, userData });
+
   } catch (error) {
     if (error instanceof BadRequestError) {
       response.status(400).json({

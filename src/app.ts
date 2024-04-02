@@ -11,7 +11,6 @@ import errorHandler from "./middlewares/errorHandler";
 // import checkUserRole from "./middlewares/adminCheck";
 import { googleStrategy, jwtStrategy } from "./config/passport";
 
-import { authenticateRefreshToken, authenticateToken, authenticateJwtToken, } from "./middlewares/jwtMiddleware";
 import refreshToken from "./controllers/auth";
 import jwtApiRouter from './routers/jwtApiRouter';
 
@@ -38,9 +37,9 @@ app.use("/api/v1/users", usersRouter);
 // );
 
 // JWT || muzahid
-app.use("/", authenticateToken, jwtApiRouter);
-app.post("/refresh-token", authenticateRefreshToken, refreshToken);
-app.post("/verify-token", authenticateJwtToken,
+app.use("/", jwtApiRouter);
+app.post("/refresh-token", refreshToken);
+app.post("/verify-token",
   (req: Request, res: Response, next: NextFunction) => {
     console.log("verify-token", req.ip);
     return res.json({ status: 200, message: "Verified" });

@@ -21,6 +21,39 @@ router.post("/registration", createUser);
 
 router.route("/forgot-password").post(forgotPassword);
 
+// Lam version
+
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  adminCheck(Role.ADMIN),
+  getAllUser
+);
+
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  getSingleUser
+);
+
+router.post("/", createUser);
+
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  updateUser
+);
+
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  adminCheck(Role.ADMIN),
+  deleteUser
+);
+
+export default router;
+
 /**** Admin Logic || added by muzahid ****/
 
 // interface CustomRequest extends Request {
@@ -73,34 +106,3 @@ router.route("/forgot-password").post(forgotPassword);
 
 /**** Admin Logic || added by muzahid ****/
 
-// Lam version
-
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
-  getAllUser
-);
-
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  getSingleUser
-);
-
-router.post("/", createUser);
-
-router.put(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  updateUser
-);
-
-router.delete(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
-  deleteUser
-);
-
-export default router;
