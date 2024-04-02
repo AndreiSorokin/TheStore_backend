@@ -4,7 +4,6 @@ import { UserDocument } from "../models/User";
 import { Role, User } from "../misc/types";
 
 const adminCheck = (...roles: string[]) => {
-  console.log('adminCheck')
   return (request: Request, response: Response, next: NextFunction) => {
     const userInformation = request.user as UserDocument;
     console.log('userInformation', userInformation)

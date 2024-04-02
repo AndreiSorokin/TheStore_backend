@@ -12,8 +12,6 @@ import passport from "passport";
 
 const router = express.Router();
 
-console.log('Role', Role)
-
 router.get("/", getAllProducts)
 router.get("/:id", getOneProduct)
 router.post("/", passport.authenticate('jwt', { session: false }), adminCheck(Role.ADMIN), createProduct);

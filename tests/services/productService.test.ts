@@ -6,7 +6,14 @@ import productServices from "../../src/services/products"
 import Product from"../../src/models/Product"
 
 async function createProduct() {
-   const product = new Product({ name: "Name", price: 111, description: "description", category: "category1", image: "img1", size: "Large" });
+   const product = new Product({ 
+      name: "name1", 
+      price: 111, 
+      description: "description", 
+      category: "Clothes", 
+      image: "img1", 
+      size: "Large" 
+   });
    return await productServices.createProduct(product);
 }
 
@@ -24,6 +31,7 @@ describe('products services test', () => {
    afterEach(async () => {
       await mongoHelper.clearDatabase();
    });
+
    it("should return a list of products", async() => {
       await createProduct()
 
@@ -31,4 +39,10 @@ describe('products services test', () => {
       expect(productList.length).toEqual(1);
       expect(productList[0]).toHaveProperty("Name");
    })
+
+   // it("should create a product", async () => {
+   //    const newProduct = await createProduct();
+   //    expect(newProduct).toHaveProperty("_id");
+   //    expect(newProduct).toHaveProperty("name");
+   // });
 })

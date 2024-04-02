@@ -151,7 +151,7 @@ export async function loginUser(request: Request, response: Response) {
       throw new BadRequestError("Wrong password");
     }
 
-    const token = jwt.sign({ email: userData.email }, process.env.SECRET_KEY!, {
+    const token = jwt.sign({ email: userData.email }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
     console.log('role in controllers',userData.role)
@@ -160,7 +160,7 @@ export async function loginUser(request: Request, response: Response) {
       { email: userData.email,
         role: userData.role
       },
-      process.env.SECRET_KEY!,
+      process.env.JWT_SECRET!,
       { expiresIn: "20d" }
     );
 

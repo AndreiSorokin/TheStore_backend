@@ -20,6 +20,7 @@ export const jwtStrategy = new JwtStrategy(
       const userEmail = payload.email;
       try {
         const user = await userService.getUserByEmail(userEmail);
+        console.log(user)
         done(null, user);
       } catch (error) {
         done(error, false);
