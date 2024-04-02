@@ -8,15 +8,12 @@ import usersRouter from "./routers/usersRouter";
 import categoryRouter from "./routers/categoryRouter";
 import orderRouter from "./routers/orderRouter";
 import errorHandler from "./middlewares/errorHandler";
-import checkUserRole from "./middlewares/adminCheck";
+// import checkUserRole from "./middlewares/adminCheck";
 import { googleStrategy, jwtStrategy } from "./config/passport";
-// import {
-//   authenticateRefreshToken,
-//   authenticateToken,
-//   authenticateJwtToken,
-// } from "./middlewares/jwtMiddleware";
 
-// const auth = require("./app/controllers/auth");
+import { authenticateRefreshToken, authenticateToken, authenticateJwtToken, } from "./middlewares/jwtMiddleware";
+import refreshToken from "./controllers/auth";
+import jwtApiRouter from './routers/jwtApiRouter';
 
 dotenv.config({ path: ".env" });
 
@@ -27,6 +24,9 @@ passport.use(jwtStrategy);
 passport.use(googleStrategy);
 
 app.use("/api/v1/products", productsRouter);
+app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/users", usersRouter);
 
 // app.use(
 //   "/api/v1/:username/users",
@@ -37,21 +37,15 @@ app.use("/api/v1/products", productsRouter);
 //   usersRouter
 // );
 
-app.use("/api/v1/categories", categoryRouter);
-app.use("/api/v1/orders", orderRouter);
-app.use("/api/v1/users", usersRouter);
-
 // JWT || muzahid
-// app.use("/", authenticateToken, require("./routers/api"));
-// app.post("/refresh-token", authenticateRefreshToken, auth.refreshToken);
-// app.post(
-//   "/verify-token",
-//   authenticateJwtToken,
-//   (req: Request, res: Response, next: NextFunction) => {
-//     console.log("verify-token", req.ip);
-//     return res.json({ status: 200, message: "Verified" });
-//   }
-// );
+app.use("/", authenticateToken, jwtApiRouter);
+app.post("/refresh-token", authenticateRefreshToken, refreshToken);
+app.post("/verify-token", authenticateJwtToken,
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log("verify-token", req.ip);
+    return res.json({ status: 200, message: "Verified" });
+  }
+);
 
 app.use(errorHandler);
 
