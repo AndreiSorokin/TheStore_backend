@@ -10,7 +10,7 @@ import {
   loginUser,
   forgotPassword,
 } from "../controllers/users";
-import checkUserRole from "../middlewares/checkUserRole";
+import adminCheck from "../middlewares/adminCheck";
 import { Role } from "../misc/types";
 import passport from "passport";
 
@@ -78,30 +78,28 @@ router.route("/forgot-password").post(forgotPassword);
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  checkUserRole(Role.ADMIN),
+  adminCheck(Role.ADMIN),
   getAllUser
 );
 
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  checkUserRole(Role.ADMIN, Role.CUSTOMER),
   getSingleUser
 );
 
-router.post("/", passport.authenticate("jwt", { session: false }), createUser);
+router.post("/", createUser);
 
 router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  checkUserRole(Role.ADMIN, Role.CUSTOMER),
   updateUser
 );
 
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  checkUserRole(Role.ADMIN),
+  adminCheck(Role.ADMIN),
   deleteUser
 );
 

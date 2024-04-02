@@ -46,7 +46,7 @@ export async function getSingleUser(
       });
     } else if (error instanceof mongoose.Error.CastError) {
       response.status(404).json({
-        message: "User not found",
+        message: "Wrong format id",
       });
       return;
     }
@@ -101,7 +101,7 @@ export async function updateUser(request: Request, response: Response) {
       response.status(404).json({ error: "User not found" });
     } else if (error instanceof mongoose.Error.CastError) {
       response.status(404).json({
-        message: "User not found",
+        message: "Wrong format id",
       });
       return;
     } else {
