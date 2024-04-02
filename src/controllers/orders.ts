@@ -26,23 +26,30 @@ export async function getAllOrders(
 
 // Creating an new order by User
 export async function createOrder(
-  request: Request & { user?: User },
+  request: Request,
   response: Response,
   next: NextFunction
 ) {
   try {
-    if (request.user) {
-      const userId = JSON.stringify(request.user.id);
-      const data = new Order(...request.body, userId);
-      const newOrder = await ordersService.createOrder(data, userId);
-      response.status(201).json(newOrder);
+    const userId = request.params.userId;
+    if (!userId) {
+      throw new NotFoundError("Missing userId!");
     }
+
+    const data = new Order(...request.body, userId);
+    const newOrder = await ordersService.createOrder(data, userId);
+
+    response.status(201).json(newOrder);
   } catch (error) {
     if (error instanceof BadRequestError) {
       response.status(400).json({
         message: `Missing order information or userId!`,
       });
       return;
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(404).json({
+        message: "Wrong user id format",
+      });
     }
     next(new InternalServerError());
   }
@@ -132,6 +139,28 @@ export async function deleteOrder(
     } else if (error instanceof BadRequestError) {
       response.status(400).json({
         message: `Missing orderId`,
+      });
+    }
+
+    next(new InternalServerError());
+  }
+}
+
+// Todo: Fetching all orders by user
+export async function getAllOrdersByUserId(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = request.params.userId;
+    const orders = await ordersService.getAllOrdersByUserId(userId);
+
+    response.status(200).json(orders);
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      response.status(400).json({
+        message: `Missing userId`,
       });
     }
 

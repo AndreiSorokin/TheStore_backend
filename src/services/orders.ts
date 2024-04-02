@@ -64,10 +64,18 @@ const updateOrder = async (
   throw new NotFoundError(`Can not find order with ${id}`);
 };
 
+const getAllOrdersByUserId = async (userId: string) => {
+  if (!userId) {
+    throw new BadRequestError(`Please provide userId!`);
+  }
+  return await Order.find({ userId: userId });
+};
+
 export default {
   getAllOrders,
   createOrder,
   getOrderById,
   deleteOrderById,
   updateOrder,
+  getAllOrdersByUserId,
 };

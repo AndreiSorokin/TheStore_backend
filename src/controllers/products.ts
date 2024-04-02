@@ -1,51 +1,70 @@
 import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 
-import Product from "../models/Product"
-import productsService from "../services/products"
+import Product from "../models/Product";
+import productsService from "../services/products";
 import { ProductDocument } from "../models/Product";
 import { User } from "../misc/types";
-import { BadRequestError, ForbiddenError, InternalServerError, NotFoundError } from "../errors/ApiError";
+import {
+  BadRequestError,
+  ForbiddenError,
+  InternalServerError,
+  NotFoundError,
+} from "../errors/ApiError";
 import Category from "../models/Category";
 
-export async function getAllProducts(request: Request, response: Response, next: NextFunction) {
-   try {
-      const { limit = 10, offset = 0, searchQuery = '', minPrice = 0, maxPrice = Infinity } = request.query;
+export async function getAllProducts(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const {
+      limit = 10,
+      offset = 0,
+      searchQuery = "",
+      minPrice = 0,
+      maxPrice = Infinity,
+    } = request.query;
 
-      const productList = await productsService.getAllProducts(
-         Number(limit),
-         Number(offset),
-         searchQuery as string,
-         !isNaN(Number(minPrice)) ? Number(minPrice) : 0,
-         !isNaN(Number(maxPrice)) ? Number(maxPrice) : Infinity
-      );
+    const productList = await productsService.getAllProducts(
+      Number(limit),
+      Number(offset),
+      searchQuery as string,
+      !isNaN(Number(minPrice)) ? Number(minPrice) : 0,
+      !isNaN(Number(maxPrice)) ? Number(maxPrice) : Infinity
+    );
 
-      const count = productList.length
-      response.status(200).json({ totalCount: count, products: productList })
-   } catch (error) {
-      console.log("error",error)
-      next(new InternalServerError("Internal error"))
-   }
+    const count = productList.length;
+    response.status(200).json({ totalCount: count, products: productList });
+  } catch (error) {
+    console.log("error", error);
+    next(new InternalServerError("Internal error"));
+  }
 }
 
-export async function getOneProduct(request: Request, response: Response, next: NextFunction) {
-   try {
-      const product = await productsService.getOneProduct(request.params.id)
-      response.status(201).json(product)
-   } catch (error) {
-      if(error instanceof NotFoundError) {
-         response.status(404).json({
-            message: "Product not found",
-         });
-      } else if(error instanceof mongoose.Error.CastError) {
-         response.status(404).json({
-            message: "Product not found",
-         });
-         return;
-      }
+export async function getOneProduct(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const product = await productsService.getOneProduct(request.params.id);
+    response.status(201).json(product);
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      response.status(404).json({
+        message: "Product not found",
+      });
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(404).json({
+        message: "Product not found",
+      });
+      return;
+    }
 
-      next(new InternalServerError());
-   }
+    next(new InternalServerError());
+  }
 }
 
 export async function createProduct(request: Request & { user?: User }, response: Response, next: NextFunction) {

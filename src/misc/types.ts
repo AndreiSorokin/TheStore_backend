@@ -22,7 +22,6 @@ export type Product = {
   size: Size;
 };
 
-
 export type OrderItem = {
   quantity: number;
   productId: Types.ObjectId;
@@ -38,10 +37,10 @@ export type Order = {
 
 export enum Role {
   ADMIN = "ADMIN",
-  CUSTOMER = "CUSTOMER"
+  CUSTOMER = "CUSTOMER",
 }
 
-export type UserToRegistar = {
+export type UserToRegister = {
   username: string;
   password: string;
   firstName: string;
@@ -49,7 +48,7 @@ export type UserToRegistar = {
   email: string;
 };
 
-export type User = UserToRegistar & {
+export type User = UserToRegister & {
   id: Types.ObjectId;
   name: string;
   role: Role;
@@ -59,4 +58,4 @@ export type User = UserToRegistar & {
 export type Payload = {
   email: string;
   _id: string;
-}
+};

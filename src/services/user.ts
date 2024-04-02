@@ -1,6 +1,5 @@
 import User, { UserDocument } from "../models/User";
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
-import Order from "../models/Order";
 
 import nodemailer from "nodemailer";
 
@@ -49,13 +48,6 @@ const deleteUser = async (id: string) => {
     return user;
   }
   throw new NotFoundError();
-};
-
-const getAllOrdersByUserId = async (userId: string) => {
-  if (!userId) {
-    throw new BadRequestError(`Please provide userId!`);
-  }
-  return await Order.find({ userId: userId });
 };
 
 const getUserByEmail = async (email: string): Promise<UserDocument> => {
@@ -108,7 +100,6 @@ export default {
   createUser,
   updateUser,
   deleteUser,
-  getAllOrdersByUserId,
   getUserByEmail,
   sendVerificationEmail,
 };
