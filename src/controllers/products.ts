@@ -67,71 +67,80 @@ export async function getOneProduct(
   }
 }
 
-export async function createProduct(request: Request, response: Response) {
-  try {
-    const { name, price, description, category, image, size } = request.body;
+export async function createProduct(request: Request & { user?: User }, response: Response, next: NextFunction) {
+   try {
+      const userRole = request.user?.role;
 
-    const categoryDoc = await Category.findOne({ name: category });
-    if (!categoryDoc) {
-      throw new BadRequestError("Category not found");
-    }
-
-    const product = new Product({
-      name,
-      price,
-      description,
-      category: categoryDoc._id,
-      image,
-      size,
-    });
-
-    const newProduct = await productsService.createProduct(product);
-    response.status(201).json(newProduct);
-  } catch (error) {
-    if (error instanceof BadRequestError) {
-      response.status(400).json({ error: error.message });
-    } else {
-      response.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-}
-
-export async function updateProduct(request: Request, response: Response) {
-  const id = request.params.id;
-  const product: Partial<ProductDocument> = request.body;
-
-  try {
-    const updatedProduct = await productsService.updateProduct(id, product);
-    response.status(200).json(updatedProduct);
-  } catch (error) {
-    if (error instanceof BadRequestError) {
-      response.status(400).json({ error: "Invalid request" });
-    } else if (error instanceof NotFoundError) {
-      response.status(404).json({ error: "Product not found" });
-    } else if (error instanceof mongoose.Error.CastError) {
-      response.status(404).json({
-        message: "Product not found",
+      if(userRole === 'ADMIN') {
+      const { name, price, description, category, image, size } = request.body;
+      
+      const categoryDoc = await Category.findOne({ name: category });
+      if (!categoryDoc) {
+         throw new BadRequestError('Category not found');
+      }
+      
+      const product = new Product({
+         name,
+         price,
+         description,
+         category: categoryDoc._id,
+         image,
+         size
       });
-      return;
-    } else {
-      response.status(500).json({ error: "Internal Server Error" });
-    }
-  }
+
+      const newProduct = await productsService.createProduct(product);
+      response.status(201).json(newProduct);
+   } else {
+      throw new ForbiddenError('Only admin can add new products');
+   }
+   } catch (error) {
+      if (error instanceof BadRequestError) {
+         response.status(400).json({ error: error.message });
+      } else {
+         response.status(500).json({ error: 'Internal Server Error' });
+      }
+      next(new InternalServerError());
+   }
 }
 
-export async function deleteProduct(request: Request, response: Response) {
-  const id = request.params.id;
+export async function updateProduct(request: Request, response: Response, next: NextFunction) {
+   const id = request.params.id;
+   const product: Partial<ProductDocument> = request.body;
 
-  try {
-    await productsService.deleteProduct(id);
-    response.status(204).json({ message: "Product has been deleted" }).end();
-  } catch (error) {
-    if (error instanceof BadRequestError) {
-      response.status(400).json({ error: "Invalid request" });
-    } else if (error instanceof NotFoundError) {
-      response.status(404).json({ error: "Product not found" });
-    } else {
-      response.status(500).json({ error: "Internal Server Error" });
-    }
-  }
+   try {
+      const updatedProduct = await productsService.updateProduct(id, product);
+      response.status(200).json(updatedProduct);
+   } catch (error) {
+      if (error instanceof BadRequestError) {
+         response.status(400).json({ error: "Invalid request" });
+      } else if (error instanceof NotFoundError) {
+         response.status(404).json({ error: "Product not found" });
+      } else if(error instanceof mongoose.Error.CastError) {
+         response.status(404).json({
+            message: "Product not found",
+         });
+         return;
+      } else {
+         response.status(500).json({ error: 'Internal Server Error' });
+      }
+      next(new InternalServerError());
+   }
+}
+
+export async function deleteProduct(request: Request, response: Response, next: NextFunction) {
+   const id = request.params.id;
+
+   try {
+      await productsService.deleteProduct(id);
+      response.status(204).json({ message: "Product has been deleted" }).end();
+   } catch (error) {
+      if (error instanceof BadRequestError) {
+         response.status(400).json({ error: "Invalid request" });
+      } else if (error instanceof NotFoundError) {
+         response.status(404).json({ error: "Product not found" });
+      } else {
+         response.status(500).json({ error: 'Internal Server Error' });
+      }
+      next(new InternalServerError());
+   }
 }
