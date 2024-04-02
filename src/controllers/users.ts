@@ -58,27 +58,35 @@ export async function getSingleUser(
 export async function createUser(request: Request, response: Response) {
   const { username, password, firstName, lastName, email, role } = request.body;
 
-  if (!username || !password || !firstName || !lastName || !email) {
-    throw new BadRequestError("Fill out all the fields");
-  } else if (!validator.isEmail(email)) {
-    throw new BadRequestError("Please Enter a valid email");
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({
-    username: username,
-    password: hashedPassword,
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    role: role || "CUSTOMER",
-  });
-
   try {
+    if (!username || !password || !firstName || !lastName || !email) {
+      throw new BadRequestError('Fill out all the fields');
+    } else if (!validator.isEmail(email)) {
+      throw new BadRequestError('Please enter a valid email');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      username,
+      password: hashedPassword,
+      firstName,
+      lastName,
+      email,
+      role: role || 'CUSTOMER',
+    });
+
     const newUser = await userService.createUser(user);
+
     response.status(201).json({ newUser });
   } catch (error) {
-    throw new InternalServerError("Something went wrong");
+    if (error instanceof BadRequestError) {
+      response.status(400).json({ error: error.message });
+    } else if (error instanceof InternalServerError) {
+      response.status(500).json({ error: 'Something went wrong' });
+    } else {
+      response.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 }
 
