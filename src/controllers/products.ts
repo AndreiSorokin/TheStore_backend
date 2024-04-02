@@ -48,7 +48,7 @@ export async function getOneProduct(request: Request, response: Response, next: 
    }
 }
 
-export async function createProduct(request: Request & { user?: User }, response: Response) {
+export async function createProduct(request: Request & { user?: User }, response: Response, next: NextFunction) {
    try {
       const userRole = request.user?.role;
 
@@ -80,10 +80,11 @@ export async function createProduct(request: Request & { user?: User }, response
       } else {
          response.status(500).json({ error: 'Internal Server Error' });
       }
+      next(new InternalServerError());
    }
 }
 
-export async function updateProduct(request: Request, response: Response) {
+export async function updateProduct(request: Request, response: Response, next: NextFunction) {
    const id = request.params.id;
    const product: Partial<ProductDocument> = request.body;
 
@@ -103,10 +104,11 @@ export async function updateProduct(request: Request, response: Response) {
       } else {
          response.status(500).json({ error: 'Internal Server Error' });
       }
+      next(new InternalServerError());
    }
 }
 
-export async function deleteProduct(request: Request, response: Response) {
+export async function deleteProduct(request: Request, response: Response, next: NextFunction) {
    const id = request.params.id;
 
    try {
@@ -120,5 +122,6 @@ export async function deleteProduct(request: Request, response: Response) {
       } else {
          response.status(500).json({ error: 'Internal Server Error' });
       }
+      next(new InternalServerError());
    }
 }
