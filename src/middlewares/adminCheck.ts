@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
-import { Role, User } from "../misc/types";
+import { Request, Response, NextFunction } from "express";
 import { ForbiddenError } from "../errors/ApiError";
+import { UserDocument } from "../models/User";
 
 // const userInfo = [
 //   {
@@ -38,9 +38,9 @@ import { ForbiddenError } from "../errors/ApiError";
 //   };
 // };
 
-const checkUserRole = (...roles: string[]) => {
+const adminCheck = (...roles: string[]) => {
   return (request: Request, response: Response, next: NextFunction) => {
-    const userInformation: User = request.user as User;
+    const userInformation = request.user as UserDocument;
 
     if (!roles.includes(userInformation?.role)) {
       throw new ForbiddenError("Unauthorized to access this route");
@@ -48,4 +48,5 @@ const checkUserRole = (...roles: string[]) => {
     next();
   };
 };
-export default checkUserRole;
+
+export default adminCheck;
