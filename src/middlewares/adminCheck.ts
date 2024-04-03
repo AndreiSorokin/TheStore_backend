@@ -6,9 +6,8 @@ import { Role } from "../misc/types";
 const adminCheck = () => {
   return (request: Request, response: Response, next: NextFunction) => {
     const userInformation = request.user as UserDocument;
-    console.log(userInformation);
-    if (!roles.includes(userInformation?.role)) {
-      throw new ForbiddenError("Unauthorized to access this route");
+    if (userInformation.role !== Role.ADMIN) {
+      throw new ForbiddenError("You don't have access to this operation");
     }
     next();
   };
