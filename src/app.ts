@@ -17,6 +17,7 @@ app.use(passport.initialize());
 passport.use(jwtStrategy);
 passport.use(googleStrategy);
 
+dotenv.config({ path: ".env" });
 app.use("/api/v1/products", productsRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/orders", orderRouter);

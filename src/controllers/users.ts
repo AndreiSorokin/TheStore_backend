@@ -60,9 +60,9 @@ export async function createUser(request: Request, response: Response) {
 
   try {
     if (!username || !password || !firstName || !lastName || !email) {
-      throw new BadRequestError('Fill out all the fields');
+      throw new BadRequestError("Fill out all the fields");
     } else if (!validator.isEmail(email)) {
-      throw new BadRequestError('Please enter a valid email');
+      throw new BadRequestError("Please enter a valid email");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -73,7 +73,7 @@ export async function createUser(request: Request, response: Response) {
       firstName,
       lastName,
       email,
-      role: role || 'CUSTOMER',
+      role: role || "CUSTOMER",
     });
 
     const newUser = await userService.createUser(user);
@@ -83,16 +83,15 @@ export async function createUser(request: Request, response: Response) {
     if (error instanceof BadRequestError) {
       response.status(400).json({ error: error.message });
     } else if (error instanceof InternalServerError) {
-      response.status(500).json({ error: 'Something went wrong' });
+      response.status(500).json({ error: "Something went wrong" });
     } else {
-      response.status(500).json({ error: 'Internal Server Error' });
+      response.status(500).json({ error: "Internal Server Error" });
     }
   }
 }
 
 export async function updateUser(request: Request, response: Response) {
   const id = request.params.id;
-  // const user: Partial<UserDocument> = request.body;
   const { firstName, lastName, email } = request.body;
 
   try {
@@ -154,12 +153,10 @@ export async function loginUser(request: Request, response: Response) {
     const token = jwt.sign({ email: userData.email }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
-    console.log('role in controllers',userData.role)
+    console.log("role in controllers", userData.role);
 
     const refreshToken = jwt.sign(
-      { email: userData.email,
-        role: userData.role
-      },
+      { email: userData.email, role: userData.role },
       process.env.JWT_SECRET!,
       { expiresIn: "20d" }
     );
@@ -167,7 +164,6 @@ export async function loginUser(request: Request, response: Response) {
     response
       .status(200)
       .json({ token: token, refreshToken: refreshToken, userData });
-
   } catch (error) {
     if (error instanceof BadRequestError) {
       response.status(400).json({

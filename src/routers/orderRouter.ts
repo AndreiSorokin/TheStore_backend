@@ -9,7 +9,6 @@ import {
   updateOrder,
 } from "../controllers/orders";
 import passport from "passport";
-import { Role } from "../misc/types";
 import adminCheck from "../middlewares/adminCheck";
 
 const router = express.Router();

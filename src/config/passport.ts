@@ -1,37 +1,34 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import GoogleTokenStrategy from "passport-google-id-token";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-import { Payload } from "../misc/types"
-import userService from "../services/user"
+import { Payload } from "../misc/types";
+import userService from "../services/user";
 
-
-dotenv.config({ path: ".env" })
+dotenv.config({ path: ".env" });
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const jwtStrategy = new JwtStrategy(
-   {
-      secretOrKey: JWT_SECRET,
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
-   },
-   async (payload: Payload, done: any) => {
-      console.log('JWT Payload:', payload);
-      const userEmail = payload.email;
-      try {
-        const user = await userService.getUserByEmail(userEmail);
-        console.log(user)
-        done(null, user);
-      } catch (error) {
-        done(error, false);
-      }
-   }
-)
+  {
+    secretOrKey: JWT_SECRET,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  },
+  async (payload: Payload, done: any) => {
+    const userEmail = payload.email;
+    console.log(userEmail);
+    try {
+      const user = await userService.getUserByEmail(userEmail);
+      console.log(user);
+      done(null, user);
+    } catch (error) {
+      done(error, false);
+    }
+  }
+);
 
-const clientId = 'string'
+const clientId = "string";
 export const googleStrategy = new GoogleTokenStrategy(
-   { clientID: clientId },
-   async () => {
-      
-   }
-)
+  { clientID: clientId },
+  async () => {}
+);
