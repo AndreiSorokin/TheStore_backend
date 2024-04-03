@@ -14,8 +14,8 @@ const router = express.Router();
 
 router.get("/", getAllProducts)
 router.get("/:id", getOneProduct)
-router.post("/", passport.authenticate('jwt', { session: false }), adminCheck(Role.ADMIN), createProduct);
-router.put("/:id", passport.authenticate('jwt', { session: false }), adminCheck(Role.ADMIN), updateProduct)
-router.delete("/:id", passport.authenticate('jwt', { session: false }), adminCheck(Role.ADMIN), deleteProduct);
+router.post("/", passport.authenticate('jwt', { session: false }), adminCheck, createProduct);
+router.put("/:id", passport.authenticate('jwt', { session: false }), adminCheck, updateProduct)
+router.delete("/:id", passport.authenticate('jwt', { session: false }), adminCheck, deleteProduct);
 
 export default router;

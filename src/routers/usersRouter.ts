@@ -11,7 +11,6 @@ import {
   forgotPassword,
 } from "../controllers/users";
 import adminCheck from "../middlewares/adminCheck";
-import { Role } from "../misc/types";
 import passport from "passport";
 
 const router = express.Router();
@@ -27,7 +26,7 @@ router.route("/forgot-password").post(forgotPassword);
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
+  adminCheck,
   getAllUser
 );
 
@@ -48,7 +47,7 @@ router.put(
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
+  adminCheck,
   deleteUser
 );
 

@@ -20,7 +20,7 @@ const router = express.Router();
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
+  adminCheck,
   getAllOrders
 );
 // Todo: create order
@@ -33,7 +33,7 @@ router.post(
 router.get(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
+  adminCheck,
   getOrderById
 );
 // Todo: update order
@@ -46,7 +46,7 @@ router.put(
 router.delete(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
+  adminCheck,
   deleteOrder
 );
 
