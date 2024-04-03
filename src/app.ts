@@ -8,7 +8,6 @@ import usersRouter from "./routers/usersRouter";
 import categoryRouter from "./routers/categoryRouter";
 import orderRouter from "./routers/orderRouter";
 import errorHandler from "./middlewares/errorHandler";
-import checkUserRole from "./middlewares/adminCheck";
 import { googleStrategy, jwtStrategy } from "./config/passport";
 // import {
 //   authenticateRefreshToken,
@@ -18,14 +17,13 @@ import { googleStrategy, jwtStrategy } from "./config/passport";
 
 // const auth = require("./app/controllers/auth");
 
-dotenv.config({ path: ".env" });
-
 const app = express();
 app.use(express.json());
 app.use(passport.initialize());
 passport.use(jwtStrategy);
 passport.use(googleStrategy);
 
+dotenv.config({ path: ".env" });
 app.use("/api/v1/products", productsRouter);
 
 // app.use(
