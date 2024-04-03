@@ -33,8 +33,8 @@ const getOneProduct = async(id: string): Promise<ProductDocument | undefined> =>
 }
 
 const createProduct = async (product: ProductDocument): Promise<ProductDocument> => {
-      const { name, price, description, category, size } = product;
-      if (!name || !price || !description || !category || !size) {
+      const { name, price, description, category, image, size } = product;
+      if (!name || !price || !description || !category || !image || !size) {
          throw new BadRequestError();
       }
 

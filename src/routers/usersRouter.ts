@@ -11,7 +11,6 @@ import {
   forgotPassword,
 } from "../controllers/users";
 import adminCheck from "../middlewares/adminCheck";
-import { Role } from "../misc/types";
 import passport from "passport";
 
 const router = express.Router();
@@ -20,6 +19,39 @@ router.post("/login", loginUser);
 router.post("/registration", createUser);
 
 router.route("/forgot-password").post(forgotPassword);
+
+// Lam version
+
+
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  adminCheck,
+  getAllUser
+);
+
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  getSingleUser
+);
+
+router.post("/", createUser);
+
+router.put(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  updateUser
+);
+
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  adminCheck,
+  deleteUser
+);
+
+export default router;
 
 /**** Admin Logic || added by muzahid ****/
 
@@ -73,34 +105,3 @@ router.route("/forgot-password").post(forgotPassword);
 
 /**** Admin Logic || added by muzahid ****/
 
-// Lam version
-
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
-  getAllUser
-);
-
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  getSingleUser
-);
-
-router.post("/", createUser);
-
-router.put(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  updateUser
-);
-
-router.delete(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  adminCheck(Role.ADMIN),
-  deleteUser
-);
-
-export default router;
