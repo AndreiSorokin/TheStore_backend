@@ -8,7 +8,8 @@ import {
   updateUser,
   loginUser,
   forgotPassword,
-  assingAdmin
+  assingAdmin,
+  removeAdmin
 } from "../controllers/users";
 import adminCheck from "../middlewares/adminCheck";
 import passport from "passport";
@@ -34,8 +35,6 @@ router.get(
   getSingleUser
 );
 
-router.post("/", createUser);
-
 router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -43,6 +42,8 @@ router.put(
 );
 
 router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }), adminCheck(), assingAdmin)
+
+router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }), adminCheck(), removeAdmin)
 
 router.delete(
   "/:id",

@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
    transform: {
       "^.+\\.(ts|tsx)$": "ts-jest",
    },
-   testMatch: ["**/tests/**/*.test.(ts|js)"],
+   testMatch: ["**/tests/**/*.test.(ts|js)", "**/tests/**/*.spec.(ts|js)"],
    testEnvironment: "node",
    setupFiles: ["dotenv/config"],
 };

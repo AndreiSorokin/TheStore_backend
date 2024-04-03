@@ -2,6 +2,7 @@ import User, { UserDocument } from "../models/User";
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
 
 import nodemailer from "nodemailer";
+import { Role } from "../misc/types";
 
 const getAllUser = async (): Promise<UserDocument[]> => {
   return await User.find().populate("orders");
@@ -105,6 +106,21 @@ const assingAdmin = async(id: string, updateRole: Partial<UserDocument>) => {
   if (!updateUser) {
     throw new BadRequestError();
   }
+
+  return updateUser;
+}
+
+const removeAdmin = async(id: string, updateRole: Partial<UserDocument>) => {
+  if (!id) {
+    throw new BadRequestError();
+  }
+
+  const options = { new: true, runValidators: true };
+  const updateUser = await User.findByIdAndUpdate(id, updateRole, options);
+
+  if (!updateUser) {
+    throw new BadRequestError();
+  }
   return updateUser;
 }
 
@@ -116,5 +132,6 @@ export default {
   deleteUser,
   getUserByEmail,
   sendVerificationEmail,
-  assingAdmin
+  assingAdmin,
+  removeAdmin
 };

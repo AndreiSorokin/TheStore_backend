@@ -225,8 +225,38 @@ export async function assingAdmin(request: Request, response: Response) {
   const { role } = request.body;
 
   try {
+    if (!id) {
+      throw new BadRequestError('Missing user ID');
+    }
     const updatedRole: UserDocument = await userService.assingAdmin(id, { role: role })
-    console.log('updatedRole:', updatedRole)
+
+    response.status(200).json(updatedRole)
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      response.status(400).json({ error: "Invalid request" });
+    } else if (error instanceof NotFoundError) {
+      response.status(404).json({ error: "User not found" });
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(400).json({
+        message: "Wrong id",
+      });
+      return;
+    } else {
+      response.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}
+
+export async function removeAdmin(request: Request, response: Response) {
+  const id = request.params.id;
+  const { role } = request.body;
+
+  try {
+    if (!id) {
+      throw new BadRequestError('Missing user ID');
+    }
+    const updatedRole: UserDocument = await userService.removeAdmin(id, { role: role })
+
     response.status(200).json(updatedRole)
   } catch (error) {
     if (error instanceof BadRequestError) {
