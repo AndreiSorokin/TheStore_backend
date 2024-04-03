@@ -94,6 +94,20 @@ const sendVerificationEmail = async (
   return await transporter.sendMail(mailOptions);
 };
 
+const assingAdmin = async(id: string, updateRole: Partial<UserDocument>) => {
+  if (!id) {
+    throw new BadRequestError();
+  }
+
+  const options = { new: true, runValidators: true };
+  const updateUser = await User.findByIdAndUpdate(id, updateRole, options);
+
+  if (!updateUser) {
+    throw new BadRequestError();
+  }
+  return updateUser;
+}
+
 export default {
   getAllUser,
   getSingleUser,
@@ -102,4 +116,5 @@ export default {
   deleteUser,
   getUserByEmail,
   sendVerificationEmail,
+  assingAdmin
 };

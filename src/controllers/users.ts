@@ -219,3 +219,27 @@ export async function forgotPassword(request: Request, response: Response) {
     }
   }
 }
+
+export async function assingAdmin(request: Request, response: Response) {
+  const id = request.params.id;
+  const { role } = request.body;
+
+  try {
+    const updatedRole: UserDocument = await userService.assingAdmin(id, { role: role })
+    console.log('updatedRole:', updatedRole)
+    response.status(200).json(updatedRole)
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      response.status(400).json({ error: "Invalid request" });
+    } else if (error instanceof NotFoundError) {
+      response.status(404).json({ error: "User not found" });
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(400).json({
+        message: "Wrong id",
+      });
+      return;
+    } else {
+      response.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}
