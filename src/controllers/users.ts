@@ -118,7 +118,6 @@ export async function updateUser(request: Request, response: Response) {
   }
 }
 
-// ToDo: fix deletion
 export async function deleteUser(request: Request, response: Response) {
   const id = request.params.id;
 
@@ -281,17 +280,14 @@ export async function updateUserStatus(request: Request, response: Response) {
 
   try {
     if (!userId  ) {
-      console.log('Missing user ID')
       throw new BadRequestError('Missing user ID ');
     }else if (!userStatus){
-      console.log('Missing user Status')
       throw new BadRequestError('Missing user Status');
     }
     const updatedUserStatus = await userService.updateUserStatus(userId ,{status: userStatus})
     response.status(200).json(updatedUserStatus)
   } catch (error) {
     if (error instanceof BadRequestError) {
-      console.log(error)
       response.status(400).json({ error: "Invalid request" });
     } else if (error instanceof NotFoundError) {
       response.status(404).json({ error: "User not found" });

@@ -32,7 +32,6 @@ export async function createCategory(request: Request, response: Response) {
         const newCategory = await categoryService.createCategory(category);
         response.status(201).json(newCategory);
     } catch (error) {
-        console.log(error);
         console.error('Error creating category:', error);
         response.status(500).json({ message: 'Internal Server Error. ' + error });
     }

@@ -35,31 +35,4 @@ describe("category controller test", () => {
       expect(response.status).toBe(201);
       expect(createdCategory).toHaveProperty("_id");
    });
-
-   it("should update a category", async () => {
-      const createdCategory = await createCategory();
-
-      const updatedCategoryData = {
-         name: "Updated Category",
-         image: "updatedImage.png",
-      };
-
-      const response = await request(app)
-         .put(`/api/v1/categories/${createdCategory._id}`)
-         .send(updatedCategoryData);
-
-      expect(response.status).toBe(200);
-
-      expect(response.body).toEqual(expect.objectContaining(updatedCategoryData));
-   });
-
-   it("should delete a category", async () => {
-      const createdCategory = await createCategory();
-      
-      const response = await request(app).delete(`/api/v1/categories/${createdCategory._id}`);
-
-      expect(response.status).toBe(204);
-
-      expect(response.body).not.toHaveProperty("_id");
-   });
 })

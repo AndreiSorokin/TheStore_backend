@@ -2,7 +2,6 @@ import User, { UserDocument } from "../models/User";
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
 
 import nodemailer from "nodemailer";
-import { Role } from "../misc/types";
 
 const getAllUser = async (): Promise<UserDocument[]> => {
   return await User.find().populate("orders");
@@ -72,7 +71,6 @@ const sendVerificationEmail = async (
     throw new BadRequestError("Please provide your email");
   }
 
-  //  Todo: Create a transporter using SMTP server details
   const transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -84,7 +82,6 @@ const sendVerificationEmail = async (
     },
   });
 
-  // Todo: create the email message
   const mailOptions = {
     from: "your-email@gmail.com",
     to: email,

@@ -31,21 +31,17 @@ export async function createProduct() {
 
 export async function createUser(username: string, password: string, firstName: string, lastName: string, email: string, role: Role) {
    const data = {
-      username: 'name',
-      password: 'password',
-      firstName: 'firstName',
-      lastName: 'lastName',
-      email: 'email@example.com',
-      role: 'ADMIN',
+      username,
+      password,
+      firstName,
+      lastName,
+      email,
+      role,
    }
    return await request(app).post("/api/v1/users/registration").send(data)
 }
 
 export async function getToken(email: string, password: string) {
-   return await request(app)
-      .post("/api/v1/users/login")
-      .send({ 
-         email: 'email@example.com',
-         password: 'password'
-      })
+   return await request(app).post("/api/v1/users/login").send({ email, password });
 }
+
