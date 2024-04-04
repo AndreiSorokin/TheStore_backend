@@ -2,7 +2,6 @@ import Category, { CategoryDocument } from "../models/Category"
 
 const getAllCategory = async (): Promise<CategoryDocument[]> => {
     return await Category.find()
-    //add pagination and filtering by name, categories, variants.
 }
 
 const getOneCategory = async (id: string): Promise<CategoryDocument | undefined> => {
@@ -24,7 +23,6 @@ const getOneCategory = async (id: string): Promise<CategoryDocument | undefined>
 const createCategory = async (category: CategoryDocument): Promise<CategoryDocument> => {
     try {
         const { name, image } = category;
-        // Check if the required field "name" is provided
         if (!name || !image) {
             throw new Error("Fill out all the fields");
         }
@@ -41,7 +39,7 @@ const createCategory = async (category: CategoryDocument): Promise<CategoryDocum
 
 const updateCategory = async (id: string, changedCategory: Partial<CategoryDocument>) => {
     try {
-        const options = { new: true, runValidators: true }; // Enable validators
+        const options = { new: true, runValidators: true };
         const updatedCategory = await Category.findByIdAndUpdate(id, changedCategory, options);
         return updatedCategory;
     } catch (error) {
