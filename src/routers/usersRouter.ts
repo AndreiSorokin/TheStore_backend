@@ -25,7 +25,7 @@ router.route("/forgot-password").post(forgotPassword);
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(),
+  adminCheck,
   getAllUser
 );
 
@@ -41,14 +41,14 @@ router.put(
   updateUser
 );
 
-router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }), adminCheck(), assingAdmin)
+router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }), adminCheck, assingAdmin)
 
-router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }), adminCheck(), removeAdmin)
+router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }), adminCheck, removeAdmin)
 
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(),
+  adminCheck,
   deleteUser
 );
 
