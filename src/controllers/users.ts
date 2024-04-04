@@ -153,7 +153,6 @@ export async function loginUser(request: Request, response: Response) {
     const token = jwt.sign({ email: userData.email }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
-    console.log("role in controllers", userData.role);
 
     const refreshToken = jwt.sign(
       { email: userData.email, role: userData.role },

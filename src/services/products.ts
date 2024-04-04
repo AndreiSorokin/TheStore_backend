@@ -4,9 +4,7 @@ import { BadRequestError, NotFoundError } from "../errors/ApiError"
 import Product, { ProductDocument } from "../models/Product"
 
 const getAllProducts = async(limit: number, offset: number, searchQuery: string = "", minPrice?: number, maxPrice?: number): Promise<ProductDocument[]> => {
-   const query: FilterQuery<ProductDocument> = {
-      price: { $gte: minPrice, $lte: maxPrice }
-   };
+   const query: FilterQuery<ProductDocument> = {};
 
    if (minPrice !== undefined && maxPrice !== undefined) {
       query.price = { $gte: minPrice, $lte: maxPrice };
