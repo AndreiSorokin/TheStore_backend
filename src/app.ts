@@ -8,6 +8,7 @@ import categoryRouter from "./routers/categoryRouter";
 import orderRouter from "./routers/orderRouter";
 import errorHandler from "./middlewares/errorHandler";
 import { googleStrategy, jwtStrategy } from "./config/passport";
+import userStatusCheck from "./middlewares/userStatusCheck";
 
 dotenv.config({ path: ".env" });
 
@@ -17,12 +18,18 @@ app.use(passport.initialize());
 passport.use(jwtStrategy);
 passport.use(googleStrategy);
 
+
+
+
 dotenv.config({ path: ".env" });
 app.use("/api/v1/products", productsRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/orders", orderRouter);
-app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/users", usersRouter,);
 
 app.use(errorHandler);
+
+
+
 
 export default app;

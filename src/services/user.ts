@@ -123,6 +123,23 @@ const removeAdmin = async(id: string, updateRole: Partial<UserDocument>) => {
   }
   return updateUser;
 }
+const updateUserStatus = async(userId: string,status: Partial<UserDocument>) => {
+  
+  if (!userId) {
+    throw new BadRequestError();
+  }else if (!status){
+    throw new BadRequestError();
+  }
+
+  const options = { new: true, runValidators: true };
+  const updateUserStatus = await User.findByIdAndUpdate(userId, status, options);
+
+  if (!updateUserStatus) {
+    throw new BadRequestError();
+  }
+  return updateUserStatus;
+}
+
 
 export default {
   getAllUser,
@@ -133,5 +150,6 @@ export default {
   getUserByEmail,
   sendVerificationEmail,
   assingAdmin,
-  removeAdmin
+  removeAdmin,
+  updateUserStatus,
 };

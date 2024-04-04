@@ -10,6 +10,7 @@ import {
 } from "../controllers/orders";
 import passport from "passport";
 import adminCheck from "../middlewares/adminCheck";
+import userStatusCheck from "../middlewares/userStatusCheck";
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ const router = express.Router();
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   adminCheck,
   getAllOrders
 );
@@ -26,12 +28,14 @@ router.get(
 router.post(
   "/:userId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   createOrder
 );
 // Todo: get single order
 router.get(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   adminCheck,
   getOrderById
 );
@@ -39,12 +43,14 @@ router.get(
 router.put(
   "/:userId/:orderId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   updateOrder
 );
 // Todo: delete order
 router.delete(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   adminCheck,
   deleteOrder
 );
@@ -53,6 +59,7 @@ router.delete(
 router.get(
   "/:userId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   getAllOrdersByUserId
 );
 

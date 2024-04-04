@@ -56,7 +56,7 @@ export async function getSingleUser(
 }
 
 export async function createUser(request: Request, response: Response) {
-  const { username, password, firstName, lastName, email, role } = request.body;
+  const { username, password, firstName, lastName, email, role,userStatus } = request.body;
 
   try {
     if (!username || !password || !firstName || !lastName || !email) {
@@ -74,6 +74,7 @@ export async function createUser(request: Request, response: Response) {
       lastName,
       email,
       role: role || "CUSTOMER",
+      status:userStatus || "ACTIVE"
     });
 
     const newUser = await userService.createUser(user);
@@ -272,3 +273,36 @@ export async function removeAdmin(request: Request, response: Response) {
     }
   }
 }
+
+// noor
+export async function updateUserStatus(request: Request, response: Response) {
+ 
+  const { userId,userStatus } = request.body;
+
+  try {
+    if (!userId  ) {
+      console.log('Missing user ID')
+      throw new BadRequestError('Missing user ID ');
+    }else if (!userStatus){
+      console.log('Missing user Status')
+      throw new BadRequestError('Missing user Status');
+    }
+    const updatedUserStatus = await userService.updateUserStatus(userId ,{status: userStatus})
+    response.status(200).json(updatedUserStatus)
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      console.log(error)
+      response.status(400).json({ error: "Invalid request" });
+    } else if (error instanceof NotFoundError) {
+      response.status(404).json({ error: "User not found" });
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(400).json({
+        message: "Wrong id",
+      });
+      return;
+    } else {
+      response.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}
+// noor

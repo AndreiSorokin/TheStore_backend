@@ -39,6 +39,11 @@ export enum Role {
   ADMIN = "ADMIN",
   CUSTOMER = "CUSTOMER",
 }
+export enum UserStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
 
 export type UserToRegister = {
   username: string;
@@ -49,9 +54,11 @@ export type UserToRegister = {
 };
 
 export type User = UserToRegister & {
+  status:UserStatus;
   role: Role;
   orders: Order[];
 };
+
 
 export type Payload = {
   email: string;

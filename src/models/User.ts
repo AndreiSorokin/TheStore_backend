@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from "mongoose";
 
-import { Role, User } from "../misc/types";
+import { Role, User, UserStatus } from "../misc/types";
 
 const Schema = mongoose.Schema;
 
@@ -32,6 +32,11 @@ const UserSchema = new Schema({
       type: String,
       enum: [Role.ADMIN, Role.CUSTOMER],
       default: Role.CUSTOMER
+   },
+   status: {
+      type: String,
+      enum: [UserStatus.ACTIVE, UserStatus.INACTIVE],
+      default: UserStatus.ACTIVE
    },
    orders: [
       {
