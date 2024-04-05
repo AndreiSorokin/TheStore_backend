@@ -84,7 +84,7 @@ export async function getOrderById(
   }
 }
 
-// Updating a specific order by Admin or User
+// Todo: Update an order
 export async function updateOrder(
   request: Request,
   response: Response,
@@ -115,7 +115,7 @@ export async function updateOrder(
   }
 }
 
-// Cancelling an order by user or Deleting an order by Admin
+// Todo: Delete an order
 export async function deleteOrder(
   request: Request,
   response: Response,

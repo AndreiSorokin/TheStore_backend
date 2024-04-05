@@ -8,11 +8,10 @@ import {
   updateUser,
   loginUser,
   forgotPassword,
+  updatePassword,
+  updateUserStatus,
   assingAdmin,
   removeAdmin,
-  updateUserStatus, googleLoginCallback
-  updatePassword,
-  resetPassword,
 } from "../controllers/users";
 
 import adminCheck from "../middlewares/adminCheck";
@@ -27,7 +26,6 @@ router.post("/registration", createUser);
 router.route("/forgot-password").post(forgotPassword);
 
 // Lam version
-
 
 router.get(
   "/",
@@ -55,9 +53,21 @@ router.put(
   updateUser
 );
 
-router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }),userStatusCheck, adminCheck, assingAdmin)
+router.put(
+  "/:id/userInformation",
+  passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
+  adminCheck,
+  assingAdmin
+);
 
-router.put("/:id/userInformation", passport.authenticate("jwt", { session: false }),userStatusCheck, adminCheck, removeAdmin)
+router.put(
+  "/:id/userInformation",
+  passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
+  adminCheck,
+  removeAdmin
+);
 
 // Todo: update a user password
 router.put(
@@ -75,7 +85,6 @@ router.delete(
   deleteUser
 );
 
-
 // noor
 router.post(
   "/changeUserStatus",
@@ -87,56 +96,3 @@ router.post(
 // noor
 
 export default router;
-
-/**** Admin Logic || added by muzahid ****/
-
-// interface CustomRequest extends Request {
-//   userRole?: string;
-//   userInfo?: { read: number; create: number; update: number; delete: number };
-// }
-
-// router.get("/", (req: CustomRequest, res: Response, next: NextFunction) => {
-//   if (req.userInfo?.read === 1) {
-//     getAllUser(req, res, next);
-//   } else {
-//     res.status(403).json({ message: "Forbidden" });
-//   }
-// });
-
-// router.get("/:id", (req: CustomRequest, res: Response, next: NextFunction) => {
-//   if (req.userInfo?.read === 1) {
-//     getSingleUser(req, res, next);
-//   } else {
-//     res.status(403).json({ message: "Forbidden" });
-//   }
-// });
-
-// router.post("/", (req: CustomRequest, res: Response, next: NextFunction) => {
-//   if (req.userInfo?.create === 1) {
-//     createUser(req, res);
-//   } else {
-//     res.status(403).json({ message: "Forbidden" });
-//   }
-// });
-
-// router.put("/:id", (req: CustomRequest, res: Response, next: NextFunction) => {
-//   if (req.userInfo?.update === 1) {
-//     updateUser(req, res);
-//   } else {
-//     res.status(403).json({ message: "Forbidden" });
-//   }
-// });
-
-// router.delete(
-//   "/:id",
-//   (req: CustomRequest, res: Response, next: NextFunction) => {
-//     if (req.userInfo?.delete === 1) {
-//       deleteUser(req, res);
-//     } else {
-//       res.status(403).json({ message: "Forbidden" });
-//     }
-//   }
-// );
-
-/**** Admin Logic || added by muzahid ****/
-
