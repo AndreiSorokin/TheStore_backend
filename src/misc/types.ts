@@ -64,3 +64,9 @@ export type Payload = {
   email: string;
   _id: string;
 };
+
+export type loginPayload = {
+  email: string;
+  password: string;
+};
+

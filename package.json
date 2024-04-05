@@ -23,6 +23,7 @@
     "passport": "^0.7.0",
     "passport-google-id-token": "^0.4.7",
     "passport-jwt": "^4.0.1",
+    "passport-google-oauth20": "^2.0.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2",

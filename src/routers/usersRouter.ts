@@ -10,7 +10,7 @@ import {
   forgotPassword,
   assingAdmin,
   removeAdmin,
-  updateUserStatus
+  updateUserStatus, googleLoginCallback
 } from "../controllers/users";
 
 import adminCheck from "../middlewares/adminCheck";
@@ -23,7 +23,9 @@ router.post("/login", loginUser);
 router.post("/registration", createUser);
 router.route("/forgot-password").post(forgotPassword);
 
-
+//google login
+router.get("/auth/google", passport.authenticate('google', { scope: ['profile','email'] }));
+router.get("/auth/google/callback",passport.authenticate('google', {   session: false,failureRedirect: '/login' }),googleLoginCallback);
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),

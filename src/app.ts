@@ -7,7 +7,7 @@ import usersRouter from "./routers/usersRouter";
 import categoryRouter from "./routers/categoryRouter";
 import orderRouter from "./routers/orderRouter";
 import errorHandler from "./middlewares/errorHandler";
-import { googleStrategy, jwtStrategy } from "./config/passport";
+import {googleAuthStrategy, googleStrategy, jwtStrategy} from "./config/passport";
 import userStatusCheck from "./middlewares/userStatusCheck";
 
 dotenv.config({ path: ".env" });
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(passport.initialize());
 passport.use(jwtStrategy);
 passport.use(googleStrategy);
-
+passport.use(googleAuthStrategy);
 
 
 
