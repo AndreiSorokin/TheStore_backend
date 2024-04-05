@@ -8,8 +8,8 @@ This project has been created in Integrify through collaboration with:
 
 ### Getting Started
 In order to run the app you need to have the following installed:
--Node v18.14.1
--Node Package Manager
+- Node v18.14.1
+- Node Package Manager
 
 ### Usage
 - Start the production server with `npm start` or `yarn start` on mac
