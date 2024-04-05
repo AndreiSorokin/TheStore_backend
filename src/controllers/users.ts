@@ -193,7 +193,6 @@ export async function deleteUser(request: Request, response: Response) {
 export async function googleLogin(request: Request, response: Response) {
   console.log("hello google login");
   try {
-    //passport.authenticate('google', { scope: ['profile',"email"] });
   } catch (error) {
     console.log(error);
     throw new InternalServerError("Something went wrong");
@@ -262,7 +261,6 @@ export async function loginUser(request: Request, response: Response) {
   }
 }
 
-// Todo: Send verification email to user
 export async function loginUserForGoogelUser(data: loginPayload) {
   try {
     const { email, password } = data;
@@ -325,7 +323,6 @@ export async function registerUserForGoogelUser(data: UserToRegister) {
     });
 
     const newUser = (await userService.createUser(user)) as UserDocument;
-    console.log(newUser);
     const loginUser = await loginUserForGoogelUser({
       email: newUser["email"],
       password: newUser["password"],
@@ -380,11 +377,10 @@ export async function forgotPassword(request: Request, response: Response) {
   }
 }
 
-// Todo: reset password
 export async function resetPassword(request: Request, response: Response) {
   try {
     const { newPassword } = request.body;
-    const token = request.query.token as string; // Retrieve token from URL query parameters
+    const token = request.query.token as string;
 
     if (!newPassword || !token) {
       throw new BadRequestError("Invalid or missing reset token");

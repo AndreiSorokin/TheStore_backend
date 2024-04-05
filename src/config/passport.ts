@@ -1,11 +1,9 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import GoogleTokenStrategy from "passport-google-id-token";
 import dotenv from "dotenv";
-import  http from "http"
-import {Payload, UserToRegister} from "../misc/types";
+import { Payload } from "../misc/types";
 import userService from "../services/user";
 import User from "../models/User";
-import {createUser, loginUserForGoogelUser, registerUserForGoogelUser} from "../controllers/users";
+import { loginUserForGoogelUser, registerUserForGoogelUser } from "../controllers/users";
 import bcrypt from "bcrypt";
 
 dotenv.config({ path: ".env" });
@@ -28,21 +26,13 @@ export const jwtStrategy = new JwtStrategy(
   }
 );
 
-const clientId = "string";
-export const googleStrategy = new GoogleTokenStrategy(
-  { clientID: clientId },
-  async () => {}
-);
-
 export const googleAuthStrategy = new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID as string ,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       callbackURL: "http://localhost:8080/api/v1/users/auth/google/callback",
     },
     async (accessToken:any, refreshToken : any, profile:any, cb : any) => {
-      console.log("inside the strategy")
       const email = profile.emails[0].value;
-      console.log(email)
       try {
         const user = await User.findOne({ email: email });
         console.log(user)
