@@ -2,7 +2,8 @@ import { BadRequestError, NotFoundError } from "../errors/ApiError";
 import Order, { OrderDocument } from "../models/Order";
 
 const getAllOrders = async (): Promise<OrderDocument[]> => {
-  return await Order.find();
+  const orders = await Order.find();
+  return orders;
   // limit
   // skip
   // {regex: search query}
@@ -64,11 +65,19 @@ const updateOrder = async (
   throw new NotFoundError(`Can not find order with ${id}`);
 };
 
-const getAllOrdersByUserId = async (userId: string) => {
+const getAllOrdersByUserId = async (
+  userId: string
+): Promise<OrderDocument[]> => {
   if (!userId) {
     throw new BadRequestError(`Please provide userId!`);
   }
-  return await Order.find({ userId: userId });
+  console.log(userId);
+  const orders = await Order.find({ userId: userId });
+  if (orders !== null) {
+    return orders;
+  }
+
+  throw new NotFoundError(`Can not find orders with userId: ${userId}`);
 };
 
 export default {

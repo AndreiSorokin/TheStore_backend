@@ -50,6 +50,8 @@ export type UserToRegister = {
 
 export type User = UserToRegister & {
   role: Role;
+  resetToken?: string | null;
+  resetTokenExpiresAt?: Date | null;
   orders: Order[];
 };
 

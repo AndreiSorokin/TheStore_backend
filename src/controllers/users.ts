@@ -13,6 +13,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../errors/ApiError";
+import { baseUrl } from "../api/baseUrl";
 
 export async function getAllUser(
   request: Request,
@@ -118,6 +119,53 @@ export async function updateUser(request: Request, response: Response) {
   }
 }
 
+// Todo: update the password
+export async function updatePassword(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    const { oldPassword, newPassword } = request.body;
+
+    if (!oldPassword || !newPassword) {
+      throw new BadRequestError(
+        "Please provide both oldPassword and newPassword!"
+      );
+    }
+
+    const userData = await userService.getSingleUser(request.params.id);
+
+    const hashedPassword = userData.password;
+
+    const isPasswordCorrect = await bcrypt.compare(oldPassword, hashedPassword);
+
+    if (!isPasswordCorrect) {
+      throw new BadRequestError("Wrong password");
+    }
+
+    const user = await userService.updatePassword(userData, newPassword);
+    response.status(201).send(user);
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      response.status(404).json({
+        message: "User not found",
+      });
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(404).json({
+        message: "Wrong format id",
+      });
+      return;
+    } else if (error instanceof BadRequestError) {
+      response.status(400).json({
+        message: error.message,
+      });
+    }
+
+    next(new InternalServerError());
+  }
+}
+
 // ToDo: fix deletion
 export async function deleteUser(request: Request, response: Response) {
   const id = request.params.id;
@@ -186,24 +234,70 @@ export async function loginUser(request: Request, response: Response) {
   }
 }
 
+// Todo: Send verification email to user
 export async function forgotPassword(request: Request, response: Response) {
   try {
     const { email } = request.body;
     const userData = await userService.getUserByEmail(email);
-    const code: string = uuid();
+    const token: string = uuid();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
       throw new BadRequestError("Invalid email address.");
     }
 
-    const verificationLink = `localhost:8080/verify?code=${code}`;
-
+    const verificationLink = `${baseUrl}/reset-password?token=${token}`;
     await userService.sendVerificationEmail(email, verificationLink);
+
+    userData.resetToken = token;
+    userData.resetTokenExpiresAt = new Date(Date.now() + 3600000);
+    await userData.save();
 
     response
       .status(200)
       .json({ message: "Verification email sent successfully." });
+  } catch (error) {
+    if (error instanceof BadRequestError) {
+      response.status(400).json({
+        message: error.message,
+      });
+    } else if (error instanceof NotFoundError) {
+      response.status(404).json({
+        message: error.message,
+      });
+    } else {
+      response.status(500).json({
+        message: "Failed to send verification email.",
+      });
+    }
+  }
+}
+
+// Todo: reset password
+export async function resetPassword(request: Request, response: Response) {
+  try {
+    const { newPassword } = request.body;
+    const token = request.query.token as string; // Retrieve token from URL query parameters
+
+    if (!newPassword || !token) {
+      throw new BadRequestError("Invalid or missing reset token");
+    }
+
+    const userData = await userService.getUserByResetToken(token);
+
+    if (!userData.resetTokenExpiresAt) {
+      throw new BadRequestError("Missing reset token expired time");
+    }
+
+    if (Date.now() > userData.resetTokenExpiresAt.getTime()) {
+      throw new BadRequestError("Expired reset token");
+    }
+
+    const newUserData = await userService.updatePassword(userData, newPassword);
+
+    response
+      .status(200)
+      .json({ newUserData, message: "Password reset successful." });
   } catch (error) {
     if (error instanceof BadRequestError) {
       response.status(400).json({

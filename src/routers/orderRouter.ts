@@ -9,44 +9,45 @@ import {
   updateOrder,
 } from "../controllers/orders";
 import passport from "passport";
-import { Role } from "../misc/types";
 import adminCheck from "../middlewares/adminCheck";
 
 const router = express.Router();
 
-// Lam
-
-// Todo: get all orders
+// Todo: get all orders by Admin
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  adminCheck,
+  adminCheck(),
   getAllOrders
 );
-// Todo: create order
+
+// Todo: create a new order by user
 router.post(
   "/:userId",
   passport.authenticate("jwt", { session: false }),
   createOrder
 );
-// Todo: get single order
+
+// Todo: get single order by admin
 router.get(
-  "/:orderId",
+  "/admin/:orderId",
   passport.authenticate("jwt", { session: false }),
-  adminCheck,
+  adminCheck(),
   getOrderById
 );
-// Todo: update order
+
+// Todo: update order by user
 router.put(
   "/:userId/:orderId",
   passport.authenticate("jwt", { session: false }),
   updateOrder
 );
-// Todo: delete order
+
+// Todo: delete order by Admin
 router.delete(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
-  adminCheck,
+  adminCheck(),
   deleteOrder
 );
 
@@ -58,3 +59,4 @@ router.get(
 );
 
 export default router;
+// Lam Ngo

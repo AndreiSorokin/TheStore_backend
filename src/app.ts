@@ -35,12 +35,12 @@ app.use("/api/v1/users", usersRouter);
 // );
 
 // JWT || muzahid
-app.use("/", jwtApiRouter);
-app.post("/refresh-token", refreshToken);
-app.post("/verify-token", (req: Request, res: Response, next: NextFunction) => {
-  console.log("verify-token", req.ip);
-  return res.json({ status: 200, message: "Verified" });
-});
+// app.use("/", jwtApiRouter);
+// app.post("/refresh-token", refreshToken);
+// app.post("/verify-token", (req: Request, res: Response, next: NextFunction) => {
+//   console.log("verify-token", req.ip);
+//   return res.json({ status: 200, message: "Verified" });
+// });
 
 app.use(errorHandler);
 

@@ -10,7 +10,7 @@ import {
 import { User } from "../misc/types";
 import mongoose from "mongoose";
 
-// Fetching all orders by Admin
+// Todo: Get all orders by Admin
 export async function getAllOrders(
   _: Request,
   response: Response,
@@ -24,7 +24,7 @@ export async function getAllOrders(
   }
 }
 
-// Creating an new order by User
+// Todo: Create a new order by user
 export async function createOrder(
   request: Request,
   response: Response,
@@ -35,8 +35,7 @@ export async function createOrder(
     if (!userId) {
       throw new NotFoundError("Missing userId!");
     }
-
-    const data = new Order(...request.body, userId);
+    const data = new Order(request.body);
     const newOrder = await ordersService.createOrder(data, userId);
 
     response.status(201).json(newOrder);
@@ -51,6 +50,7 @@ export async function createOrder(
         message: "Wrong user id format",
       });
     }
+    console.log(error);
     next(new InternalServerError());
   }
 }
@@ -131,6 +131,7 @@ export async function deleteOrder(
       response.status(404).json({
         message: `Cant find order with id ${request.params.orderId}`,
       });
+      return;
     } else if (error instanceof mongoose.Error.CastError) {
       response.status(404).json({
         message: "Wrong id format",
@@ -140,13 +141,14 @@ export async function deleteOrder(
       response.status(400).json({
         message: `Missing orderId`,
       });
+      return;
     }
 
     next(new InternalServerError());
   }
 }
 
-// Todo: Fetching all orders by user
+// Todo: Get all orders by user Id
 export async function getAllOrdersByUserId(
   request: Request,
   response: Response,
@@ -155,13 +157,25 @@ export async function getAllOrdersByUserId(
   try {
     const userId = request.params.userId;
     const orders = await ordersService.getAllOrdersByUserId(userId);
+    console.log(orders);
 
     response.status(200).json(orders);
   } catch (error) {
-    if (error instanceof BadRequestError) {
-      response.status(400).json({
-        message: `Missing userId`,
+    if (error instanceof NotFoundError) {
+      response.status(404).json({
+        message: `Can not find orders with userId: ${request.params.userId}`,
       });
+      return;
+    } else if (error instanceof mongoose.Error.CastError) {
+      response.status(404).json({
+        message: "Wrong id format",
+      });
+      return;
+    } else if (error instanceof BadRequestError) {
+      response.status(400).json({
+        message: `Missing orderId`,
+      });
+      return;
     }
 
     next(new InternalServerError());

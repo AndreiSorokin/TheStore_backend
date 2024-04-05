@@ -16,10 +16,8 @@ export const jwtStrategy = new JwtStrategy(
   },
   async (payload: Payload, done: any) => {
     const userEmail = payload.email;
-    console.log(userEmail);
     try {
       const user = await userService.getUserByEmail(userEmail);
-      console.log(user);
       done(null, user);
     } catch (error) {
       done(error, false);

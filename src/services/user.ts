@@ -1,5 +1,6 @@
 import User, { UserDocument } from "../models/User";
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
+import bcrypt from "bcrypt";
 
 import nodemailer from "nodemailer";
 
@@ -7,7 +8,10 @@ const getAllUser = async (): Promise<UserDocument[]> => {
   return await User.find().populate("orders");
 };
 
-const getSingleUser = async (id: string): Promise<UserDocument | undefined> => {
+const getSingleUser = async (id: string): Promise<UserDocument> => {
+  if (!id) {
+    throw new BadRequestError();
+  }
   const user = await User.findById(id);
   if (user) {
     return user;
@@ -42,6 +46,20 @@ const updateUser = async (id: string, updateData: Partial<UserDocument>) => {
   return updateUser;
 };
 
+const updatePassword = async (
+  user: UserDocument,
+  newPassword: string
+): Promise<UserDocument> => {
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  user.resetToken = null;
+  user.resetTokenExpiresAt = null;
+
+  await user.save();
+
+  return user;
+};
+
 const deleteUser = async (id: string) => {
   const user = await User.findByIdAndDelete(id);
   if (user) {
@@ -51,7 +69,7 @@ const deleteUser = async (id: string) => {
 };
 
 const getUserByEmail = async (email: string): Promise<UserDocument> => {
-  if (email === "") {
+  if (!email) {
     throw new BadRequestError(`Please input data properly`);
   }
   const user = await User.findOne({ email: email });
@@ -94,6 +112,21 @@ const sendVerificationEmail = async (
   return await transporter.sendMail(mailOptions);
 };
 
+const getUserByResetToken = async (
+  resetToken: string
+): Promise<UserDocument> => {
+  if (!resetToken) {
+    throw new BadRequestError(`Please provide resetToken`);
+  }
+  const user = await User.findOne({ resetToken });
+
+  if (!user) {
+    throw new NotFoundError(`User Not Found`);
+  }
+
+  return user;
+};
+
 export default {
   getAllUser,
   getSingleUser,
@@ -102,4 +135,6 @@ export default {
   deleteUser,
   getUserByEmail,
   sendVerificationEmail,
+  updatePassword,
+  getUserByResetToken,
 };

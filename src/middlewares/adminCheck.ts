@@ -6,6 +6,7 @@ import { Role } from "../misc/types";
 const adminCheck = () => {
   return (request: Request, response: Response, next: NextFunction) => {
     const userInformation = request.user as UserDocument;
+
     if (userInformation.role !== Role.ADMIN) {
       throw new ForbiddenError("You don't have access to this operation");
     }

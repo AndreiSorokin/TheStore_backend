@@ -1,7 +1,21 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { Order } from "../misc/types";
+import { Order, OrderItem } from "../misc/types";
 
 export type OrderDocument = Document & Order;
+
+export type OrderItemDocument = Document & OrderItem;
+
+const OrderItemSchema = new Schema<OrderItemDocument>({
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  productId: {
+    type: Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+});
 
 const OrderSchema = new Schema<OrderDocument>({
   userId: {
@@ -22,23 +36,7 @@ const OrderSchema = new Schema<OrderDocument>({
     type: Number,
     required: true,
   },
-  orderItems: [
-    {
-      id: {
-        type: String,
-        required: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-      },
-      productId: {
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-        required: true,
-      },
-    },
-  ],
+  orderItems: [OrderItemSchema],
 });
 
 export default mongoose.model<OrderDocument>("Orders", OrderSchema);
