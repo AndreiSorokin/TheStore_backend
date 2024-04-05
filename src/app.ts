@@ -11,7 +11,7 @@ import {
   googleAuthStrategy,
   jwtStrategy,
 } from "./config/passport";
-import userStatusCheck from "./middlewares/userStatusCheck";
+
 
 dotenv.config({ path: ".env" });
 
