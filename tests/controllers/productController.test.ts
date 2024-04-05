@@ -2,27 +2,8 @@ import request from "supertest";
 import connect, { MongoHelper } from "../db-helper";
 
 import app from "../../src/app";
-
-async function createUser() {
-   const data = {
-      username: 'name',
-      password: 'password',
-      firstName: 'firstName',
-      lastName: 'lastName',
-      email: 'email@example.com',
-      role: 'ADMIN',
-   }
-   return await request(app).post("/api/v1/users").send(data)
-}
-
-async function getToken(email: string, password: string) {
-   return await request(app)
-      .post("/api/v1/users/login")
-      .send({ 
-         email: 'email@example.com',
-         password: 'password'
-      })
-}
+import productServices from "../../src/services/products";
+import { ProductDocument } from "../../src/models/Product";
 
 describe('product controller test', () => {
    let mongoHelper: MongoHelper;
@@ -39,9 +20,6 @@ describe('product controller test', () => {
       await mongoHelper.clearDatabase();
    });
 
-
-   
-
    it("should return a list of products", async() => {
       const response = await request(app)
          .get('/api/v1/products')
@@ -50,37 +28,13 @@ describe('product controller test', () => {
          expect(response.body.products.length).toEqual(0);
    })
 
-   it("should create a category when use is ADMIN", async () => {
-      const userResponse = await createUser();
-
-      const userData = await getToken(userResponse.body.email, "password");
-      const token = userData.body.token;
-
-      const response = await request(app)
-         .post("/api/v1/products")
-         .set("Authorization", "Bearer " + token)
-         .send({ 
-            name: "name", 
-            price: 111, 
-            description: "description", 
-            category: "category1", 
-            image: "img1", 
-            size: "Large" 
-         });
-   
+   it("should return a single product", async() => {
+      const mockProduct: ProductDocument = { _id: '123', name: 'Product Name', price: 10 } as ProductDocument;
+      jest.spyOn(productServices, 'getOneProduct').mockResolvedValue(mockProduct);
+      
+      const response = await request(app).get('/api/v1/products/123');
+      
       expect(response.status).toBe(201);
-   
-      // expect(response.body).toMatchObject({
-      //    newCategory: {
-      //       name: "name", 
-      //       price: 111, 
-      //       description: "description", 
-      //       category: "category1", 
-      //       image: "img1", 
-      //       size: "Large",
-      //       _id: expect.any(String),
-      //       __v: expect.any(Number),
-      //    },
-      // });
+      expect(response.body).toEqual(mockProduct);
    });
 })

@@ -89,7 +89,6 @@ const sendVerificationEmail = async (
     throw new BadRequestError("Please provide your email");
   }
 
-  //  Todo: Create a transporter using SMTP server details
   const transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -101,7 +100,6 @@ const sendVerificationEmail = async (
     },
   });
 
-  // Todo: create the email message
   const mailOptions = {
     from: "your-email@gmail.com",
     to: email,
@@ -126,6 +124,56 @@ const getUserByResetToken = async (
 
   return user;
 };
+const assingAdmin = async (id: string, updateRole: Partial<UserDocument>) => {
+  if (!id) {
+    throw new BadRequestError();
+  }
+
+  const options = { new: true, runValidators: true };
+  const updateUser = await User.findByIdAndUpdate(id, updateRole, options);
+
+  if (!updateUser) {
+    throw new BadRequestError();
+  }
+
+  return updateUser;
+};
+
+const removeAdmin = async (id: string, updateRole: Partial<UserDocument>) => {
+  if (!id) {
+    throw new BadRequestError();
+  }
+
+  const options = { new: true, runValidators: true };
+  const updateUser = await User.findByIdAndUpdate(id, updateRole, options);
+
+  if (!updateUser) {
+    throw new BadRequestError();
+  }
+  return updateUser;
+};
+const updateUserStatus = async (
+  userId: string,
+  status: Partial<UserDocument>
+) => {
+  if (!userId) {
+    throw new BadRequestError();
+  } else if (!status) {
+    throw new BadRequestError();
+  }
+
+  const options = { new: true, runValidators: true };
+  const updateUserStatus = await User.findByIdAndUpdate(
+    userId,
+    status,
+    options
+  );
+
+  if (!updateUserStatus) {
+    throw new BadRequestError();
+  }
+  return updateUserStatus;
+};
 
 export default {
   getAllUser,
@@ -137,4 +185,7 @@ export default {
   sendVerificationEmail,
   updatePassword,
   getUserByResetToken,
+  assingAdmin,
+  removeAdmin,
+  updateUserStatus,
 };

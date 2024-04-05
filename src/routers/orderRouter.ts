@@ -10,6 +10,7 @@ import {
 } from "../controllers/orders";
 import passport from "passport";
 import adminCheck from "../middlewares/adminCheck";
+import userStatusCheck from "../middlewares/userStatusCheck";
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ const router = express.Router();
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(),
+  adminCheck,
   getAllOrders
 );
 
@@ -25,6 +26,7 @@ router.get(
 router.post(
   "/:userId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   createOrder
 );
 
@@ -32,7 +34,8 @@ router.post(
 router.get(
   "/admin/:orderId",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(),
+  userStatusCheck,
+  adminCheck,
   getOrderById
 );
 
@@ -40,6 +43,7 @@ router.get(
 router.put(
   "/:userId/:orderId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   updateOrder
 );
 
@@ -47,7 +51,8 @@ router.put(
 router.delete(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
-  adminCheck(),
+  userStatusCheck,
+  adminCheck,
   deleteOrder
 );
 
@@ -55,6 +60,7 @@ router.delete(
 router.get(
   "/:userId",
   passport.authenticate("jwt", { session: false }),
+  userStatusCheck,
   getAllOrdersByUserId
 );
 

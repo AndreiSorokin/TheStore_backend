@@ -38,7 +38,6 @@ export async function getAllProducts(
         const count = productList.length;
         response.status(200).json({ totalCount: count, products: productList });
     } catch (error) {
-        console.log("error", error);
         next(new InternalServerError("Internal error"));
     }
 }
