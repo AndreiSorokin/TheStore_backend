@@ -1,4 +1,5 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
+import GoogleTokenStrategy from "passport-google-id-token";
 import dotenv from "dotenv";
 import { Payload } from "../misc/types";
 import userService from "../services/user";
@@ -32,10 +33,11 @@ export const googleAuthStrategy = new GoogleStrategy({
       callbackURL: "http://localhost:8080/api/v1/users/auth/google/callback",
     },
     async (accessToken:any, refreshToken : any, profile:any, cb : any) => {
+      console.log("inside the strategy")
       const email = profile.emails[0].value;
+      console.log(email)
       try {
         const user = await User.findOne({ email: email });
-        console.log(user)
         if(user!=null){
             const response=await loginUserForGoogelUser({
                 password: user.password,

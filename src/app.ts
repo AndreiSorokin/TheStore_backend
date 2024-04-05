@@ -9,7 +9,6 @@ import orderRouter from "./routers/orderRouter";
 import errorHandler from "./middlewares/errorHandler";
 import {
   googleAuthStrategy,
-  googleStrategy,
   jwtStrategy,
 } from "./config/passport";
 import userStatusCheck from "./middlewares/userStatusCheck";
@@ -20,7 +19,6 @@ const app = express();
 app.use(express.json());
 app.use(passport.initialize());
 passport.use(jwtStrategy);
-passport.use(googleStrategy);
 passport.use(googleAuthStrategy);
 
 dotenv.config({ path: ".env" });
