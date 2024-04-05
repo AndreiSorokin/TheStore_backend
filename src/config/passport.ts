@@ -45,7 +45,6 @@ export const googleAuthStrategy = new GoogleStrategy({
             })
           return cb(null, response);
         }else{
-          //create a new user
 
             const username = profile.displayName;
             const firstName=profile.name.givenName;

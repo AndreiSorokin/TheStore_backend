@@ -25,8 +25,6 @@ router.post("/registration", createUser);
 
 router.route("/forgot-password").post(forgotPassword);
 
-// Lam version
-
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -35,7 +33,6 @@ router.get(
   getAllUser
 );
 
-// Todo: get a single user by Admin
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -45,7 +42,6 @@ router.get(
 
 router.post("/", createUser);
 
-// Todo: update a user information
 router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -69,14 +65,12 @@ router.put(
   removeAdmin
 );
 
-// Todo: update a user password
 router.put(
   "/:id/update-password",
   passport.authenticate("jwt", { session: false }),
   updatePassword
 );
 
-// Todo: Delete a user
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -85,7 +79,6 @@ router.delete(
   deleteUser
 );
 
-// noor
 router.post(
   "/changeUserStatus",
   passport.authenticate("jwt", { session: false }),
@@ -93,8 +86,6 @@ router.post(
   updateUserStatus
 );
 
-// noor
-//google login
 router.get("/auth/google", passport.authenticate('google', { scope: ['profile','email'] }));
 router.get("/auth/google/callback",passport.authenticate('google', {   session: false,failureRedirect: '/login' }),googleLoginCallback);
 export default router;

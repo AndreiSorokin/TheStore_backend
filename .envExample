@@ -1,0 +1,6 @@
+PORT = 8080
+MONGO_DB_URL = mongodb+srv://username:ptBEVrnoz8nYEFBV@cluster0.38zbltc.mongodb.net/
+GOOGLE_CLIENT_ID=910050408095-7clc53ft3o2j4qlm6qiv94kbfqji84pv.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+JWT_SECRET=aeygyuaefgtyiea9359288e9fagtyaghua726829882
+JWT_EXPIRES_IN=999999999

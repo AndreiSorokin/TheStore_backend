@@ -7,7 +7,6 @@ import {
   InternalServerError,
   NotFoundError,
 } from "../errors/ApiError";
-import { User } from "../misc/types";
 import mongoose from "mongoose";
 
 // Todo: Get all orders by Admin
@@ -24,7 +23,6 @@ export async function getAllOrders(
   }
 }
 
-// Todo: Create a new order by user
 export async function createOrder(
   request: Request,
   response: Response,
@@ -55,7 +53,6 @@ export async function createOrder(
   }
 }
 
-// Getting a specific order by Admin or User
 export async function getOrderById(
   request: Request,
   response: Response,
@@ -84,7 +81,6 @@ export async function getOrderById(
   }
 }
 
-// Todo: Update an order
 export async function updateOrder(
   request: Request,
   response: Response,
@@ -115,7 +111,6 @@ export async function updateOrder(
   }
 }
 
-// Todo: Delete an order
 export async function deleteOrder(
   request: Request,
   response: Response,
@@ -148,7 +143,6 @@ export async function deleteOrder(
   }
 }
 
-// Todo: Get all orders by user Id
 export async function getAllOrdersByUserId(
   request: Request,
   response: Response,

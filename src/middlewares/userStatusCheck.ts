@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ForbiddenError } from "../errors/ApiError";
 import { UserDocument } from "../models/User";
-import { Role, UserStatus } from "../misc/types";
+import { UserStatus } from "../misc/types";
 
 const userStatusCheck = (request: Request, response: Response, next: NextFunction) => {
 
@@ -9,7 +9,7 @@ const userStatusCheck = (request: Request, response: Response, next: NextFunctio
     if (userInformation.status !== UserStatus.ACTIVE) {
         throw new ForbiddenError("You don't have access to this systems Please contact support ");
     }
-     next();
+    next();
 };
 
 export default userStatusCheck;

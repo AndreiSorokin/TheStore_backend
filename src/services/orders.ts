@@ -4,9 +4,6 @@ import Order, { OrderDocument } from "../models/Order";
 const getAllOrders = async (): Promise<OrderDocument[]> => {
   const orders = await Order.find();
   return orders;
-  // limit
-  // skip
-  // {regex: search query}
 };
 
 const createOrder = async (

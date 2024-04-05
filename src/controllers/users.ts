@@ -126,7 +126,6 @@ export async function updateUser(request: Request, response: Response) {
   }
 }
 
-// Todo: update the password
 export async function updatePassword(
   request: Request,
   response: Response,
@@ -173,7 +172,6 @@ export async function updatePassword(
   }
 }
 
-// ToDo: fix deletion
 export async function deleteUser(request: Request, response: Response) {
   const id = request.params.id;
 
@@ -475,7 +473,6 @@ export async function removeAdmin(request: Request, response: Response) {
   }
 }
 
-// noor
 export async function updateUserStatus(request: Request, response: Response) {
   const { userId, userStatus } = request.body;
 
@@ -504,4 +501,3 @@ export async function updateUserStatus(request: Request, response: Response) {
     }
   }
 }
-// noor
