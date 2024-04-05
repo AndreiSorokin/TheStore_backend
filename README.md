@@ -6,10 +6,6 @@ This project has been created in Integrify through collaboration with:
 3. https://github.com/naimulNoor
 4. https://github.com/muzahidswe
 
-### Deployment
-Deployed on by Render
-https://fs17-backend-89jl.onrender.com/
-
 ### Getting Started
 In order to run the app you need to have the following installed:
 -Node v18.14.1
