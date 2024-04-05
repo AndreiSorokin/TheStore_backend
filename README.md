@@ -22,6 +22,7 @@ In order to run the app you need to have the following installed:
 - Restar the tests with `rs`
 
 ### ERD diagram
+![ERD](https://github.com/AndreiSorokin/fs17-backend/assets/72672144/2c6a71ce-d8ca-4692-80ac-9cc9835d7794)
 
 ### Endpoints:
  1.**Products:**
