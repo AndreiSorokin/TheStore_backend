@@ -11,7 +11,7 @@ import {
   updatePassword,
   updateUserStatus,
   assingAdmin,
-  removeAdmin,
+  removeAdmin, googleLoginCallback,
 } from "../controllers/users";
 
 import adminCheck from "../middlewares/adminCheck";
@@ -94,5 +94,7 @@ router.post(
 );
 
 // noor
-
+//google login
+router.get("/auth/google", passport.authenticate('google', { scope: ['profile','email'] }));
+router.get("/auth/google/callback",passport.authenticate('google', {   session: false,failureRedirect: '/login' }),googleLoginCallback);
 export default router;
