@@ -1,6 +1,6 @@
 ### Welcome to Our Internet Store REST API
 This REST API provides functionality for managing an internet store. You can perform CRUD operations on the database and control user access to specific routes.
-This project has been created through collaboration at Integrify:
+This project has been created in Integrify through collaboration with:
 1. https://github.com/AndreiSorokin 
 2. https://github.com/LamNgo1911
 3. https://github.com/naimulNoor
