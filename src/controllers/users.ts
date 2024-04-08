@@ -262,7 +262,7 @@ export async function loginUser(request: Request, response: Response) {
   }
 }
 
-// Todo: Send verification email to user
+// Todo: Send verification link to user
 export async function loginUserForGoogelUser(data: loginPayload) {
   try {
     const { email, password } = data;

@@ -58,7 +58,7 @@ router.delete(
 
 // Todo: fetch all orders by User
 router.get(
-  "/:userId",
+  "/:userId/get-orders",
   passport.authenticate("jwt", { session: false }),
   userStatusCheck,
   getAllOrdersByUserId

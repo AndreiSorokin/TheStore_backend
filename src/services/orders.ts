@@ -1,12 +1,65 @@
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
 import Order, { OrderDocument } from "../models/Order";
+import { PipelineStage } from "mongoose";
+
+type CountResult = {
+  count: number;
+};
+
+type OrderData = {
+  orders: OrderDocument[];
+  count: number;
+};
+
+// const getAllOrders = async (
+//   limit: number,
+//   skip: number,
+//   searchQuery?: string,
+//   minPrice?: number,
+//   maxPrice?: number
+// ): Promise<OrderData> => {
+//   const pipeline: PipelineStage[] = [];
+
+//   // Search by userId (case-insensitive)
+//   if (searchQuery) {
+//     pipeline.push({
+//       $match: { userId: { $regex: searchQuery, $options: "i" } },
+//     });
+//   }
+
+//   // Price range matching
+//   if (minPrice !== undefined && maxPrice !== undefined) {
+//     pipeline.push({
+//       $match: {
+//         price: { $gte: minPrice, $lte: maxPrice },
+//       },
+//     });
+//   }
+
+//   // Add sorting and pagination to the pipeline
+//   pipeline.push(
+//     { $sort: { createdAt: -1 } },
+//     { $skip: skip },
+//     { $limit: limit }
+//   );
+
+//   // Perform the aggregation
+//   const countPipeline: PipelineStage[] = [...pipeline]; // Clone the pipeline for counting
+//   countPipeline.push({ $count: "count" });
+//   const countResult: CountResult[] = await Order.aggregate<CountResult>(
+//     countPipeline
+//   );
+
+//   const count = countResult.length > 0 ? countResult[0].count : 0;
+//   console.log("Pipeline:", JSON.stringify(pipeline));
+//   console.log("Count:", count);
+//   const data = await Order.aggregate(pipeline);
+
+//   return { orders: data, count };
+// };
 
 const getAllOrders = async (): Promise<OrderDocument[]> => {
-  const orders = await Order.find();
-  return orders;
-  // limit
-  // skip
-  // {regex: search query}
+  return await Order.find();
 };
 
 const createOrder = async (

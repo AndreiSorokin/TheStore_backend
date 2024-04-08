@@ -101,7 +101,7 @@ const sendVerificationEmail = async (
   });
 
   const mailOptions = {
-    from: "your-email@gmail.com",
+    from: "lamngo606@gmail.com",
     to: email,
     subject: "Email Verification",
     text: `Please verify your email by clicking the following link: ${verificationLink}`,
