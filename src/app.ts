@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
+import cors from "cors";
 
 import productsRouter from "./routers/productsRouter";
 import usersRouter from "./routers/usersRouter";
@@ -16,6 +17,7 @@ import {
 dotenv.config({ path: ".env" });
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use(passport.initialize());
 passport.use(jwtStrategy);
