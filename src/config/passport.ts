@@ -1,11 +1,10 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import GoogleTokenStrategy from "passport-google-id-token";
 import dotenv from "dotenv";
-import  http from "http"
-import {Payload, UserToRegister} from "../misc/types";
+import { Payload } from "../misc/types";
 import userService from "../services/user";
 import User from "../models/User";
-import {createUser, loginUserForGoogelUser, registerUserForGoogelUser} from "../controllers/users";
+import { loginUserForGoogelUser, registerUserForGoogelUser } from "../controllers/users";
 import bcrypt from "bcrypt";
 
 dotenv.config({ path: ".env" });
@@ -28,12 +27,6 @@ export const jwtStrategy = new JwtStrategy(
   }
 );
 
-const clientId = "string";
-export const googleStrategy = new GoogleTokenStrategy(
-  { clientID: clientId },
-  async () => {}
-);
-
 export const googleAuthStrategy = new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID as string ,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -45,7 +38,6 @@ export const googleAuthStrategy = new GoogleStrategy({
       console.log(email)
       try {
         const user = await User.findOne({ email: email });
-        console.log(user)
         if(user!=null){
             const response=await loginUserForGoogelUser({
                 password: user.password,
@@ -53,7 +45,6 @@ export const googleAuthStrategy = new GoogleStrategy({
             })
           return cb(null, response);
         }else{
-          //create a new user
 
             const username = profile.displayName;
             const firstName=profile.name.givenName;

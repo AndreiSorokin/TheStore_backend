@@ -14,7 +14,6 @@ import userStatusCheck from "../middlewares/userStatusCheck";
 
 const router = express.Router();
 
-// Todo: get all orders by Admin
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -22,7 +21,6 @@ router.get(
   getAllOrders
 );
 
-// Todo: create a new order by user
 router.post(
   "/:userId",
   passport.authenticate("jwt", { session: false }),
@@ -30,7 +28,6 @@ router.post(
   createOrder
 );
 
-// Todo: get single order by admin
 router.get(
   "/admin/:orderId",
   passport.authenticate("jwt", { session: false }),
@@ -39,7 +36,6 @@ router.get(
   getOrderById
 );
 
-// Todo: update order by user
 router.put(
   "/:userId/:orderId",
   passport.authenticate("jwt", { session: false }),
@@ -47,7 +43,6 @@ router.put(
   updateOrder
 );
 
-// Todo: delete order by Admin
 router.delete(
   "/:orderId",
   passport.authenticate("jwt", { session: false }),
@@ -56,7 +51,6 @@ router.delete(
   deleteOrder
 );
 
-// Todo: fetch all orders by User
 router.get(
   "/:userId/get-orders",
   passport.authenticate("jwt", { session: false }),
@@ -65,4 +59,3 @@ router.get(
 );
 
 export default router;
-// Lam Ngo

@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
+import cors from "cors";
 
 import productsRouter from "./routers/productsRouter";
 import usersRouter from "./routers/usersRouter";
@@ -9,18 +10,17 @@ import orderRouter from "./routers/orderRouter";
 import errorHandler from "./middlewares/errorHandler";
 import {
   googleAuthStrategy,
-  googleStrategy,
   jwtStrategy,
 } from "./config/passport";
-import userStatusCheck from "./middlewares/userStatusCheck";
+
 
 dotenv.config({ path: ".env" });
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use(passport.initialize());
 passport.use(jwtStrategy);
-passport.use(googleStrategy);
 passport.use(googleAuthStrategy);
 
 dotenv.config({ path: ".env" });

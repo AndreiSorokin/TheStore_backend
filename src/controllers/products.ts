@@ -4,10 +4,8 @@ import mongoose from "mongoose";
 import Product from "../models/Product";
 import productsService from "../services/products";
 import { ProductDocument } from "../models/Product";
-import { User } from "../misc/types";
 import {
     BadRequestError,
-    ForbiddenError,
     InternalServerError,
     NotFoundError,
 } from "../errors/ApiError";

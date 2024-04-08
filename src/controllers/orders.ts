@@ -109,7 +109,6 @@ export async function getOrderById(
   }
 }
 
-// Todo: Update an order
 export async function updateOrder(
   request: Request,
   response: Response,
@@ -140,7 +139,6 @@ export async function updateOrder(
   }
 }
 
-// Todo: Delete an order
 export async function deleteOrder(
   request: Request,
   response: Response,
@@ -173,7 +171,6 @@ export async function deleteOrder(
   }
 }
 
-// Todo: Get all orders by user Id
 export async function getAllOrdersByUserId(
   request: Request,
   response: Response,
