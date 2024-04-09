@@ -18,7 +18,7 @@ export type Product = {
   price: number;
   description: string;
   category: Category;
-  image: string;
+  images: [string];
   size: Size;
 };
 

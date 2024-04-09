@@ -33,8 +33,10 @@ export async function getAllProducts(
             !isNaN(Number(maxPrice)) ? Number(maxPrice) : Infinity
         );
 
-        const count = productList.length;
-        response.status(200).json({ totalCount: count, products: productList });
+        // const count = productList.length;
+        // response.status(200).json({ totalCount: count, products: productList });
+
+        response.status(200).json({ products: productList });
     } catch (error) {
         next(new InternalServerError("Internal error"));
     }
@@ -66,7 +68,7 @@ export async function getOneProduct(
 
 export async function createProduct(request: Request, response: Response) {
     try {
-        const { name, price, description, category, image, size } = request.body;
+        const { name, price, description, category, images, size } = request.body;
 
         const categoryDoc = await Category.findOne({ name: category });
         if (!categoryDoc) {
@@ -78,7 +80,7 @@ export async function createProduct(request: Request, response: Response) {
             price,
             description,
             category: categoryDoc._id,
-            image,
+            images,
             size,
         });
 
