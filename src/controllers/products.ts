@@ -83,7 +83,9 @@ export async function createProduct(request: Request, response: Response) {
             images,
             size,
         });
-
+/**
+ * 
+ */
         const newProduct = await productsService.createProduct(product);
         response.status(201).json(newProduct);
     } catch (error) {
