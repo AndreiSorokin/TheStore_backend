@@ -36,8 +36,8 @@ export async function getAllProducts(
             !isNaN(Number(maxPrice)) ? Number(maxPrice) : Infinity
         );
 
-        // const count = productList.length;
-        // response.status(200).json({ totalCount: count, products: productList });
+        const count = productList.length;
+        response.status(200).json({ totalCount: count, products: productList });
 
         response.status(200).json({ products: productList });
     } catch (error) {
@@ -125,35 +125,6 @@ export async function createProduct(request: Request, response: Response) {
         }
     }
 }
-
-// export async function createProduct(request: Request, response: Response) {
-//     try {
-//         const { name, price, description, category, images, size } = request.body;
-
-//         const categoryDoc = await Category.findOne({ name: category });
-//         if (!categoryDoc) {
-//             throw new BadRequestError("Category not found");
-//         }
-
-//         const product = new Product({
-//             name,
-//             price,
-//             description,
-//             category: categoryDoc._id,
-//             images,
-//             size,
-//         });
-
-//         const newProduct = await productsService.createProduct(product);
-//         response.status(201).json(newProduct);
-//     } catch (error) {
-//         if (error instanceof BadRequestError) {
-//             response.status(400).json({ error: error.message });
-//         } else {
-//             response.status(500).json({ error: "Internal Server Error" });
-//         }
-//     }
-// }
 
 export async function updateProduct(request: Request, response: Response) {
     const id = request.params.id;
