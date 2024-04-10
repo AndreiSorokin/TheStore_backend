@@ -1,5 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
+import passport from "passport";
+import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
 
 import Product from "../models/Product";
 import productsService from "../services/products";
@@ -66,13 +69,41 @@ export async function getOneProduct(
     }
 }
 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+async function uploadImageToCloudinary(fileBuffer: Buffer, fileName: string): Promise<string> {
+    try {
+        const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileBuffer.toString('base64')}`, {
+            folder: "TheStore",
+            public_id: fileName,
+        });
+        return result.secure_url;
+    } catch (error) {
+        console.error('Error uploading image to Cloudinary:', error);
+        throw new Error('Failed to upload image');
+    }
+}
+
 export async function createProduct(request: Request, response: Response) {
     try {
-        const { name, price, description, category, images, size } = request.body;
+        const { name, price, description, category, size } = request.body;
 
         const categoryDoc = await Category.findOne({ name: category });
         if (!categoryDoc) {
             throw new BadRequestError("Category not found");
+        }
+
+        
+        let imageUrls = [];
+        if (request.files) {
+            const files = request.files as Express.Multer.File[];
+            for (const file of files) {
+                const imageUrl = await uploadImageToCloudinary(file.buffer, file.originalname);
+                imageUrls.push(imageUrl);
+            }
         }
 
         const product = new Product({
@@ -80,12 +111,10 @@ export async function createProduct(request: Request, response: Response) {
             price,
             description,
             category: categoryDoc._id,
-            images,
+            images: imageUrls,
             size,
         });
-/**
- * 
- */
+        
         const newProduct = await productsService.createProduct(product);
         response.status(201).json(newProduct);
     } catch (error) {
@@ -96,6 +125,35 @@ export async function createProduct(request: Request, response: Response) {
         }
     }
 }
+
+// export async function createProduct(request: Request, response: Response) {
+//     try {
+//         const { name, price, description, category, images, size } = request.body;
+
+//         const categoryDoc = await Category.findOne({ name: category });
+//         if (!categoryDoc) {
+//             throw new BadRequestError("Category not found");
+//         }
+
+//         const product = new Product({
+//             name,
+//             price,
+//             description,
+//             category: categoryDoc._id,
+//             images,
+//             size,
+//         });
+
+//         const newProduct = await productsService.createProduct(product);
+//         response.status(201).json(newProduct);
+//     } catch (error) {
+//         if (error instanceof BadRequestError) {
+//             response.status(400).json({ error: error.message });
+//         } else {
+//             response.status(500).json({ error: "Internal Server Error" });
+//         }
+//     }
+// }
 
 export async function updateProduct(request: Request, response: Response) {
     const id = request.params.id;
