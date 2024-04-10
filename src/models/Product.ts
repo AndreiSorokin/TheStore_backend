@@ -36,6 +36,13 @@ const ProductSchema = new Schema({
    },
 })
 
+ProductSchema.set('toJSON', {
+   transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id;
+      delete returnedObject._id
+   }
+})
+
 ProductSchema.index({ name: "text" })
 
 export default mongoose.model<ProductDocument>("Products", ProductSchema)

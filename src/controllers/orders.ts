@@ -9,7 +9,6 @@ import {
 } from "../errors/ApiError";
 import mongoose from "mongoose";
 
-// Todo: Get all orders by Admin
 export async function getAllOrders(
   request: Request,
   response: Response,
@@ -22,34 +21,6 @@ export async function getAllOrders(
     next(new InternalServerError());
   }
 }
-
-// export async function getAllOrders(
-//   request: Request,
-//   response: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const page = Number(request.query?.page) || 1;
-//     const limit = Number(request.query?.limit) || 8;
-//     const search = request.query?.search as string;
-//     const minPrice = Number(request.query?.minPrice) || 0;
-//     const maxPrice = Number(request.query?.maxPrice) || 1000;
-//     const skip = (page - 1) * limit;
-
-//     const { orders, count } = await ordersService.getAllOrders(
-//       limit,
-//       skip,
-//       search,
-//       minPrice,
-//       maxPrice
-//     );
-//     response.status(200).json({ orders, totalCount: count });
-//   } catch (error) {
-//     next(new InternalServerError());
-//   }
-// }
-
-// Todo: Create a new order by user
 export async function createOrder(
   request: Request,
   response: Response,
@@ -79,8 +50,6 @@ export async function createOrder(
     next(new InternalServerError());
   }
 }
-
-// Todo: Get a single order by Admin
 export async function getOrderById(
   request: Request,
   response: Response,
@@ -108,7 +77,6 @@ export async function getOrderById(
     next(new InternalServerError());
   }
 }
-
 export async function updateOrder(
   request: Request,
   response: Response,
@@ -138,7 +106,6 @@ export async function updateOrder(
     next(new InternalServerError());
   }
 }
-
 export async function deleteOrder(
   request: Request,
   response: Response,

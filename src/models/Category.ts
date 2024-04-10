@@ -17,4 +17,11 @@ const CategorySchema = new Schema({
     }
 })
 
+CategorySchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id;
+        delete returnedObject._id
+    }
+})
+
 export default mongoose.model<CategoryDocument>("Category", CategorySchema)

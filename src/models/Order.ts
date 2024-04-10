@@ -17,6 +17,13 @@ const OrderItemSchema = new Schema<OrderItemDocument>({
   },
 });
 
+OrderItemSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id;
+    delete returnedObject._id
+  }
+})
+
 const OrderSchema = new Schema<OrderDocument>({
   userId: {
     type: Schema.Types.ObjectId,
@@ -38,5 +45,12 @@ const OrderSchema = new Schema<OrderDocument>({
   },
   orderItems: [OrderItemSchema],
 });
+
+OrderSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id;
+    delete returnedObject._id
+  }
+})
 
 export default mongoose.model<OrderDocument>("Orders", OrderSchema);
