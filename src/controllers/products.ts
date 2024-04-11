@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
-
+import { FilterQuery } from 'mongoose';
 import Product from "../models/Product";
 import productsService from "../services/products";
 import { ProductDocument } from "../models/Product";
@@ -21,25 +21,40 @@ export async function getAllProducts(
 ) {
     try {
         const {
-            limit = 10,
+            limit = 9,
             offset = 0,
             searchQuery = "",
             minPrice = 0,
             maxPrice = Infinity,
         } = request.query;
 
-        const productList = await productsService.getAllProducts(
-            Number(limit),
-            Number(offset),
-            searchQuery as string,
-            !isNaN(Number(minPrice)) ? Number(minPrice) : 0,
-            !isNaN(Number(maxPrice)) ? Number(maxPrice) : Infinity
-        );
+        // Build the query based on filters
+        const query: FilterQuery<ProductDocument> = {};
 
-        const count = productList.length;
-        response.status(200).json({ totalCount: count, products: productList });
+        if (minPrice !== undefined && maxPrice !== undefined) {
+            query.price = { $gte: minPrice, $lte: maxPrice };
+        }
 
-        response.status(200).json({ products: productList });
+        if (searchQuery) {
+            // Ensure searchQuery is treated as a string
+            const searchQueryStr = String(searchQuery);
+            query.name = { $regex: new RegExp(searchQueryStr, 'i') };
+        }
+
+        // Find all products that match the query without limit and offset
+        const totalProducts = await Product.find(query);
+        const totalCount = totalProducts.length;
+
+        // Now apply limit and offset to get the page-specific products
+        const productList = await Product
+            .find(query)
+            .sort({ price: 1 })
+            .populate("category", { name: 1, image: 1 })
+            .limit(Number(limit))
+            .skip(Number(offset));
+
+        // Return both the total count and the products for the current page
+        response.status(200).json({ totalCount, products: productList });
     } catch (error) {
         next(new InternalServerError("Internal error"));
     }

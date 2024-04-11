@@ -1,4 +1,5 @@
 import express from "express";
+import multer from 'multer';
 
 import {
   getAllUser,
@@ -20,8 +21,11 @@ import userStatusCheck from "../middlewares/userStatusCheck";
 
 const router = express.Router();
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 router.post("/login", loginUser);
-router.post("/registration", createUser);
+router.post("/registration", upload.single('image'), createUser);
 
 router.route("/forgot-password").post(forgotPassword);
 

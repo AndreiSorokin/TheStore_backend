@@ -28,6 +28,9 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  avatar: {
+    type: String
+  },
   resetToken: {
     type: String,
     default: null,

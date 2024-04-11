@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import { v4 as uuid } from "uuid";
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
 
 import userService from "../services/user";
 import User, { UserDocument } from "../models/User";
@@ -15,6 +17,8 @@ import {
 } from "../errors/ApiError";
 import { baseUrl } from "../api/baseUrl";
 import { loginPayload, UserToRegister } from "../misc/types";
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 export async function getAllUser(
   request: Request,
@@ -61,9 +65,27 @@ export async function getSingleUser(
   }
 }
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+async function uploadImageToCloudinary(fileBuffer: Buffer, fileName: string): Promise<string> {
+  try {
+      const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileBuffer.toString('base64')}`, {
+          folder: "TheStore",
+          public_id: fileName,
+      });
+      return result.secure_url;
+  } catch (error) {
+      console.error('Error uploading image to Cloudinary:', error);
+      throw new Error('Failed to upload image');
+  }
+}
+
+
 export async function createUser(request: Request, response: Response) {
-  const { username, password, firstName, lastName, email, role, userStatus } =
-    request.body;
+  const { username, password, firstName, lastName, email, role, userStatus, avatar } = request.body;
 
   try {
     if (!username || !password || !firstName || !lastName || !email) {
@@ -83,6 +105,7 @@ export async function createUser(request: Request, response: Response) {
       email,
       role: role || "CUSTOMER",
       status: userStatus || "ACTIVE",
+      avatar
     });
 
     const newUser = await userService.createUser(user);

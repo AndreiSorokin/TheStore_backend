@@ -51,6 +51,7 @@ export type UserToRegister = {
   firstName: string;
   lastName: string;
   email: string;
+  avatar?: string;
 };
 
 export type User = UserToRegister & {
