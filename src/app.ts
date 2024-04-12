@@ -12,6 +12,7 @@ import {
   googleAuthStrategy,
   jwtStrategy,
 } from "./config/passport";
+import uploadRouter from "./routers/uploadRouter";
 
 
 dotenv.config({ path: ".env" });
@@ -28,6 +29,7 @@ app.use("/api/v1/products", productsRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/uploads", uploadRouter)
 
 app.use(errorHandler);
 

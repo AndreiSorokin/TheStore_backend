@@ -1,10 +1,10 @@
-import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 
 import { Request, Response } from "express";
 import Category from "../models/Category"
 import categoryService from "../services/category"
 import { CategoryDocument } from "../models/Category";
+import { uploadImageToCloudinary } from '../services/uploads';
 
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -29,23 +29,6 @@ export async function getOneCategory(request: Request, response: Response) {
     } catch (error) {
         console.error('Error fetching category:', error);
         response.status(500).json({ message: 'Internal Server Error. ' + error });
-    }
-}
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-async function uploadImageToCloudinary(fileBuffer: Buffer, fileName: string): Promise<string> {
-    try {
-        const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileBuffer.toString('base64')}`, {
-            folder: "TheStore",
-            public_id: fileName,
-        });
-        return result.secure_url;
-    } catch (error) {
-        console.error('Error uploading image to Cloudinary:', error);
-        throw new Error('Failed to upload image');
     }
 }
 
