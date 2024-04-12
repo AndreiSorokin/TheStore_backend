@@ -26,9 +26,11 @@ export async function getAllProducts(
             searchQuery = "",
             minPrice = 0,
             maxPrice = Infinity,
+            size,
+            gender
+            // category
         } = request.query;
 
-        // Build the query based on filters
         const query: FilterQuery<ProductDocument> = {};
 
         if (minPrice !== undefined && maxPrice !== undefined) {
@@ -36,16 +38,26 @@ export async function getAllProducts(
         }
 
         if (searchQuery) {
-            // Ensure searchQuery is treated as a string
             const searchQueryStr = String(searchQuery);
             query.name = { $regex: new RegExp(searchQueryStr, 'i') };
         }
 
-        // Find all products that match the query without limit and offset
+        if(size) {
+            query.size = String(size);
+        }
+
+        if(gender) {
+            query.gender = String(gender);
+        }
+
+        // if(category && category !== '') {
+        //     const categoryQuery = String(category)
+        //     query.category = { $regex: new RegExp(categoryQuery, 'i') };
+        // }
+
         const totalProducts = await Product.find(query);
         const totalCount = totalProducts.length;
 
-        // Now apply limit and offset to get the page-specific products
         const productList = await Product
             .find(query)
             .sort({ price: 1 })
@@ -53,7 +65,6 @@ export async function getAllProducts(
             .limit(Number(limit))
             .skip(Number(offset));
 
-        // Return both the total count and the products for the current page
         response.status(200).json({ totalCount, products: productList });
     } catch (error) {
         next(new InternalServerError("Internal error"));
@@ -104,7 +115,7 @@ async function uploadImageToCloudinary(fileBuffer: Buffer, fileName: string): Pr
 
 export async function createProduct(request: Request, response: Response) {
     try {
-        const { name, price, description, category, size } = request.body;
+        const { name, price, description, category, size, gender } = request.body;
 
         const categoryDoc = await Category.findOne({ name: category });
         if (!categoryDoc) {
@@ -128,6 +139,7 @@ export async function createProduct(request: Request, response: Response) {
             category: categoryDoc._id,
             images: imageUrls,
             size,
+            gender
         });
         
         const newProduct = await productsService.createProduct(product);

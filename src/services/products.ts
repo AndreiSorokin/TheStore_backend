@@ -2,8 +2,9 @@ import { FilterQuery } from "mongoose";
 
 import { BadRequestError, NotFoundError } from "../errors/ApiError"
 import Product, { ProductDocument } from "../models/Product"
+import { Gender, Size } from "../misc/types";
 
-const getAllProducts = async(limit: number, offset: number, searchQuery: string = "", minPrice?: number, maxPrice?: number): Promise<ProductDocument[]> => {
+const getAllProducts = async(limit: number, offset: number, searchQuery: string = "", minPrice?: number, maxPrice?: number, categoryQuery?: string, size?: string, gender?: string): Promise<ProductDocument[]> => {
    const query: FilterQuery<ProductDocument> = {};
 
    if (minPrice !== undefined && maxPrice !== undefined) {
@@ -13,6 +14,18 @@ const getAllProducts = async(limit: number, offset: number, searchQuery: string 
    if (searchQuery) {
       query.name = { $regex: new RegExp(searchQuery, 'i') };
    }
+
+   if (size && [Size.Small, Size.Medium, Size.Large].includes(size as Size)) {
+      query.size = size;
+   }
+
+   if(gender && [Gender.Male, Gender.Female].includes(gender as Gender)) {
+      query.gender = gender;
+   }
+
+   // if (categoryQuery) {
+   //    query.category.name = { $regex: new RegExp(categoryQuery, 'i') };
+   // }
    
    return await Product
       .find(query)
@@ -31,8 +44,8 @@ const getOneProduct = async(id: string): Promise<ProductDocument | undefined> =>
 }
 
 const createProduct = async (product: ProductDocument): Promise<ProductDocument> => {
-      const { name, price, description, category, images, size } = product;
-      if (!name || !price || !description || !category || !images || !size) {
+      const { name, price, description, category, images, size, gender } = product;
+      if (!name || !price || !description || !category || !images || !size || !gender) {
          throw new BadRequestError();
       }
 

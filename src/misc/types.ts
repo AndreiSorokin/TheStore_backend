@@ -6,6 +6,11 @@ export enum Size {
   Large = "Large",
 }
 
+export enum Gender {
+  Male = "Male",
+  Female = "Female"
+}
+
 export type Category = {
   id: string;
   name: string;
@@ -20,6 +25,7 @@ export type Product = {
   category: Category;
   images: [string];
   size: Size;
+  gender: Gender;
 };
 
 export type OrderItem = {

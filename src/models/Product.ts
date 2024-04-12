@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from "mongoose";
 
-import { Product, Size } from "../misc/types"
+import { Gender, Product, Size } from "../misc/types"
 
 const Schema = mongoose.Schema;
 
@@ -34,6 +34,11 @@ const ProductSchema = new Schema({
       enum: [Size.Small, Size.Medium, Size.Large],
       required: true
    },
+   gender: {
+      type: String,
+      enum: [Gender.Male, Gender.Female],
+      required: true
+   }
 })
 
 ProductSchema.set('toJSON', {
