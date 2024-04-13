@@ -1,13 +1,8 @@
-import multer from 'multer';
-
 import { Request, Response } from "express";
 import Category from "../models/Category"
 import categoryService from "../services/category"
 import { CategoryDocument } from "../models/Category";
 import { uploadImageToCloudinary } from '../services/uploads';
-
-
-const upload = multer({ storage: multer.memoryStorage() });
 
 export async function getAllCategory(_: Request, response: Response) {
     try {

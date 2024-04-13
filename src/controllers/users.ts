@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import { v4 as uuid } from "uuid";
 import { v2 as cloudinary } from 'cloudinary';
-import multer from 'multer';
+import { uploadImageToCloudinary } from "../services/uploads";
 
 import userService from "../services/user";
 import User, { UserDocument } from "../models/User";
@@ -17,8 +17,6 @@ import {
 } from "../errors/ApiError";
 import { baseUrl } from "../api/baseUrl";
 import { loginPayload, UserToRegister } from "../misc/types";
-
-const upload = multer({ storage: multer.memoryStorage() });
 
 export async function getAllUser(
   request: Request,
@@ -70,18 +68,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
-async function uploadImageToCloudinary(fileBuffer: Buffer, fileName: string): Promise<string> {
-  try {
-      const result = await cloudinary.uploader.upload(`data:image/jpeg;base64,${fileBuffer.toString('base64')}`, {
-          folder: "TheStore",
-          public_id: fileName,
-      });
-      return result.secure_url;
-  } catch (error) {
-      console.error('Error uploading image to Cloudinary:', error);
-      throw new Error('Failed to upload image');
-  }
-}
 
 
 export async function createUser(request: Request, response: Response) {
@@ -93,6 +79,14 @@ export async function createUser(request: Request, response: Response) {
     } else if (!validator.isEmail(email)) {
       throw new BadRequestError("Please enter a valid email");
     }
+
+    let imageUrl = '';
+    if (request.file) {
+        const fileBuffer: Buffer = request.file.buffer;
+        const fileName: string = request.file.originalname;
+        imageUrl = await uploadImageToCloudinary(fileBuffer, fileName);
+    }
+
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -105,7 +99,7 @@ export async function createUser(request: Request, response: Response) {
       email,
       role: role || "CUSTOMER",
       status: userStatus || "ACTIVE",
-      avatar
+      avatar: imageUrl
     });
 
     const newUser = await userService.createUser(user);
