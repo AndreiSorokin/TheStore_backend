@@ -34,12 +34,20 @@ export type OrderItem = {
 };
 
 export type Order = {
+  id: number;
   userId: Types.ObjectId;
   createdAt: Date;
   shipment: string;
   priceSum: number;
   orderItems: OrderItem[];
 };
+
+export type Cart = {
+  id: number;
+  userId: Types.ObjectId;
+  priceSum: number;
+  cartItems: OrderItem[];
+}
 
 export enum Role {
   ADMIN = "ADMIN",
