@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ForbiddenError, InternalServerError } from "../errors/ApiError";
 
 const jwt = require('jsonwebtoken');
 
@@ -14,4 +15,35 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
     return res.json(output);
 };
 
-export default refreshToken;
+async function refreshAccessToken(request: Request, response: Response, next: NextFunction) {
+    try {
+        const refreshToken = request.cookies['refreshToken'];
+        if (!refreshToken) {
+            return response.status(400).json({ message: "Refresh token is required" });
+        }
+        
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
+        if (!decoded || typeof decoded === 'string') {
+            return response.status(401).json({ message: "Invalid refresh token" });
+        }
+        
+        const userEmail = decoded.email;
+        if (!userEmail) {
+            return response.status(400).json({ message: "Invalid refresh token" });
+        }
+        
+        const newAccessToken = jwt.sign({ email: userEmail }, process.env.JWT_SECRET!, {
+            expiresIn: "1h",
+        });
+        const newRefreshToken = jwt.sign({ email: userEmail }, process.env.REFRESH_TOKEN_SECRET!, {
+            expiresIn: "20d",
+        });
+        
+        response.cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'strict' });
+        
+        response.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+    }
+}
+
+export { refreshToken, refreshAccessToken };

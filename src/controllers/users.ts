@@ -18,6 +18,7 @@ import {
 import { baseUrl } from "../api/baseUrl";
 import { loginPayload, UserToRegister } from "../misc/types";
 
+
 export async function getAllUser(
   request: Request,
   response: Response,
@@ -248,9 +249,16 @@ export async function loginUser(request: Request, response: Response) {
 
     const refreshToken = jwt.sign(
       { email: userData.email, role: userData.role },
-      process.env.JWT_SECRET!,
+      process.env.REFRESH_TOKEN_SECRET!,
       { expiresIn: "20d" }
     );
+
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 20 * 24 * 60 * 60 * 1000
+    });
 
     response
       .status(200)

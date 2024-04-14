@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import passport from "passport";
 import cors from "cors";
+import cookieParser from 'cookie-parser';
 
 import productsRouter from "./routers/productsRouter";
 import usersRouter from "./routers/usersRouter";
@@ -18,13 +19,19 @@ import uploadRouter from "./routers/uploadRouter";
 dotenv.config({ path: ".env" });
 
 const app = express();
-app.use(cors())
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
+
+app.use(cors(corsOptions))
+app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
 passport.use(jwtStrategy);
 passport.use(googleAuthStrategy);
 
-dotenv.config({ path: ".env" });
 app.use("/api/v1/products", productsRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/orders", orderRouter);

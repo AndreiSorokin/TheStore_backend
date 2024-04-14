@@ -18,6 +18,7 @@ import {
 import adminCheck from "../middlewares/adminCheck";
 import passport from "passport";
 import userStatusCheck from "../middlewares/userStatusCheck";
+import { refreshAccessToken } from "../controllers/auth";
 
 const router = express.Router();
 
@@ -92,4 +93,6 @@ router.post(
 
 router.get("/auth/google", passport.authenticate('google', { scope: ['profile','email'] }));
 router.get("/auth/google/callback",passport.authenticate('google', {   session: false,failureRedirect: '/login' }),googleLoginCallback);
+
+router.post("/refreshToken", refreshAccessToken)
 export default router;
