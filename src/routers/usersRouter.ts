@@ -19,11 +19,14 @@ import adminCheck from "../middlewares/adminCheck";
 import passport from "passport";
 import userStatusCheck from "../middlewares/userStatusCheck";
 import { refreshAccessToken } from "../controllers/auth";
+import { addProductToUserCart, getCartByUserId } from "../controllers/cart";
 
 const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+router.get("/:id/cart", getCartByUserId);
 
 router.post("/login", loginUser);
 router.post("/registration", upload.single('avatar'), createUser);

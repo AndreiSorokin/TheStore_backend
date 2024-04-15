@@ -8,7 +8,6 @@ import productsRouter from "./routers/productsRouter";
 import usersRouter from "./routers/usersRouter";
 import categoryRouter from "./routers/categoryRouter";
 import orderRouter from "./routers/orderRouter";
-import cartRouter from "./routers/cartRouter";
 import paymentRouter from "./routers/paymentRouter";
 import errorHandler from "./middlewares/errorHandler";
 import {
@@ -39,7 +38,6 @@ app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/uploads", uploadRouter);
-app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/payment", paymentRouter);
 
 app.use(errorHandler);

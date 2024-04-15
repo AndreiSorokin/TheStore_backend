@@ -11,11 +11,14 @@ import {
 } from "../controllers/products";
 import adminCheck from "../middlewares/adminCheck";
 import userStatusCheck from "../middlewares/userStatusCheck";
+import { addProductToUserCart } from "../controllers/cart";
 
 const router = express.Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+router.post("/:id/addToCart", addProductToUserCart);
 
 router.get("/",getAllProducts);
 router.get("/:id",getOneProduct);

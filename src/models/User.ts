@@ -55,6 +55,10 @@ const UserSchema = new Schema({
       ref: "Orders",
     },
   ],
+  cart: {
+    type: Schema.Types.ObjectId,
+    ref: "Cart",
+  },
 });
 
 UserSchema.set('toJSON', {

@@ -87,7 +87,7 @@ export async function getOneProduct(
     }
 }
 
-export async function createProduct(request: Request, response: Response) {
+export async function createProduct(request: Request, response: Response, next: NextFunction) {
     try {
         const { name, price, description, category, size, gender } = request.body;
 
@@ -106,24 +106,22 @@ export async function createProduct(request: Request, response: Response) {
             }
         }
 
+        console.log('categoryDoc', categoryDoc.id)
         const product = new Product({
             name,
             price,
             description,
-            category: categoryDoc._id,
+            category: categoryDoc.id,
             images: imageUrls,
             size,
             gender
         });
         
         const newProduct = await productsService.createProduct(product);
+        console.log(newProduct)
         response.status(201).json(newProduct);
     } catch (error) {
-        if (error instanceof BadRequestError) {
-            response.status(400).json({ error: error.message });
-        } else {
-            response.status(500).json({ error: "Internal Server Error" });
-        }
+        next(error)
     }
 }
 

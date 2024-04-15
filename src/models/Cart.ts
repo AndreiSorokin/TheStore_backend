@@ -6,11 +6,19 @@ const Schema = mongoose.Schema;
 
 export type CartDocument = Document & Cart;
 
+// const CartItemSchema = new Schema({
+   // quantity: {
+   //    type: Number,
+   //    required: true,
+   // },
+   // productId: {
+   //    type: Schema.Types.ObjectId,
+   //    ref: "Products",
+   //    required: true,
+   // },
+// });
+
 const CartSchema = new Schema({
-   id: {
-      type: Number,
-      required: true
-   },
    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -18,19 +26,21 @@ const CartSchema = new Schema({
    },
    priceSum: {
       type: Number,
-      required: true
+      required: true,
+      default: 0
    },
-   cartItems: {
+   cartItems: [{
+      productId: {
+         type: Schema.Types.ObjectId,
+         ref: "Products",
+         required: true,
+      },
       quantity: {
          type: Number,
          required: true,
+         min: 1
       },
-      productId: {
-         type: Schema.Types.ObjectId,
-         ref: "Product",
-         required: true,
-      },
-   }
+   }]
 })
 
 CartSchema.set('toJSON', {
@@ -40,4 +50,4 @@ CartSchema.set('toJSON', {
    }
 })
 
-export default mongoose.model<CartDocument>("User", CartSchema);
+export default mongoose.model<CartDocument>("Cart", CartSchema);

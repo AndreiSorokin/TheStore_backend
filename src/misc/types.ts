@@ -73,7 +73,8 @@ export type User = UserToRegister & {
   role: Role;
   resetToken?: string | null;
   resetTokenExpiresAt?: Date | null;
-  orders: Order[];
+  orders?: Order[];
+  cart?: Cart[];
 };
 
 

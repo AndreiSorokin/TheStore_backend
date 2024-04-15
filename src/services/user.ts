@@ -12,7 +12,7 @@ const getSingleUser = async (id: string): Promise<UserDocument> => {
   if (!id) {
     throw new BadRequestError();
   }
-  const user = await User.findById(id);
+  const user = await User.findById(id).populate("cart")
   if (user) {
     return user;
   }
