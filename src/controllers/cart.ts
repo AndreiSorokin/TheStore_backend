@@ -26,6 +26,8 @@ export async function addProductToUserCart(req: Request, res: Response, next: Ne
    try {
       const { userId, productId, quantity } = req.body;
 
+      await cartService.createCart(userId)
+
       const updatedCart = await cartService.addProductToCart(userId, productId, quantity);
       res.status(200).json({
          message: "Product added to cart successfully",

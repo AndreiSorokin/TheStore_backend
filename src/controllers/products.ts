@@ -91,10 +91,12 @@ export async function createProduct(request: Request, response: Response, next: 
     try {
         const { name, price, description, category, size, gender } = request.body;
 
-        const categoryDoc = await Category.findOne({ name: category });
+        const categoryDoc = await Category.findById( category ).exec();
+
         if (!categoryDoc) {
             throw new BadRequestError("Category not found");
         }
+
 
         
         let imageUrls = [];
@@ -105,8 +107,7 @@ export async function createProduct(request: Request, response: Response, next: 
                 imageUrls.push(imageUrl);
             }
         }
-
-        console.log('categoryDoc', categoryDoc.id)
+        console.log(request.body) // no images
         const product = new Product({
             name,
             price,
@@ -118,7 +119,7 @@ export async function createProduct(request: Request, response: Response, next: 
         });
         
         const newProduct = await productsService.createProduct(product);
-        console.log(newProduct)
+        
         response.status(201).json(newProduct);
     } catch (error) {
         next(error)

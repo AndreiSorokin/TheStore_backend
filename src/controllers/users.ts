@@ -17,6 +17,8 @@ import {
 } from "../errors/ApiError";
 import { baseUrl } from "../api/baseUrl";
 import { loginPayload, UserToRegister } from "../misc/types";
+import Cart from "../models/Cart";
+import cartService from "../services/cart"
 
 
 export async function getAllUser(
@@ -100,7 +102,7 @@ export async function createUser(request: Request, response: Response) {
       email,
       role: role || "CUSTOMER",
       status: userStatus || "ACTIVE",
-      avatar: imageUrl
+      avatar: imageUrl,
     });
 
     const newUser = await userService.createUser(user);
@@ -127,6 +129,7 @@ export async function updateUser(request: Request, response: Response) {
       lastName,
       email,
     });
+    console.log(updateUser)
     response.status(200).json(updateUser);
   } catch (error) {
     if (error instanceof BadRequestError) {

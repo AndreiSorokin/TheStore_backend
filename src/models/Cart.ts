@@ -29,6 +29,8 @@ const CartSchema = new Schema({
          min: 1
       },
    }]
+}, {
+   timestamps: true
 })
 
 CartSchema.set('toJSON', {
