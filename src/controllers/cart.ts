@@ -2,10 +2,15 @@ import { Request, Response, NextFunction } from "express";
 
 import cartService from "../services/cart";
 import { Types } from "mongoose";
+import User from "../models/User";
 
 export async function getCartByUserId(req: Request, res: Response, next: NextFunction) {
    try {
       const userId = req.params.id;
+      const user = await User.findById(userId);
+   if (!user) {
+      return res.status(404).json({ message: "User not found" });
+   }
       const objectId = new Types.ObjectId(userId);
       const cart = await cartService.getCartByUserId(objectId);
       if (!cart) {

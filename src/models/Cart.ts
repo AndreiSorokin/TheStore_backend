@@ -1,22 +1,10 @@
 import mongoose, { Document, Model } from "mongoose";
 
-import { Cart, OrderItem } from "../misc/types"
+import { Cart } from "../misc/types"
 
 const Schema = mongoose.Schema;
 
 export type CartDocument = Document & Cart;
-
-// const CartItemSchema = new Schema({
-   // quantity: {
-   //    type: Number,
-   //    required: true,
-   // },
-   // productId: {
-   //    type: Schema.Types.ObjectId,
-   //    ref: "Products",
-   //    required: true,
-   // },
-// });
 
 const CartSchema = new Schema({
    userId: {

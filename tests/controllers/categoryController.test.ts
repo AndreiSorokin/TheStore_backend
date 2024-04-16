@@ -1,4 +1,7 @@
 import request from "supertest";
+import fs from "fs";
+import path from "path";
+
 import connect, { MongoHelper } from "../db-helper";
 
 import app from "../../src/app";
@@ -35,4 +38,20 @@ describe("category controller test", () => {
       expect(response.status).toBe(201);
       expect(createdCategory).toHaveProperty("_id");
    });
+
+   // it("should create a new category", async () => {
+   //    const imagePath = path.join(__dirname, "testImage.png");
+   //    const testImage = fs.readFileSync(imagePath);
+      
+   //    const response = await request(app)
+   //       .post("/api/v1/categories")
+   //       .set("Content-Type", "multipart/form-data")
+   //       .field("name", "Test Category")
+   //       .attach("image", testImage, "testImage.png");
+      
+   //    expect(response.status).toBe(201);
+   //    expect(response.body).toHaveProperty("_id");
+   //    expect(response.body).toHaveProperty("name", "Test Category");
+   //    expect(response.body).toHaveProperty("image");
+   // });
 })
