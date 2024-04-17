@@ -89,16 +89,13 @@ export async function getOneProduct(
 
 export async function createProduct(request: Request, response: Response, next: NextFunction) {
     try {
-        const { name, price, description, category, size, gender } = request.body;
+        const { name, price, description, categoryId, size, gender } = request.body;
 
-        const categoryDoc = await Category.findById( category ).exec();
-
+        const categoryDoc = await Category.findById(categoryId).exec();
         if (!categoryDoc) {
             throw new BadRequestError("Category not found");
         }
 
-
-        
         let imageUrls = [];
         if (request.files) {
             const files = request.files as Express.Multer.File[];
@@ -106,8 +103,12 @@ export async function createProduct(request: Request, response: Response, next: 
                 const imageUrl = await uploadImageToCloudinary(file.buffer, file.originalname);
                 imageUrls.push(imageUrl);
             }
+        } else {
+            imageUrls = request.body.images || [];
         }
-        console.log(request.body) // no images
+
+        console.log('Image URLs:', imageUrls);
+
         const product = new Product({
             name,
             price,
@@ -117,14 +118,55 @@ export async function createProduct(request: Request, response: Response, next: 
             size,
             gender
         });
-        
+
+        console.log('Product before saving:', product);
+
         const newProduct = await productsService.createProduct(product);
-        
+
         response.status(201).json(newProduct);
     } catch (error) {
-        next(error)
+        console.error('Error in createProduct:', error);
+        next(error);
     }
 }
+
+// export async function createProduct(request: Request, response: Response, next: NextFunction) {
+//     try {
+//         const { name, price, description, categoryId, size, gender } = request.body;
+
+//         const categoryDoc = await Category.findById( categoryId ).exec();
+
+//         if (!categoryDoc) {
+//             throw new BadRequestError("Category not found");
+//         }
+        
+//         let imageUrls = [];
+//         if (request.files) {
+//             const files = request.files as Express.Multer.File[];
+//             for (const file of files) {
+//                 const imageUrl = await uploadImageToCloudinary(file.buffer, file.originalname);
+//                 imageUrls.push(imageUrl);
+//             }
+//         }
+//         console.log('request.body',request.body) // no images
+//         const product = new Product({
+//             name,
+//             price,
+//             description,
+//             category: categoryDoc.id,
+//             images: imageUrls,
+//             size,
+//             gender
+//         });
+        
+
+//         const newProduct = await productsService.createProduct(product);
+        
+//         response.status(201).json(newProduct);
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
 export async function updateProduct(request: Request, response: Response) {
     const id = request.params.id;

@@ -33,15 +33,12 @@ const OrderSchema = new Schema<OrderDocument>({
   createdAt: {
     default: Date.now(),
     type: Date,
-    required: true,
   },
   shipment: {
     type: String,
-    required: true,
   },
   priceSum: {
     type: Number,
-    required: true,
   },
   orderItems: [OrderItemSchema],
 });

@@ -8,6 +8,7 @@ import {
   NotFoundError,
 } from "../errors/ApiError";
 import mongoose from "mongoose";
+import User from "../models/User";
 
 export async function getAllOrders(
   request: Request,
@@ -31,11 +32,27 @@ export async function createOrder(
     if (!userId) {
       throw new NotFoundError("Missing userId!");
     }
-    const data = new Order(request.body);
+    const data = new Order({
+      ...request.body,
+      userId,
+    });
+    
     const newOrder = await ordersService.createOrder(data, userId);
+
+    console.log('userId', userId)
+    console.log('newOrder', newOrder)
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new NotFoundError("User not found!");
+    }
+    user.orders?.push(newOrder.id);
+    await user.save();
 
     response.status(201).json(newOrder);
   } catch (error) {
+    const userId = request.params.userId;
+    console.log('userId', userId)
     if (error instanceof BadRequestError) {
       response.status(400).json({
         message: `Missing order information or userId!`,

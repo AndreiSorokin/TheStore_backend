@@ -83,11 +83,15 @@ export async function createUser(request: Request, response: Response) {
       throw new BadRequestError("Please enter a valid email");
     }
 
+    console.log('request.body;', request.body)
+
     let imageUrl = '';
     if (request.file) {
         const fileBuffer: Buffer = request.file.buffer;
         const fileName: string = request.file.originalname;
         imageUrl = await uploadImageToCloudinary(fileBuffer, fileName);
+    } else {
+      imageUrl = request.body.avatar
     }
 
     const saltRounds = 10;
