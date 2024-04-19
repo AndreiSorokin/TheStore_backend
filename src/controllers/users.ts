@@ -213,15 +213,8 @@ export async function deleteUser(request: Request, response: Response) {
     }
   }
 }
+
 export async function googleLogin(request: Request, response: Response) {
-  console.log("hello google login");
-  try {
-  } catch (error) {
-    console.log(error);
-    throw new InternalServerError("Something went wrong");
-  }
-}
-export async function googleLoginCallback(request: Request, response: Response) {
   console.log("inside the google login callback");
   try {
     const user = request.user;
