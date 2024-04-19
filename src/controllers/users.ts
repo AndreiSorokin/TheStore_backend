@@ -221,10 +221,7 @@ export async function googleLogin(request: Request, response: Response) {
     throw new InternalServerError("Something went wrong");
   }
 }
-export async function googleLoginCallback(
-  request: Request,
-  response: Response
-) {
+export async function googleLoginCallback(request: Request, response: Response) {
   console.log("inside the google login callback");
   try {
     const user = request.user;

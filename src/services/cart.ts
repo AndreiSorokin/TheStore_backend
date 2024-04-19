@@ -15,8 +15,8 @@ const createCart = async(userId: string) => {
       throw new NotFoundError();
    }
 
-   const newCart = new Cart({userId: user})
-   newCart.save()
+//    const newCart = new Cart({...request.body,userId: user})
+//    newCart.save()
 }
 
 
@@ -29,15 +29,15 @@ async function addProductToCart(userId: Types.ObjectId, productId: Types.ObjectI
    }
 
    let cart = await Cart.findOne({ userId: userId });
-   // console.log(`Cart found: ${cart}`);
-   // if (!cart) {
-   //    console.log(`No cart found for userId=${userId}, creating a new one.`);
-   //    cart = new Cart({
-   //       userId,
-   //       cartItems: [],
-   //       priceSum: 0
-   //    });
-   // }
+   console.log(`Cart found: ${cart}`);
+   if (!cart) {
+      console.log(`No cart found for userId=${userId}, creating a new one.`);
+      cart = new Cart({
+         userId,
+         cartItems: [],
+         priceSum: 0
+      });
+   }
 
    if (!cart) {
       throw new Error('Cart not found');

@@ -18,6 +18,7 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
 async function refreshAccessToken(request: Request, response: Response, next: NextFunction) {
     try {
         const refreshToken = request.cookies['refreshToken'];
+        console.log('Received refresh token:', refreshToken);
         if (!refreshToken) {
             return response.status(400).json({ message: "Refresh token is required" });
         }
@@ -27,15 +28,15 @@ async function refreshAccessToken(request: Request, response: Response, next: Ne
             return response.status(401).json({ message: "Invalid refresh token" });
         }
         
-        const userEmail = decoded.email;
-        if (!userEmail) {
+        const { email, id } = decoded as { email: string; id: string };
+        if (!email || !id) {
             return response.status(400).json({ message: "Invalid refresh token" });
         }
         
-        const newAccessToken = jwt.sign({ email: userEmail }, process.env.JWT_SECRET!, {
+        const newAccessToken = jwt.sign({ email, id }, process.env.JWT_SECRET!, {
             expiresIn: "1h",
         });
-        const newRefreshToken = jwt.sign({ email: userEmail }, process.env.REFRESH_TOKEN_SECRET!, {
+        const newRefreshToken = jwt.sign({ email, id }, process.env.REFRESH_TOKEN_SECRET!, {
             expiresIn: "20d",
         });
         
@@ -43,6 +44,8 @@ async function refreshAccessToken(request: Request, response: Response, next: Ne
         
         response.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
+        console.error(error);
+        response.status(500).json({ message: "Internal server error" });
     }
 }
 

@@ -31,7 +31,7 @@ const getOrderById = async (id: string): Promise<OrderDocument> => {
     throw new BadRequestError(`Please provide orderId!`);
   }
 
-  const foundOrder = await Order.findById(id);
+  const foundOrder = await Order.findById(id).populate('orderItems.productId');
   if (foundOrder) {
     return foundOrder;
   }
@@ -78,7 +78,10 @@ const getAllOrdersByUserId = async (
     throw new BadRequestError(`Please provide userId!`);
   }
   console.log(userId);
-  const orders = await Order.find({ userId: userId });
+  const orders = await Order.find({ userId: userId }).populate({
+    path: 'orderItems.productId',
+    select: 'images name price size gender',
+  });
   if (orders !== null) {
     return orders;
   }

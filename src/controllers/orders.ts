@@ -9,6 +9,8 @@ import {
 } from "../errors/ApiError";
 import mongoose from "mongoose";
 import User from "../models/User";
+import Product from "../models/Product";
+import { OrderItem } from "../misc/types";
 
 export async function getAllOrders(
   request: Request,
@@ -32,9 +34,16 @@ export async function createOrder(
     if (!userId) {
       throw new NotFoundError("Missing userId!");
     }
+    console.log(request.body)
+
+    const orderItems = request.body.items.map((item: any) => ({
+      quantity: item.quantity,
+      productId: item.product.id,
+      image: item.product.category.image,
+    }));
     const data = new Order({
-      ...request.body,
       userId,
+      orderItems
     });
     
     const newOrder = await ordersService.createOrder(data, userId);
@@ -67,6 +76,8 @@ export async function createOrder(
     next(new InternalServerError());
   }
 }
+
+
 export async function getOrderById(
   request: Request,
   response: Response,
