@@ -70,6 +70,7 @@ const stripePayment = async (req: Request, res: Response, next: NextFunction) =>
          if (!product) {
             throw new Error(`Product not found for ID: ${item.productId}`);
          }
+         console.log('ssssssssssssssssssss')
          return {
             price_data: {
                currency: 'usd',

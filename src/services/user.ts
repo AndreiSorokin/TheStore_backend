@@ -1,8 +1,9 @@
 import User, { UserDocument } from "../models/User";
-import { BadRequestError, NotFoundError } from "../errors/ApiError";
+import { ApiError, BadRequestError, NotFoundError } from "../errors/ApiError";
 import bcrypt from "bcrypt";
 
 import nodemailer from "nodemailer";
+
 
 const getAllUser = async (): Promise<UserDocument[]> => {
   return await User.find().populate("orders");
@@ -95,19 +96,23 @@ const sendVerificationEmail = async (
     port: 465,
     secure: true,
     auth: {
-      user: "lamngo606@gmail.com",
-      pass: "nlrpjsxylajeyhnp",
+      user: `${process.env.USER}`,
+      pass: `${process.env.PASS}`,
     },
   });
 
   const mailOptions = {
-    from: "lamngo606@gmail.com",
+    from: `${process.env.USER}`,
     to: email,
     subject: "Email Verification",
     text: `Please verify your email by clicking the following link: ${verificationLink}`,
   };
 
-  return await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    throw new ApiError(500, "Failed to send verification email");
+  }
 };
 
 const getUserByResetToken = async (
@@ -175,6 +180,23 @@ const updateUserStatus = async (
   return updateUserStatus;
 };
 
+const findOrCreate = async (payload: Partial<UserDocument>) => {
+  const result = await User.findOne({ email: payload.email });
+  if (result) {
+    return result;
+  } else {
+    const randomPassword = Math.random().toString(36).slice(-8);
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+    const user = new User({
+      email: payload.email,
+      password: hashedPassword,
+      role: "CUSTOMER",
+    });
+    const createdUser = await user.save();
+    return createdUser;
+  }
+};
+
 export default {
   getAllUser,
   getSingleUser,
@@ -188,4 +210,5 @@ export default {
   assingAdmin,
   removeAdmin,
   updateUserStatus,
+  findOrCreate
 };

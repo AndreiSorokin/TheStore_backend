@@ -17,9 +17,9 @@ import {
 } from "../errors/ApiError";
 import { baseUrl } from "../api/baseUrl";
 import { loginPayload, UserToRegister } from "../misc/types";
-import Cart from "../models/Cart";
-import cartService from "../services/cart"
 
+import dotenv from "dotenv";
+dotenv.config({ path: ".env" });
 
 export async function getAllUser(
   request: Request,
@@ -217,10 +217,31 @@ export async function deleteUser(request: Request, response: Response) {
 export async function googleLogin(request: Request, response: Response) {
   console.log("inside the google login callback");
   try {
-    const user = request.user;
-    response.status(200).json({ user });
+    const user = request.user as UserDocument;
+
+    // user.isLogInWithGoogle = true;
+    const token = jwt.sign(
+      {
+        // should not provide password
+        // firstName: userData.firstName
+        email: user.email,
+        id: user.id,
+      },
+      process.env.JWT_SECRET || '',
+
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    const refreshToken = jwt.sign(
+      { email: user.email, role: user.role },
+      process.env.REFRESH_TOKEN_SECRET || "",
+      { expiresIn: "20d" }
+    );
+    response.status(200).json({ user, token, refreshToken });
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     throw new InternalServerError("Something went wrong");
   }
 }
@@ -390,6 +411,7 @@ export async function forgotPassword(request: Request, response: Response) {
         message: error.message,
       });
     } else {
+      console.log('error', error)
       response.status(500).json({
         message: "Failed to send verification email.",
       });

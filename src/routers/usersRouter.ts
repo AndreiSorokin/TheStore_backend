@@ -32,7 +32,7 @@ router.get("/:id/cart", getCartByUserId);
 router.post("/login", loginUser);
 router.post("/registration", upload.single('avatar'), createUser);
 
-router.route("/forgot-password").post(forgotPassword);
+router.post("/forgot-password", forgotPassword);
 
 router.get(
   "/",
@@ -95,8 +95,8 @@ router.post(
   updateUserStatus
 );
 
-router.get("/auth/google",
-passport.authenticate('google', {   session: false, failureRedirect: '/login' }), 
+router.post("/auth/google",
+passport.authenticate("google-id-token", { session: false }),
 googleLogin);
 
 router.post("/refreshToken", refreshAccessToken)

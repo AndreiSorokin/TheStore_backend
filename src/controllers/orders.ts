@@ -178,6 +178,7 @@ export async function getAllOrdersByUserId(
 
     response.status(200).json(orders);
   } catch (error) {
+    console.log(error)
     if (error instanceof NotFoundError) {
       response.status(404).json({
         message: `Can not find orders with userId: ${request.params.userId}`,

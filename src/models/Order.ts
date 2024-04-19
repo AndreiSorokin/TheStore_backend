@@ -12,7 +12,7 @@ const OrderItemSchema = new Schema<OrderItemDocument>({
   },
   productId: {
     type: Schema.Types.ObjectId,
-    ref: "Product",
+    ref: "Products",
     required: true,
   },
 });

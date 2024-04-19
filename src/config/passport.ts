@@ -5,14 +5,10 @@ import GoogleTokenStrategy from "passport-google-id-token";
 import dotenv from "dotenv";
 import { Payload } from "../misc/types";
 import userService from "../services/user";
-import User from "../models/User";
-import { loginUserForGoogelUser, registerUserForGoogelUser } from "../controllers/users";
-import bcrypt from "bcrypt";
 
 dotenv.config({ path: ".env" });
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-// good
 export const jwtStrategy = new JwtStrategy(
   {
     secretOrKey: JWT_SECRET,
@@ -29,19 +25,25 @@ export const jwtStrategy = new JwtStrategy(
   }
 );
 
-// add logic 
-export const googleAuthStrategy = new GoogleTokenStrategy({
-      clientID: process.env.GOOGLE_CLIENT_ID as string ,
-    },
-    async (parsedToken: any, googleId: string, done: any) => {
-      //parsedToken: data from Google after it dont auth
-      // send id_token
+export const googleAuthStrategy = new GoogleTokenStrategy(
+  {
+    clientID: process.env.GOOGLE_CLIENT_ID as string,
+  },
+  async (parsedToken: any, googleId: string, done: any) => {
+    try {
+      const { email, password } = parsedToken.payload;
+
       const userPayload = {
-      email: parsedToken.payload.email,
-      // hashed password
-  
-    };
-        
-   const user  = await userService.findOrCreate(userPayload)
-  done(null, user);}
+        email,
+        password,
+        googleId,
+      };
+
+      const user = await userService.findOrCreate(userPayload);
+      done(null, user);
+    } catch (error) {
+      console.log("googleAuthStrategy", error)
+      done(error, false);
+    }
+  }
 );
