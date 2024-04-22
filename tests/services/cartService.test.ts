@@ -37,9 +37,9 @@ describe('cart services test', () => {
       });
       await category.save();
       return category;
-  };
+   };
 
-  const createProduct = async (categoryId: mongoose.Types.ObjectId) => {
+   const createProduct = async (categoryId: mongoose.Types.ObjectId) => {
    const product = new Product({
        name: "Test Product",
        price: 100,
@@ -50,7 +50,7 @@ describe('cart services test', () => {
    });
    await product.save();
    return product;
-};
+   };
 
    it("should add a product to a new cart for an existing user", async () => {
       const user = await createUser();

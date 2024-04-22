@@ -9,7 +9,6 @@ export type UserDocument = Document & User;
 const UserSchema = new Schema({
   username: {
     type: String,
-    // required: true,
   },
   password: {
     type: String,
@@ -17,11 +16,9 @@ const UserSchema = new Schema({
   },
   firstName: {
     type: String,
-    // required: true,
   },
   lastName: {
     type: String,
-    // required: true,
   },
   email: {
     type: String,

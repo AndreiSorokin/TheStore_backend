@@ -218,6 +218,7 @@ export async function googleLogin(request: Request, response: Response) {
   try {
     const user = request.user as UserDocument;
 
+    console.log('user',user)
     const token = jwt.sign(
       {
         email: user.email,

@@ -129,6 +129,7 @@ const getUserByResetToken = async (
 
   return user;
 };
+
 const assingAdmin = async (id: string, updateRole: Partial<UserDocument>) => {
   if (!id) {
     throw new BadRequestError();
@@ -157,6 +158,7 @@ const removeAdmin = async (id: string, updateRole: Partial<UserDocument>) => {
   }
   return updateUser;
 };
+
 const updateUserStatus = async (
   userId: string,
   status: Partial<UserDocument>
@@ -198,9 +200,9 @@ const findOrCreate = async (payload: Partial<UserDocument>) => {
       lastName: "",
     });
     console.log('payload',payload)
-    // const emailContent = `Welcome! Your account has been created successfully. Here is your password: ${randomPassword}. Please change it upon your first login for security reasons.`;
+    const emailContent = `Welcome! Your account has been created successfully. Here is your password: ${randomPassword}. Please change it upon your first login for security reasons.`;
 
-    // await sendVerificationEmail(payload.email, emailContent);
+    await sendVerificationEmail(payload.email, emailContent);
     const createdUser = await user.save();
     return createdUser;
   }
