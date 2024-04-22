@@ -14,12 +14,7 @@ const createCart = async(userId: string) => {
    if (!user) {
       throw new NotFoundError();
    }
-
-//    const newCart = new Cart({...request.body,userId: user})
-//    newCart.save()
 }
-
-
 
 async function addProductToCart(userId: Types.ObjectId, productId: Types.ObjectId, quantity: number) {
    let user = await User.findById(userId);

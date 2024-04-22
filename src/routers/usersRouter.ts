@@ -36,9 +36,6 @@ router.post("/forgot-password", forgotPassword);
 
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
-  userStatusCheck,
-  adminCheck,
   getAllUser
 );
 

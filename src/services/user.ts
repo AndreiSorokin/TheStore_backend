@@ -181,6 +181,9 @@ const updateUserStatus = async (
 };
 
 const findOrCreate = async (payload: Partial<UserDocument>) => {
+  if (!payload.email) {
+    throw new BadRequestError("Something went wrong");
+  }
   const result = await User.findOne({ email: payload.email });
   if (result) {
     return result;
@@ -190,8 +193,14 @@ const findOrCreate = async (payload: Partial<UserDocument>) => {
     const user = new User({
       email: payload.email,
       password: hashedPassword,
-      role: "CUSTOMER",
+      username: "username",
+      firstName: "",
+      lastName: "",
     });
+    console.log('payload',payload)
+    // const emailContent = `Welcome! Your account has been created successfully. Here is your password: ${randomPassword}. Please change it upon your first login for security reasons.`;
+
+    // await sendVerificationEmail(payload.email, emailContent);
     const createdUser = await user.save();
     return createdUser;
   }

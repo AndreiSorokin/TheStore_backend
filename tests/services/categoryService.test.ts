@@ -40,7 +40,7 @@ describe('Category services test', () => {
 
    it("should create a category", async () => {
       const category = await createCategory();
-      expect(category).toHaveProperty("_id")
+      expect(category).toHaveProperty("id")
    })
 
    it("should update a category", async () => {

@@ -24,7 +24,8 @@ export async function createProduct() {
       description: "description", 
       category: category._id, 
       image: "img1", 
-      size: "Large" 
+      size: "Large",
+      gender: "Male"
    });
    return await productServices.createProduct(product);
 }
