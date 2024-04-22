@@ -1,17 +1,33 @@
-import request from "supertest";
+import request, { Response, SuperTest, Test } from "supertest";
 import fs from "fs";
 import path from "path";
 
 import connect, { MongoHelper } from "../db-helper";
 
 import app from "../../src/app";
-import { createCategory } from "../common/common";
+import { createCategory, createUser, getToken } from "../common/common";
+import { Role } from "../../src/misc/types";
+import User from "../../src/models/User";
+
+export const filePath = path.resolve(__dirname, "assets", "cakeBoy.png");
 
 describe("category controller test", () => {
    let mongoHelper: MongoHelper;
+   let agent: request.SuperTest<request.Test>;
+   let token: string;
+   let res: Response;
+   const requestBody = {
+      name: "name",
+   };
+   let categoryId: string;
 
    beforeAll(async () => {
-      mongoHelper = await connect()
+      mongoHelper = await connect();
+      agent = request(app) as unknown as SuperTest<Test>;
+
+      const user = await createUser("testUser", "testPass", "Test", "User", "testuser@test.com", Role.ADMIN);
+      const loginResponse = await getToken(user.body.newUser.email, "testPass");
+      token = loginResponse.body.token;
    })
 
    afterAll(async () => {
@@ -39,19 +55,35 @@ describe("category controller test", () => {
       expect(createdCategory).toHaveProperty("_id");
    });
 
-   // it("should create a new category", async () => {
-   //    const imagePath = path.join(__dirname, "testImage.png");
-   //    const testImage = fs.readFileSync(imagePath);
-      
+
+   // it("should create a new category with image upload", async () => {
    //    const response = await request(app)
    //       .post("/api/v1/categories")
-   //       .set("Content-Type", "multipart/form-data")
-   //       .field("name", "Test Category")
-   //       .attach("image", testImage, "testImage.png");
-      
+   //       .set("Authorization", "Bearer " + token)
+   //       .field("name", requestBody.name)
+   //       .attach("image", filePath);
+
    //    expect(response.status).toBe(201);
-   //    expect(response.body).toHaveProperty("_id");
-   //    expect(response.body).toHaveProperty("name", "Test Category");
-   //    expect(response.body).toHaveProperty("image");
+   // });
+
+   // it('should update a category and return the updated category', async () => {
+   //    const categoryResponse = await createCategory();
+   //    categoryId = categoryResponse._id;
+   //    const updatedData = { name: 'Updated Category' };
+
+   //    const response = await request(app)
+   //       .put(`/api/v1/categories/${categoryId}`)
+   //       .set("Authorization", "Bearer " + token)
+   //       .send(updatedData);
+
+   //    expect(response.status).toBe(200);
+   // });
+
+   // it('should delete a category and return a 204 status code', async () => {
+   //    const response = await request(app)
+   //    .delete(`/api/v1/categories/${res.body.newCategory._id}`)
+   //    .set("Authorization", "Bearer " + token);
+   //    console.log('res.body:', res.body)
+   //    expect(response.status).toBe(204);
    // });
 })
