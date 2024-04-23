@@ -436,31 +436,28 @@ export async function removeAdmin(request: Request, response: Response) {
   }
 }
 
-export async function updateUserStatus(request: Request, response: Response) {
-  const { userId, userStatus } = request.body;
-
+export async function updateUserStatus(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
   try {
-    if (!userId) {
-      throw new BadRequestError("Missing user ID ");
-    } else if (!userStatus) {
-      throw new BadRequestError("Missing user Status");
+    const { userId, status } = request.body;
+
+    if (!userId || !status) {
+      throw new BadRequestError("Please provide userId and status!");
     }
-    const updatedUserStatus = await userService.updateUserStatus(userId, {
-      status: userStatus,
-    });
-    response.status(200).json(updatedUserStatus);
+
+    const user = await userService.updateUserStatus(userId, status);
+
+    response.status(200).json({ user });
   } catch (error) {
-    if (error instanceof BadRequestError) {
-      response.status(400).json({ error: "Invalid request" });
-    } else if (error instanceof NotFoundError) {
-      response.status(404).json({ error: "User not found" });
-    } else if (error instanceof mongoose.Error.CastError) {
+    if (error instanceof mongoose.Error.CastError) {
       response.status(400).json({
-        message: "Wrong id",
+        message: "Wrong format id",
       });
-      return;
     } else {
-      response.status(500).json({ error: "Internal Server Error" });
+      next(error);
     }
   }
 }

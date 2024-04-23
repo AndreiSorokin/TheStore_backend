@@ -5,6 +5,9 @@ import app from "../../src/app";
 import productServices from "../../src/services/products";
 import { ProductDocument } from "../../src/models/Product";
 
+import fs from "fs";
+import path from "path";
+
 describe('product controller test', () => {
    let mongoHelper: MongoHelper;
 
@@ -13,15 +16,16 @@ describe('product controller test', () => {
 beforeAll(async () => {
   mongoHelper = await connect();
 
-  // Simulate admin login to obtain JWT token
+
   const loginResponse = await request(app)
-    .post('http://localhost:8080/api/v1/users/login')
+    .post('/api/v1/users/login')
     .send({
-      email: 'kenici780@gmail.com',
+      email: 'admin@mail.com',
       password: 'password1'
     });
 
-  adminToken = `Bearer ${loginResponse.body.token}`; // Adjust according to how your login response structure is
+  adminToken = `Bearer ${loginResponse.body.token}`;
+  console.log("Bearer", loginResponse.body) // Bearer { message: 'User Not Found' }
 });
 
    afterAll(async () => {
@@ -50,24 +54,29 @@ beforeAll(async () => {
       expect(response.body).toEqual(mockProduct);
    });
 
-   // it("should create a new product", async () => {
-   //    const categoryId = "mockCategoryId"; 
+   it("should create a new product", async () => {
+      const categoryId = 'your_category_id_here';
+      const productData = {
+         name: 'Test Product',
+         price: 20,
+         description: 'A test product description',
+         categoryId: categoryId,
+         size: 'Medium',
+         gender: 'Male',
+      };
 
-   //    const productData = {
-   //       name: "Test Product",
-   //       price: 100,
-   //       description: "A test product description",
-   //       categoryId: categoryId,
-   //       size: "Medium",
-   //       gender: "Unisex",
-   //       images: ["http://example.com/testimage.jpg"] 
-   //    };
+      const response = await request(app)
+         .post('/api/v1/products')
+         .set("Authorization", adminToken)
+         .field('name', productData.name)
+         .field('price', productData.price.toString())
+         .field('description', productData.description)
+         .field('categoryId', productData.categoryId)
+         .field('size', productData.size)
+         .field('gender', productData.gender)
+         .attach('image', fs.readFileSync(path.join(__dirname, '../assets/cakeBoy.png')), 'cakeBoy.png')
+         ;
 
-   //    const response = await request(app)
-   //       .post('/api/v1/products')
-   //       .set('Authorization', adminToken)
-   //       .send(productData);
-
-   //    expect(response.status).toBe(201);
-   // });
+      expect(response.status).toBe(201);
+   });
 })

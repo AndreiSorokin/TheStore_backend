@@ -130,44 +130,6 @@ export async function createProduct(request: Request, response: Response, next: 
     }
 }
 
-// export async function createProduct(request: Request, response: Response, next: NextFunction) {
-//     try {
-//         const { name, price, description, categoryId, size, gender } = request.body;
-
-//         const categoryDoc = await Category.findById( categoryId ).exec();
-
-//         if (!categoryDoc) {
-//             throw new BadRequestError("Category not found");
-//         }
-        
-//         let imageUrls = [];
-//         if (request.files) {
-//             const files = request.files as Express.Multer.File[];
-//             for (const file of files) {
-//                 const imageUrl = await uploadImageToCloudinary(file.buffer, file.originalname);
-//                 imageUrls.push(imageUrl);
-//             }
-//         }
-//         console.log('request.body',request.body) // no images
-//         const product = new Product({
-//             name,
-//             price,
-//             description,
-//             category: categoryDoc.id,
-//             images: imageUrls,
-//             size,
-//             gender
-//         });
-        
-
-//         const newProduct = await productsService.createProduct(product);
-        
-//         response.status(201).json(newProduct);
-//     } catch (error) {
-//         next(error)
-//     }
-// }
-
 export async function updateProduct(request: Request, response: Response) {
     const id = request.params.id;
     const product: Partial<ProductDocument> = request.body;

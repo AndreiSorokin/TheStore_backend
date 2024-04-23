@@ -159,27 +159,15 @@ const removeAdmin = async (id: string, updateRole: Partial<UserDocument>) => {
   return updateUser;
 };
 
-const updateUserStatus = async (
-  userId: string,
-  status: Partial<UserDocument>
-) => {
-  if (!userId) {
-    throw new BadRequestError();
-  } else if (!status) {
-    throw new BadRequestError();
-  }
-
+const updateUserStatus = async (userId: string, status: string) => {
   const options = { new: true, runValidators: true };
-  const updateUserStatus = await User.findByIdAndUpdate(
-    userId,
-    status,
-    options
-  );
+  const user = await User.findByIdAndUpdate(userId, { status }, options);
 
-  if (!updateUserStatus) {
-    throw new BadRequestError();
+  if (!user) {
+    throw new NotFoundError(`User Not Found with ${userId}`);
   }
-  return updateUserStatus;
+
+  return user;
 };
 
 const findOrCreate = async (payload: Partial<UserDocument>) => {
