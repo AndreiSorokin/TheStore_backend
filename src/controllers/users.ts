@@ -223,6 +223,12 @@ export async function googleLogin(request: Request, response: Response) {
       {
         email: user.email,
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: user.avatar,
+        username: user.username,
+        role: user.role,
+        status: user.status
       },
       process.env.JWT_SECRET || '',
 
@@ -258,7 +264,16 @@ export async function loginUser(request: Request, response: Response) {
       throw new BadRequestError("Wrong password");
     }
 
-    const token = jwt.sign({ email: userData.email }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ 
+        email: userData.email,
+        id: userData.id,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        avatar: userData.avatar,
+        username: userData.username,
+        role: userData.role,
+        status: userData.status
+    }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
 
