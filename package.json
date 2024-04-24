@@ -19,6 +19,7 @@
     "http": "^0.0.1-security",
     "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
+    "mailersend": "^2.2.0",
     "mongodb-memory-server": "^9.1.8",
     "mongoose": "^8.2.2",
     "multer": "^1.4.5-lts.1",
