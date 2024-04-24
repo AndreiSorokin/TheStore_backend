@@ -1,5 +1,3 @@
-
-
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import GoogleTokenStrategy from "passport-google-id-token";
 import dotenv from "dotenv";
@@ -43,7 +41,6 @@ export const googleAuthStrategy = new GoogleTokenStrategy(
       const user = await userService.findOrCreate(userPayload);
       done(null, user);
     } catch (error) {
-      console.log("googleAuthStrategy", error)
       done(error, false);
     }
   }

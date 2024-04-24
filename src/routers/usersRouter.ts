@@ -13,7 +13,8 @@ import {
   updateUserStatus,
   assingAdmin,
   removeAdmin,
-  googleLogin
+  googleLogin,
+  resetPassword
 } from "../controllers/users";
 
 import adminCheck from "../middlewares/adminCheck";
@@ -33,6 +34,7 @@ router.post("/login", loginUser);
 router.post("/registration", upload.single('avatar'), createUser);
 
 router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword)
 
 router.get(
   "/",

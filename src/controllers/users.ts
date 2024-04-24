@@ -325,7 +325,7 @@ export async function forgotPassword(request: Request, response: Response) {
       throw new BadRequestError("Invalid email address.");
     }
 
-    const verificationLink = `${baseUrl}/reset-password?token=${token}`;
+    const verificationLink = `http://localhost:3000/reset-password?token=${token}`;
     await userService.sendVerificationEmail(email, verificationLink);
 
     userData.resetToken = token;

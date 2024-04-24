@@ -82,39 +82,6 @@ const getUserByEmail = async (email: string): Promise<UserDocument> => {
   return user;
 };
 
-import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
-
-// const sendVerificationEmail = async (
-//   email: string,
-//   verificationLink: string
-// ): Promise<void> => {
-//   if (!email) {
-//     throw new BadRequestError("Please provide your email");
-//   }
-
-//   if (!process.env.MAILER_KEY) {
-//     throw new Error("MAILER_KEY is not set in the environment variables.");
-//   }
-//   const mailerSend = new MailerSend({
-//     apiKey: process.env.MAILER_KEY,
-//   });
-
-// const sentFrom = new Sender(process.env.USER || "default@yourdomain.com", "Your name");
-//   const recipients = [
-//     new Recipient(email, email)
-//   ];
-  
-//   const emailParams = new EmailParams()
-//     .setFrom(sentFrom)
-//     .setTo(recipients)
-//     .setReplyTo(sentFrom)
-//     .setSubject("This is a Subject")
-//     .setHtml("<strong>This is the HTML content</strong>")
-//     .setText("This is the text content");
-  
-//   await mailerSend.email.send(emailParams);
-// };
-
 const sendVerificationEmail = async (
   email: string,
   verificationLink: string
