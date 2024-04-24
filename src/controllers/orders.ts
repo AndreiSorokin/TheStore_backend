@@ -38,8 +38,8 @@ export async function createOrder(
 
     const orderItems = request.body.items.map((item: any) => ({
       quantity: item.quantity,
-      productId: item.product.id,
-      image: item.product.category.image,
+      productId: item.productId.id,
+      image: item.productId.category.image,
     }));
     const data = new Order({
       userId,
