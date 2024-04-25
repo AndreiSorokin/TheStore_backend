@@ -133,8 +133,30 @@ export async function updateUser(request: Request, response: Response) {
       lastName,
       email,
     });
-    console.log(updateUser)
-    response.status(200).json(updateUser);
+
+    if (!updateUser) {
+      throw new NotFoundError("User not found");
+    }
+    const token = jwt.sign({ 
+        email: updateUser.email,
+        id: updateUser.id,
+        firstName: updateUser.firstName,
+        lastName: updateUser.lastName,
+        avatar: updateUser.avatar,
+        username: updateUser.username,
+        role: updateUser.role,
+        status: updateUser.status
+    }, process.env.JWT_SECRET!, {
+      expiresIn: "1h",
+    });
+
+    const refreshToken = jwt.sign(
+      { email: updateUser.email, role: updateUser.role },
+      process.env.REFRESH_TOKEN_SECRET!,
+      { expiresIn: "20d" }
+    );
+
+    response.status(200).json({ updateUser, token, refreshToken });
   } catch (error) {
     if (error instanceof BadRequestError) {
       response.status(400).json({ error: "Invalid request" });

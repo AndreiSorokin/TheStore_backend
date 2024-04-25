@@ -48,9 +48,6 @@ export async function createOrder(
     
     const newOrder = await ordersService.createOrder(data, userId);
 
-    console.log('userId', userId)
-    console.log('newOrder', newOrder)
-
     const user = await User.findById(userId);
     if (!user) {
       throw new NotFoundError("User not found!");
@@ -60,8 +57,6 @@ export async function createOrder(
 
     response.status(201).json(newOrder);
   } catch (error) {
-    const userId = request.params.userId;
-    console.log('userId', userId)
     if (error instanceof BadRequestError) {
       response.status(400).json({
         message: `Missing order information or userId!`,
@@ -72,7 +67,6 @@ export async function createOrder(
         message: "Wrong user id format",
       });
     }
-    console.log(error);
     next(new InternalServerError());
   }
 }

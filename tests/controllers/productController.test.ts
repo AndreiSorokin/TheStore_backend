@@ -14,18 +14,18 @@ describe('product controller test', () => {
    let adminToken: any;
 
 beforeAll(async () => {
-  mongoHelper = await connect();
+   mongoHelper = await connect();
 
 
-  const loginResponse = await request(app)
-    .post('/api/v1/users/login')
-    .send({
-      email: 'admin@mail.com',
-      password: 'password1'
-    });
+   const loginResponse = await request(app)
+      .post('/api/v1/users/login')
+      .send({
+         email: 'admin@mail.com',
+         password: 'password1'
+      });
 
-  adminToken = `Bearer ${loginResponse.body.token}`;
-  console.log("Bearer", loginResponse.body) // Bearer { message: 'User Not Found' }
+   adminToken = `Bearer ${loginResponse.header.token}`;
+   console.log("Bearer", loginResponse.body) // Bearer { message: 'User Not Found' }
 });
 
    afterAll(async () => {
@@ -74,8 +74,7 @@ beforeAll(async () => {
          .field('categoryId', productData.categoryId)
          .field('size', productData.size)
          .field('gender', productData.gender)
-         .attach('image', fs.readFileSync(path.join(__dirname, '../assets/cakeBoy.png')), 'cakeBoy.png')
-         ;
+         .attach('image', fs.readFileSync(path.join(__dirname, '../assets/cakeBoy.png')), 'cakeBoy.png');
 
       expect(response.status).toBe(201);
    });

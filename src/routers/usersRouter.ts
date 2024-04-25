@@ -44,7 +44,6 @@ router.get(
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),
-  userStatusCheck,
   getSingleUser
 );
 
@@ -63,14 +62,6 @@ router.put(
   userStatusCheck,
   adminCheck,
   assingAdmin
-);
-
-router.put(
-  "/:id/userInformation",
-  passport.authenticate("jwt", { session: false }),
-  userStatusCheck,
-  adminCheck,
-  removeAdmin
 );
 
 router.put(
