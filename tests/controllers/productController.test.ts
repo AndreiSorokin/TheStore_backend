@@ -11,7 +11,7 @@ import { Role } from "../../src/misc/types";
 
 describe('product controller test', () => {
    let mongoHelper: MongoHelper;
-   let adminToken: any;
+   let adminToken: string;
    let categoryId: number;
 
    const filePath = `${__dirname}/assets/cakeBoy.png`;
@@ -19,24 +19,6 @@ describe('product controller test', () => {
    beforeAll(async () => {
       mongoHelper = await connect();
       adminToken = await registerAndLoginAdmin();
-
-      // const register = await request(app)
-      // .post('/api/v1/users/registration')
-      // .send({ 
-      //    username: "username",
-      //    password: "password",
-      //    firstName: "firstName",
-      //    lastName: "lastName",
-      //    email: "email@gmail.com",
-      //    role: Role.ADMIN,
-      //    avatar: "img"
-      // });
-
-      // const loginResponse = await request(app)
-      //    .post('/api/v1/users/login')
-      //    .send({ email: register.body.newUser.email, password: 'password' });
-
-      // adminToken = `Bearer ${loginResponse.body.token}`;
 
       const categoryResponse = await request(app)
          .post('/api/v1/categories')
@@ -89,7 +71,6 @@ describe('product controller test', () => {
          size: 'Medium',
          gender: 'Male',
       };
-      console.log('productData', productData)
 
       const response = await request(app)
          .post('/api/v1/products')
