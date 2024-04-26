@@ -21,7 +21,7 @@ import adminCheck from "../middlewares/adminCheck";
 import passport from "passport";
 import userStatusCheck from "../middlewares/userStatusCheck";
 import { refreshAccessToken } from "../controllers/auth";
-import { addProductToUserCart, getCartByUserId } from "../controllers/cart";
+import { getCartByUserId } from "../controllers/cart";
 
 const router = express.Router();
 

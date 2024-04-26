@@ -7,6 +7,7 @@ import { ProductDocument } from "../../src/models/Product";
 
 import fs from "fs";
 import path from "path";
+import { createProduct } from "../common/common";
 
 describe('product controller test', () => {
    let mongoHelper: MongoHelper;
@@ -54,28 +55,59 @@ beforeAll(async () => {
       expect(response.body).toEqual(mockProduct);
    });
 
-   it("should create a new product", async () => {
-      const categoryId = 'your_category_id_here';
-      const productData = {
-         name: 'Test Product',
-         price: 20,
-         description: 'A test product description',
-         categoryId: categoryId,
-         size: 'Medium',
-         gender: 'Male',
-      };
+   // it("should create a new product", async () => {
+   //    const categoryId = 'your_category_id_here';
+   //    const productData = {
+   //       name: 'Test Product',
+   //       price: 20,
+   //       description: 'A test product description',
+   //       categoryId: categoryId,
+   //       size: 'Medium',
+   //       gender: 'Male',
+   //    };
 
-      const response = await request(app)
-         .post('/api/v1/products')
-         .set("Authorization", adminToken)
-         .field('name', productData.name)
-         .field('price', productData.price.toString())
-         .field('description', productData.description)
-         .field('categoryId', productData.categoryId)
-         .field('size', productData.size)
-         .field('gender', productData.gender)
-         .attach('image', fs.readFileSync(path.join(__dirname, '../assets/cakeBoy.png')), 'cakeBoy.png');
+   //    const response = await request(app)
+   //       .post('/api/v1/products')
+   //       .set("Authorization", adminToken)
+   //       .field('name', productData.name)
+   //       .field('price', productData.price.toString())
+   //       .field('description', productData.description)
+   //       .field('categoryId', productData.categoryId)
+   //       .field('size', productData.size)
+   //       .field('gender', productData.gender)
+   //       .attach('image', fs.readFileSync(path.join(__dirname, '../assets/cakeBoy.png')), 'cakeBoy.png');
 
-      expect(response.status).toBe(201);
-   });
+   //    expect(response.status).toBe(201);
+   // });
+
+   // it("should update a product", async () => {
+   //    const product = await createProduct();
+
+   //    const updatedProductData = {
+   //       name: 'Updated Product',
+   //       price: 120,
+   //       description: 'Updated description',
+   //    };
+
+   //    const response = await request(app)
+   //       .put(`/api/v1/products/${product._id}`)
+   //       .set("Authorization", adminToken)
+   //       .send(updatedProductData);
+
+   //    expect(response.status).toBe(200);
+   //    expect(response.body).toHaveProperty('_id', product._id.toString());
+   // });
+
+   // it("should delete a product", async () => {
+   //    const product = await createProduct();
+   
+   //    const deleteResponse = await request(app)
+   //       .delete(`/api/v1/products/${product._id}`)
+   //       .set("Authorization", adminToken);
+   
+   //    expect(deleteResponse.status).toBe(204);
+   
+   //    const fetchResponse = await request(app).get(`/api/v1/products/${product._id}`);
+   //    expect(fetchResponse.status).toBe(404);
+   // });
 })

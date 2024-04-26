@@ -2,11 +2,9 @@ import express from "express";
 
 import {
   createOrder,
-  deleteOrder,
   getAllOrders,
   getAllOrdersByUserId,
   getOrderById,
-  updateOrder,
 } from "../controllers/orders";
 import passport from "passport";
 import adminCheck from "../middlewares/adminCheck";
@@ -34,21 +32,6 @@ router.get(
   userStatusCheck,
   adminCheck,
   getOrderById
-);
-
-router.put(
-  "/:userId/:orderId",
-  passport.authenticate("jwt", { session: false }),
-  userStatusCheck,
-  updateOrder
-);
-
-router.delete(
-  "/:orderId",
-  passport.authenticate("jwt", { session: false }),
-  userStatusCheck,
-  adminCheck,
-  deleteOrder
 );
 
 router.get(

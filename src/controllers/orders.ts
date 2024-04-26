@@ -70,8 +70,6 @@ export async function createOrder(
     next(new InternalServerError());
   }
 }
-
-
 export async function getOrderById(
   request: Request,
   response: Response,
@@ -99,67 +97,6 @@ export async function getOrderById(
     next(new InternalServerError());
   }
 }
-export async function updateOrder(
-  request: Request,
-  response: Response,
-  next: NextFunction
-) {
-  try {
-    const orderId = request.params.id;
-    const newData = new Order(request.body);
-    await ordersService.updateOrder(orderId, newData);
-    response.sendStatus(204);
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      response.status(404).json({
-        message: `Cant find order with id ${request.params.orderId}`,
-      });
-    } else if (error instanceof mongoose.Error.CastError) {
-      response.status(404).json({
-        message: "Wrong id format",
-      });
-      return;
-    } else if (error instanceof BadRequestError) {
-      response.status(400).json({
-        message: `Missing  update information or orderId`,
-      });
-    }
-
-    next(new InternalServerError());
-  }
-}
-export async function deleteOrder(
-  request: Request,
-  response: Response,
-  next: NextFunction
-) {
-  try {
-    const orderId = request.params.id;
-    await ordersService.deleteOrderById(orderId);
-
-    response.sendStatus(204);
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      response.status(404).json({
-        message: `Cant find order with id ${request.params.orderId}`,
-      });
-      return;
-    } else if (error instanceof mongoose.Error.CastError) {
-      response.status(404).json({
-        message: "Wrong id format",
-      });
-      return;
-    } else if (error instanceof BadRequestError) {
-      response.status(400).json({
-        message: `Missing orderId`,
-      });
-      return;
-    }
-
-    next(new InternalServerError());
-  }
-}
-
 export async function getAllOrdersByUserId(
   request: Request,
   response: Response,

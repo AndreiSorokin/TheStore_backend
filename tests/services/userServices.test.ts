@@ -206,7 +206,7 @@ describe('user services test', () => {
       });
       const savedUser = await newUser.save();
     
-      const updatedUser = await userService.updateUserStatus(savedUser.id.toString(), { status: UserStatus.ACTIVE });
+const updatedUser = await userService.updateUserStatus(savedUser.id.toString(), UserStatus.ACTIVE);
     
       expect(updatedUser).toBeDefined();
       expect(updatedUser.status).toBe(UserStatus.ACTIVE);

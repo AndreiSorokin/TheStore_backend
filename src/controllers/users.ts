@@ -125,10 +125,11 @@ export async function createUser(request: Request, response: Response) {
 
 export async function updateUser(request: Request, response: Response) {
   const id = request.params.id;
-  const { firstName, lastName, email } = request.body;
+  const { username, firstName, lastName, email } = request.body;
 
   try {
     const updateUser: UserDocument | null = await userService.updateUser(id, {
+      username,
       firstName,
       lastName,
       email,
