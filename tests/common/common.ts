@@ -30,6 +30,27 @@ export async function createProduct() {
    return await productServices.createProduct(product);
 }
 
+export async function registerAndLoginAdmin() {
+    const registerResponse = await request(app)
+        .post('/api/v1/users/registration')
+        .send({ 
+            username: "username",
+            password: "password",
+            firstName: "firstName",
+            lastName: "lastName",
+            email: "email@gmail.com",
+            role: Role.ADMIN,
+            avatar: "img"
+        });
+
+    const loginResponse = await request(app)
+        .post('/api/v1/users/login')
+        .send({ email: registerResponse.body.newUser.email, password: 'password' });
+
+    const adminToken = `Bearer ${loginResponse.body.token}`;
+    return adminToken;
+}
+
 export async function createUser(username: string, password: string, firstName: string, lastName: string, email: string, role: Role) {
    const data = {
       username,
