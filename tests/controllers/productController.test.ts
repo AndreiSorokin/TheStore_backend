@@ -7,34 +7,45 @@ import { ProductDocument } from "../../src/models/Product";
 
 import fs from "fs";
 import path from "path";
-import { createProduct } from "../common/common";
+import { createProduct, getToken } from "../common/common";
+import User from "../../src/models/User";
+import { Role } from "../../src/misc/types";
 
 describe('product controller test', () => {
    let mongoHelper: MongoHelper;
 
    let adminToken: any;
 
-beforeAll(async () => {
-   mongoHelper = await connect();
+   beforeAll(async () => {
+      mongoHelper = await connect();
 
-
-   const loginResponse = await request(app)
-      .post('/api/v1/users/login')
-      .send({
-         email: 'admin@mail.com',
-         password: 'password1'
+      const register = await request(app)
+      .post('/api/v1/users/registration')
+      .send({ 
+         username: "username",
+         password: "password",
+         firstName: "firstName",
+         lastName: "lastName",
+         email: "email@gmail.com",
+         role: Role.ADMIN,
+         avatar: "img"
       });
 
-   adminToken = `Bearer ${loginResponse.header.token}`;
-   console.log("Bearer", loginResponse.body) // Bearer { message: 'User Not Found' }
-});
+      const loginResponse = await request(app)
+         .post('/api/v1/users/login')
+         .send({ email: register.body.newUser.email, password: 'password' });
+
+         
+      adminToken = `Bearer ${loginResponse.body.token}`;
+   });
 
    afterAll(async () => {
       await mongoHelper.closeDatabase();
+      // await mongoHelper.clearDatabase();
    });
    
    afterEach(async () => {
-      await mongoHelper.clearDatabase();
+      // await mongoHelper.clearDatabase();
    });
 
    it("should return a list of products", async() => {
@@ -50,35 +61,58 @@ beforeAll(async () => {
       jest.spyOn(productServices, 'getOneProduct').mockResolvedValue(mockProduct);
       
       const response = await request(app).get('/api/v1/products/123');
-      
+      console.log('response',response.body)
       expect(response.status).toBe(201);
       expect(response.body).toEqual(mockProduct);
    });
 
-   // it("should create a new product", async () => {
-   //    const categoryId = 'your_category_id_here';
-   //    const productData = {
-   //       name: 'Test Product',
-   //       price: 20,
-   //       description: 'A test product description',
-   //       categoryId: categoryId,
-   //       size: 'Medium',
-   //       gender: 'Male',
-   //    };
+   it("should create a new product", async () => {
+      // mongoHelper = await connect();
 
-   //    const response = await request(app)
-   //       .post('/api/v1/products')
-   //       .set("Authorization", adminToken)
-   //       .field('name', productData.name)
-   //       .field('price', productData.price.toString())
-   //       .field('description', productData.description)
-   //       .field('categoryId', productData.categoryId)
-   //       .field('size', productData.size)
-   //       .field('gender', productData.gender)
-   //       .attach('image', fs.readFileSync(path.join(__dirname, '../assets/cakeBoy.png')), 'cakeBoy.png');
+  //    const imagePath = path.join(__dirname, '../assets/cakeBoy.png');
+      const filePath = `${__dirname}/assets/cakeBoy.png`;
+      console.log("File path:",filePath)
+      if (!fs.existsSync(filePath)) {
+         throw new Error('Image file does not exist');
+      }
 
-   //    expect(response.status).toBe(201);
-   // });
+      console.log('imagePath',filePath)
+      
+      const categoryResponse = await request(app)
+         .post('/api/v1/categories')
+         .set("Authorization", adminToken)
+         .field('name', 'name' )
+         .attach('image', filePath, 'cakeBoy.png');
+      const categoryId = categoryResponse.body.id;
+
+      console.log('categoryResponse.body', categoryResponse.body)
+
+      const productData = {
+         name: 'Test Product',
+         price: 20,
+         description: 'A test product description',
+         categoryId: categoryId,
+         size: 'Medium',
+         gender: 'Male',
+      };
+      console.log('productData', productData)
+
+      const response = await request(app)
+         .post('/api/v1/products')
+         .set("Authorization", adminToken)
+         .field('name', productData.name)
+         .field('price', productData.price)
+         .field('description', productData.description)
+         .field('categoryId', productData.categoryId)
+         .field('size', productData.size)
+         .field('gender', productData.gender)
+         .attach('images', filePath, 'cakeBoy.png');
+
+      console.log('response.body',response)
+      
+
+      expect(response.status).toBe(201);
+   });
 
    // it("should update a product", async () => {
    //    const product = await createProduct();

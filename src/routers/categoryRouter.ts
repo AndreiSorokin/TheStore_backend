@@ -19,7 +19,7 @@ const upload = multer({ storage: storage });
 router.get("/", getAllCategory);
 router.get("/:id", getOneCategory);
 
-router.post("/", 
+router.post("/",
 passport.authenticate("jwt", { session: false }),
 userStatusCheck,
 adminCheck,
