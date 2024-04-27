@@ -339,7 +339,7 @@ export async function forgotPassword(request: Request, response: Response, next:
       throw new BadRequestError("Invalid email address.");
     }
 
-    const verificationLink = `http://localhost:3000/reset-password?token=${token}`;
+    const verificationLink = `https://fs17-frontend-project-iota.vercel.app/reset-password?token=${token}`;
     await userService.sendVerificationEmail(email, verificationLink);
 
     userData.resetToken = token;
