@@ -22,7 +22,8 @@ dotenv.config({ path: ".env" });
 const app = express();
 
 const corsOptions = {
-  origin: 'https://fs17-frontend-project-iota.vercel.app',
+  // origin: 'https://fs17-frontend-project-iota.vercel.app',
+  origin: 'http://localhost:3000',
   credentials: true,
 };
 
