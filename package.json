@@ -5,7 +5,6 @@
   "license": "MIT",
   "dependencies": {
     "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.12",
     "@types/node": "^20.11.27",
     "@types/nodemailer": "^6.4.14",
     "bcrypt": "^5.1.1",
@@ -46,7 +45,9 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
+    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/mocha": "^10.0.6",
     "@types/multer": "^1.4.11",
     "@types/passport-google-id-token": "^0.4.3",
     "@types/passport-jwt": "^4.0.1",
