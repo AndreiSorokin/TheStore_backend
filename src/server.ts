@@ -9,12 +9,8 @@ mongoose
     dbName: "store"
   })
   .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(port, () => {
-      console.log(`Server is up and running on port http://localhost:${port}`);
-    });
+    app.listen(port, () => {});
   })
   .catch((error: Error) => {
-    console.error("MongDB connection error:", error);
     process.exit(1);
   });

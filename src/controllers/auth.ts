@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ForbiddenError, InternalServerError } from "../errors/ApiError";
+import { InternalServerError } from "../errors/ApiError";
 
 const jwt = require('jsonwebtoken');
 
@@ -18,7 +18,6 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
 async function refreshAccessToken(request: Request, response: Response, next: NextFunction) {
     try {
         const refreshToken = request.cookies['refreshToken'];
-        console.log('Received refresh token:', refreshToken);
         if (!refreshToken) {
             return response.status(400).json({ message: "Refresh token is required" });
         }
@@ -44,8 +43,7 @@ async function refreshAccessToken(request: Request, response: Response, next: Ne
         
         response.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
-        console.error(error);
-        response.status(500).json({ message: "Internal server error" });
+        next(new InternalServerError());
     }
 }
 

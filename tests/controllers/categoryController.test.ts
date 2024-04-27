@@ -1,29 +1,19 @@
 import request, { Response, SuperTest, Test } from "supertest";
-import fs from "fs";
-import path from "path";
 
 import connect, { MongoHelper } from "../db-helper";
 
 import app from "../../src/app";
-import { createCategory, createUser, getToken, registerAndLoginAdmin } from "../common/common";
-import { Role } from "../../src/misc/types";
-import User from "../../src/models/User";
+import { createCategory, registerAndLoginAdmin } from "../common/common";
 
 const filePath = `${__dirname}/assets/cakeBoy.png`;
 
 describe("category controller test", () => {
    let mongoHelper: MongoHelper;
-   let agent: request.SuperTest<request.Test>;
    let adminToken: string;
-   let res: Response;
-   const requestBody = {
-      name: "name",
-   };
    let categoryId: string;
 
    beforeAll(async () => {
       mongoHelper = await connect();
-      agent = request(app) as unknown as SuperTest<Test>;
 
       adminToken = await registerAndLoginAdmin();
    })

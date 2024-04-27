@@ -1,20 +1,20 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Category from "../models/Category"
 import categoryService from "../services/category"
 import { CategoryDocument } from "../models/Category";
 import { uploadImageToCloudinary } from '../services/uploads';
+import { InternalServerError } from "../errors/ApiError";
 
-export async function getAllCategory(_: Request, response: Response) {
+export async function getAllCategory(_: Request, response: Response, next: NextFunction) {
     try {
         const category = await categoryService.getAllCategory()
         response.status(200).json(category)
     } catch (error) {
-        console.error('Error fetching category:', error);
-        response.status(500).json({ message: 'Internal Server Error. ' + error });
+        next(new InternalServerError());
     }
 }
 
-export async function getOneCategory(request: Request, response: Response) {
+export async function getOneCategory(request: Request, response: Response, next: NextFunction) {
     try {
         const category = await categoryService.getOneCategory(request.params.id)
         if (!category) {
@@ -22,12 +22,11 @@ export async function getOneCategory(request: Request, response: Response) {
         }
         response.status(201).json(category)
     } catch (error) {
-        console.error('Error fetching category:', error);
-        response.status(500).json({ message: 'Internal Server Error. ' + error });
+        next(new InternalServerError());
     }
 }
 
-export async function createCategory(request: Request, response: Response) {
+export async function createCategory(request: Request, response: Response, next: NextFunction) {
     try {
         let imageUrl = '';
         if (request.file) {
@@ -44,12 +43,11 @@ export async function createCategory(request: Request, response: Response) {
         const newCategory = await categoryService.createCategory(category);
         response.status(201).json(newCategory);
     } catch (error) {
-        console.error('Error creating category:', error);
-        response.status(500).json({ message: 'Internal Server Error. ' + error });
+        next(new InternalServerError());
     }
 }
 
-export async function updateCategory(request: Request, response: Response) {
+export async function updateCategory(request: Request, response: Response, next: NextFunction) {
     try {
         const id = request.params.id;
         const category: Partial<CategoryDocument> = request.body;
@@ -62,19 +60,17 @@ export async function updateCategory(request: Request, response: Response) {
 
         response.status(200).json(updatedCategory);
     } catch (error) {
-        console.error('Error updating category:', error);
-        response.status(500).json({ message: 'Internal Server Error. ' + error });
+        next(new InternalServerError());
     }
 }
 
-export async function deleteCategory(request: Request, response: Response) {
+export async function deleteCategory(request: Request, response: Response, next: NextFunction) {
     try {
         const id = request.params.id;
         await categoryService.deleteCategory(id)
         response.status(204).json({ message: "Category has been deleted" }).end()
 
     } catch (error) {
-        console.error('Error deleting category:', error);
-        response.status(500).json({ message: 'Internal Server Error. ' + error });
+        next(new InternalServerError());
     }
 }

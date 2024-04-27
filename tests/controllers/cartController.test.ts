@@ -1,6 +1,5 @@
 import request from 'supertest';
 import app from '../../src/app';
-import mongoose from 'mongoose';
 import User from '../../src/models/User';
 import Cart from '../../src/models/Cart';
 import connect, { MongoHelper } from "../db-helper";

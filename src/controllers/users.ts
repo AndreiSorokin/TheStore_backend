@@ -15,8 +15,6 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../errors/ApiError";
-import { baseUrl } from "../api/baseUrl";
-import { loginPayload, UserToRegister } from "../misc/types";
 
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
@@ -82,8 +80,6 @@ export async function createUser(request: Request, response: Response) {
     } else if (!validator.isEmail(email)) {
       throw new BadRequestError("Please enter a valid email");
     }
-
-    console.log('request.body;', request.body)
 
     let imageUrl = '';
     if (request.file) {
@@ -215,12 +211,11 @@ export async function updatePassword(
         message: error.message,
       });
     }
-
     next(new InternalServerError());
   }
 }
 
-export async function deleteUser(request: Request, response: Response) {
+export async function deleteUser(request: Request, response: Response, next: NextFunction) {
   const id = request.params.id;
 
   try {
@@ -232,16 +227,15 @@ export async function deleteUser(request: Request, response: Response) {
     } else if (error instanceof NotFoundError) {
       response.status(404).json({ error: "User not found" });
     } else {
-      response.status(500).json({ error: "Internal Server Error" });
+      next(new InternalServerError());
     }
   }
 }
 
-export async function googleLogin(request: Request, response: Response) {
+export async function googleLogin(request: Request, response: Response, next: NextFunction) {
   try {
     const user = request.user as UserDocument;
 
-    console.log('user',user)
     const token = jwt.sign(
       {
         email: user.email,
@@ -267,12 +261,11 @@ export async function googleLogin(request: Request, response: Response) {
     );
     response.status(200).json({ user, token, refreshToken });
   } catch (error) {
-    console.log('error', error);
-    throw new InternalServerError("Something went wrong");
+    next(new InternalServerError());
   }
 }
 
-export async function loginUser(request: Request, response: Response) {
+export async function loginUser(request: Request, response: Response, next: NextFunction) {
   try {
     const { email, password } = request.body;
     const userData = await userService.getUserByEmail(email);
@@ -330,14 +323,12 @@ export async function loginUser(request: Request, response: Response) {
         message: error.message,
       });
     } else {
-      response.status(500).json({
-        message: "Internal server error",
-      });
+      next(new InternalServerError());
     }
   }
 }
 
-export async function forgotPassword(request: Request, response: Response) {
+export async function forgotPassword(request: Request, response: Response, next: NextFunction) {
   try {
     const { email } = request.body;
     const userData = await userService.getUserByEmail(email);
@@ -368,15 +359,12 @@ export async function forgotPassword(request: Request, response: Response) {
         message: error.message,
       });
     } else {
-      console.log('error', error)
-      response.status(500).json({
-        message: "Failed to send verification email.",
-      });
+      next(new InternalServerError());
     }
   }
 }
 
-export async function resetPassword(request: Request, response: Response) {
+export async function resetPassword(request: Request, response: Response, next: NextFunction) {
   try {
     const { newPassword } = request.body;
     const token = request.query.token as string;
@@ -410,13 +398,11 @@ export async function resetPassword(request: Request, response: Response) {
         message: error.message,
       });
     } else {
-      response.status(500).json({
-        message: "Failed to send verification email.",
-      });
+      next(new InternalServerError());
     }
   }
 }
-export async function assingAdmin(request: Request, response: Response) {
+export async function assingAdmin(request: Request, response: Response, next: NextFunction) {
   const id = request.params.id;
   const { role } = request.body;
 
@@ -440,12 +426,12 @@ export async function assingAdmin(request: Request, response: Response) {
       });
       return;
     } else {
-      response.status(500).json({ error: "Internal Server Error" });
+      next(new InternalServerError());
     }
   }
 }
 
-export async function removeAdmin(request: Request, response: Response) {
+export async function removeAdmin(request: Request, response: Response, next: NextFunction) {
   const id = request.params.id;
   const { role } = request.body;
 
@@ -469,7 +455,7 @@ export async function removeAdmin(request: Request, response: Response) {
       });
       return;
     } else {
-      response.status(500).json({ error: "Internal Server Error" });
+      next(new InternalServerError());
     }
   }
 }
@@ -495,7 +481,7 @@ export async function updateUserStatus(
         message: "Wrong format id",
       });
     } else {
-      next(error);
+      next(new InternalServerError());
     }
   }
 }

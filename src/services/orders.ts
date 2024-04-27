@@ -1,15 +1,6 @@
 import { BadRequestError, NotFoundError } from "../errors/ApiError";
 import Order, { OrderDocument } from "../models/Order";
-import { PipelineStage } from "mongoose";
 
-type CountResult = {
-  count: number;
-};
-
-type OrderData = {
-  orders: OrderDocument[];
-  count: number;
-};
 
 const getAllOrders = async (): Promise<OrderDocument[]> => {
   return await Order.find();
@@ -45,7 +36,6 @@ const getAllOrdersByUserId = async (
   if (!userId) {
     throw new BadRequestError(`Please provide userId!`);
   }
-  console.log(userId);
   const orders = await Order.find({ userId: userId }).populate({
     path: 'orderItems.productId',
     select: 'images name price size gender',

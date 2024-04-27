@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import cartService from "../services/cart";
 import { Types } from "mongoose";
 import User from "../models/User";
+import { InternalServerError } from "../errors/ApiError";
 
 export async function getCartByUserId(req: Request, res: Response, next: NextFunction) {
    try {
@@ -18,7 +19,7 @@ export async function getCartByUserId(req: Request, res: Response, next: NextFun
       }
       res.status(200).json(cart);
    } catch (error) {
-      console.log(error)
+      next(new InternalServerError());
    }
 }
 
@@ -34,6 +35,6 @@ export async function addProductToUserCart(req: Request, res: Response, next: Ne
          cart: updatedCart
       });
    } catch (error) {
-      console.log(error);
+      next(new InternalServerError());
    }
 }

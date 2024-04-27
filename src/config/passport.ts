@@ -37,7 +37,6 @@ export const googleAuthStrategy = new GoogleTokenStrategy(
         googleId,
       };
 
-      console.log('userPayload', userPayload)
       const user = await userService.findOrCreate(userPayload);
       done(null, user);
     } catch (error) {

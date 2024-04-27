@@ -107,8 +107,6 @@ export async function createProduct(request: Request, response: Response, next: 
             imageUrls = request.body.images || [];
         }
 
-        console.log('Image URLs:', imageUrls);
-
         const product = new Product({
             name,
             price,
@@ -119,18 +117,15 @@ export async function createProduct(request: Request, response: Response, next: 
             gender
         });
 
-        console.log('Product before saving:', product);
-
         const newProduct = await productsService.createProduct(product);
 
         response.status(201).json(newProduct);
     } catch (error) {
-        console.error('Error in createProduct:', error);
-        next(error);
+        next(new InternalServerError());
     }
 }
 
-export async function updateProduct(request: Request, response: Response) {
+export async function updateProduct(request: Request, response: Response, next: NextFunction) {
     const id = request.params.id;
     const product: Partial<ProductDocument> = request.body;
 
@@ -148,12 +143,12 @@ export async function updateProduct(request: Request, response: Response) {
             });
             return;
         } else {
-            response.status(500).json({ error: "Internal Server Error" });
+            next(new InternalServerError());
         }
     }
 }
 
-export async function deleteProduct(request: Request, response: Response) {
+export async function deleteProduct(request: Request, response: Response, next: NextFunction) {
     const id = request.params.id;
 
     try {
@@ -165,7 +160,7 @@ export async function deleteProduct(request: Request, response: Response) {
         } else if (error instanceof NotFoundError) {
             response.status(404).json({ error: "Product not found" });
         } else {
-            response.status(500).json({ error: "Internal Server Error" });
+            next(new InternalServerError());
         }
     }
 }

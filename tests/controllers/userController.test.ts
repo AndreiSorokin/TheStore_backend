@@ -17,13 +17,6 @@ describe('User controller', () => {
 
       const user = await createUser("testUser", "testPass", "Test", "User", "testuser@gmail.com", Role.ADMIN);
       userId = user.body.newUser.id;
-      console.log('loginResponse.body1', user.body.newUser);
-
-      // const customer = await createUser("testUser", "testPass", "Test", "User", "testuser2@gmail.com", Role.CUSTOMER);
-      // const loginResponse = await request(app)
-      // .post('/api/v1/users/login')
-      // .send({ email: customer.body.newUser.email, password: 'password' });
-      // console.log('loginResponse.body1', loginResponse.body.newUser);
    });
 
    afterAll(async () => {

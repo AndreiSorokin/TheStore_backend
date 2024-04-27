@@ -182,7 +182,6 @@ const findOrCreate = async (payload: Partial<UserDocument>) => {
       firstName: "",
       lastName: "",
     });
-    console.log('payload',payload)
     const emailContent = `Welcome! Your account has been created successfully. Here is your password: ${randomPassword}. Please change it upon your first login for security reasons.`;
 
     await sendVerificationEmail(payload.email, emailContent);

@@ -7,7 +7,6 @@ import { ProductDocument } from "../../src/models/Product";
 
 import fs from "fs";
 import { createProduct, registerAndLoginAdmin } from "../common/common";
-import { Role } from "../../src/misc/types";
 
 describe('product controller test', () => {
    let mongoHelper: MongoHelper;
@@ -46,7 +45,6 @@ describe('product controller test', () => {
       jest.spyOn(productServices, 'getOneProduct').mockResolvedValue(mockProduct);
       
       const response = await request(app).get('/api/v1/products/123');
-      console.log('response',response.body)
       expect(response.status).toBe(201);
       expect(response.body).toEqual(mockProduct);
    });

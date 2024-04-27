@@ -9,8 +9,6 @@ import {
 } from "../errors/ApiError";
 import mongoose from "mongoose";
 import User from "../models/User";
-import Product from "../models/Product";
-import { OrderItem } from "../misc/types";
 
 export async function getAllOrders(
   request: Request,
@@ -34,7 +32,6 @@ export async function createOrder(
     if (!userId) {
       throw new NotFoundError("Missing userId!");
     }
-    console.log(request.body)
 
     const orderItems = request.body.items.map((item: any) => ({
       quantity: item.quantity,
@@ -93,7 +90,6 @@ export async function getOrderById(
         message: `Missing orderId`,
       });
     }
-
     next(new InternalServerError());
   }
 }
@@ -105,11 +101,9 @@ export async function getAllOrdersByUserId(
   try {
     const userId = request.params.userId;
     const orders = await ordersService.getAllOrdersByUserId(userId);
-    console.log(orders);
 
     response.status(200).json(orders);
   } catch (error) {
-    console.log(error)
     if (error instanceof NotFoundError) {
       response.status(404).json({
         message: `Can not find orders with userId: ${request.params.userId}`,
@@ -126,7 +120,6 @@ export async function getAllOrdersByUserId(
       });
       return;
     }
-
     next(new InternalServerError());
   }
 }

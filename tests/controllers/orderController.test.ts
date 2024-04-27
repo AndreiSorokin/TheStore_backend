@@ -3,10 +3,8 @@ import connect, { MongoHelper } from "../db-helper";
 import fs from 'fs';
 
 import app from "../../src/app";
-import { createProduct, createUser, getToken, registerAndLoginAdmin } from "../common/common";
-import { Gender, Role, Size } from "../../src/misc/types";
-import Product from "../../src/models/Product";
-import Category from "../../src/models/Category";
+import { createProduct, createUser, registerAndLoginAdmin } from "../common/common";
+import { Role } from "../../src/misc/types";
 import Order from "../../src/models/Order";
 
 describe('order controller test', () => {

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { uploadImageToCloudinary } from '../services/uploads';
+import { InternalServerError } from '../errors/ApiError';
 
 export const uploadImage = async (req: Request, res: Response, next: NextFunction) => {
    if (!req.file) {
@@ -11,6 +12,6 @@ export const uploadImage = async (req: Request, res: Response, next: NextFunctio
       const imageUrl = await uploadImageToCloudinary(fileBuffer, fileName);
       res.json({ imageUrl });
    } catch (error) {
-      next(error)
+      next(new InternalServerError());
    }
 };

@@ -2,6 +2,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import Product from "../models/Product";
 import { OrderItem } from "../misc/types";
+import { InternalServerError } from "../errors/ApiError";
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -39,8 +40,7 @@ const stripePayment = async (req: Request, res: Response, next: NextFunction) =>
 
       res.json({ url: session.url });
    } catch (error) {
-      console.error('Stripe Payment Error:', error);
-      res.status(500).json({ error: "Internal Server Error" });
+      next(new InternalServerError());
    }
 };
 

@@ -11,7 +11,6 @@ const getOneCategory = async (id: string): Promise<CategoryDocument | undefined>
             return category;
         }
     } catch (error) {
-        console.error("Error fetching categories:", error);
         if (error instanceof Error) {
             throw new Error("Failed to fetch categories: " + error.message);
         } else {
@@ -28,7 +27,6 @@ const createCategory = async (category: CategoryDocument): Promise<CategoryDocum
         }
         return await category.save();
     } catch (error) {
-        console.error("Error creating categories:", error);
         if (error instanceof Error) {
             throw new Error("Failed to create categories: " + error.message);
         } else {
@@ -43,7 +41,6 @@ const updateCategory = async (id: string, changedCategory: Partial<CategoryDocum
         const updatedCategory = await Category.findByIdAndUpdate(id, changedCategory, options);
         return updatedCategory;
     } catch (error) {
-        console.error("Error updating categories:", error);
         if (error instanceof Error) {
             throw new Error("Failed to update categories: " + error.message);
         } else {
@@ -59,7 +56,6 @@ const deleteCategory = async (id: string) => {
             return category;
         }
     } catch (error) {
-        console.error("Error deleting categories:", error);
         if (error instanceof Error) {
             throw new Error("Failed to delete categories: " + error.message);
         } else {
