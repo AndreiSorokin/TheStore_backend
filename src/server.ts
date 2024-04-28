@@ -9,7 +9,8 @@ mongoose
     dbName: "store"
   })
   .then(() => {
-    app.listen(port, () => {});
+    app.listen(port, () => {
+    });
   })
   .catch((error: Error) => {
     process.exit(1);
