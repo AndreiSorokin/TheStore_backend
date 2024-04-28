@@ -1,11 +1,12 @@
 ### Welcome to Our Internet Store REST API
-This REST API provides functionality for managing an internet store. You can perform CRUD operations on the database and control user access to specific routes.
+This REST API provides functionality for managing an internet store(https://fs17-frontend-project-iota.vercel.app/). You can perform CRUD operations on the database and control user access to specific routes.
 This project has been created in Integrify through collaboration with:
 1. https://github.com/AndreiSorokin 
 2. https://github.com/LamNgo1911
 3. https://github.com/naimulNoor
 4. https://github.com/muzahidswe
 
+where I had a tech lead role and then expanded by myself to suit my project
 ### Getting Started
 In order to run the app you need to have the following installed:
 - Node v18.14.1
@@ -69,3 +70,5 @@ In order to run the app you need to have the following installed:
 - supertest
 - uuid
 - validator
+- stripe
+- cloudinary
