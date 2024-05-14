@@ -7,7 +7,7 @@ jest.mock('../../src/services/uploads', () => ({
 }));
 
 describe('uploadImage Controller', () => {
-   const filePath = `${__dirname}/assets/cakeBoy.png`;
+  const filePath = `${__dirname}/assets/cakeBoy.png`;
   it('should return the image URL on successful upload', async () => {
     (uploadImageToCloudinary as jest.Mock).mockResolvedValue('http://example.com/image.jpg');
 

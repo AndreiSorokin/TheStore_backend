@@ -39,7 +39,7 @@
     "start": "node dist/src/server.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/server.ts",
     "build": "tsc -p . && ls dist",
-    "test": "jest --runInBand --forceExit --detectOpenHandles --coverage  --verbose false"
+    "test": "jest --runInBand --forceExit --detectOpenHandles --coverage --verbose false"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
