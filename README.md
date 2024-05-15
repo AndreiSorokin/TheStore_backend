@@ -1,3 +1,6 @@
+### Link
+https://thestore-backend.onrender.com
+
 ### Welcome to Our Internet Store REST API
 This REST API provides functionality for managing an internet store(https://fs17-frontend-project-iota.vercel.app/). You can perform CRUD operations on the database and control user access to specific routes.
 This project has been created in Integrify through collaboration with:
@@ -7,6 +10,14 @@ This project has been created in Integrify through collaboration with:
 4. https://github.com/muzahidswe
 
 where I had a tech lead role and then expanded by myself to suit my project
+
+### Run the project wih Docker
+Link: https://hub.docker.com/repositories/kenici780
+1. git clone https://github.com/AndreiSorokin/fs17-backend/tree/andrei
+2. Navigate to the cloned project with cd your/cloded/project
+3. docker build -t fs17-backend .
+4. docker run -p 8080:8080 --env-file .env fs17-backend
+
 ### Getting Started
 In order to run the app you need to have the following installed:
 - Node v18.14.1
