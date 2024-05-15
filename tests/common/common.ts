@@ -5,7 +5,7 @@ import Product from "../../src/models/Product";
 import productServices from "../../src/services/products";
 import categoryServices from "../../src/services/category";
 import app from "../../src/app";
-import { Role } from "../../src/misc/types";
+import { Gender, Role } from "../../src/misc/types";
 
 export async function createCategory() {
    const category = new Category({
@@ -23,9 +23,9 @@ export async function createProduct() {
       price: 111, 
       description: "description", 
       category: category._id, 
-      image: "img1", 
+      images: ["img1"],
       size: "Large",
-      gender: "Male"
+      gender: Gender.Male
    });
    return await productServices.createProduct(product);
 }
