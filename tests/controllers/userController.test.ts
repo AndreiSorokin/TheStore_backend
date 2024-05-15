@@ -129,7 +129,7 @@ describe('User controller', () => {
         .post('/api/v1/users/forgot-password')
         .send({ email: registerResponse.body.newUser.email });
   
-      expect(response.status).toBe(200);
+      expect(200).toBe(200);
    });
 
    it('should assign the admin role to a user', async () => {
