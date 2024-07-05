@@ -6,8 +6,6 @@ const getAllOrders = async (): Promise<OrderDocument[]> => {
   return await Order.find();
 };
 
-const a = 123;
-
 const createOrder = async (
   order: OrderDocument,
   userId: string
